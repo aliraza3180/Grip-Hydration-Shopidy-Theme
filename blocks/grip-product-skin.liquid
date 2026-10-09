@@ -1,0 +1,71 @@
+{%- doc -%}
+  Invisible styling block for Horizon's featured product section. Place it
+  inside Product details. It sets the desktop media/details split, adds extra
+  vertical padding inside the section's painted surface (Horizon caps padding
+  at 100px), and applies GRIP tokens, all scoped to this section only.
+  Depends on Horizon's product-information class names: re-check after
+  Horizon updates.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign split = block.settings.split
+  assign rest = 100 | minus: split
+  assign scope = '[id="shopify-section-' | append: section.id | append: '"]'
+-%}
+
+{% style %}
+  {{ scope }} {
+    --grip-muted: {{ block.settings.muted_color }};
+    --color-error: var(--grip-error);
+  }
+
+  {{ scope }} .product-information.section.spacing-style {
+    padding-block:
+      calc(var(--padding-block-start) + var(--section-top-offset, 0px) + var(--spacing-scale, 1) * {{ block.settings.extra_padding }}px)
+      calc(var(--padding-block-end) + var(--spacing-scale, 1) * {{ block.settings.extra_padding }}px);
+  }
+
+  {{ scope }} :is(.media-gallery img, .product-media, .product-media img) {
+    border-radius: var(--grip-radius);
+  }
+
+  @media screen and (min-width: 990px) {
+    {{ scope }} .product-information__grid.product-information--media-left:not(.product-information--media-none) {
+      grid-template-columns: {{ split }}fr {{ rest }}fr;
+    }
+
+    {{ scope }} .product-information__grid.product-information--media-right:not(.product-information--media-none) {
+      grid-template-columns: {{ rest }}fr {{ split }}fr;
+    }
+  }
+{% endstyle %}
+
+{%- if request.design_mode -%}
+  <p class="grip-editor-note" {{ block.shopify_attributes }}>
+    GRIP skin: {{ split }}/{{ rest }} split, +{{ block.settings.extra_padding }}px padding. Not visible on the storefront.
+  </p>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP product skin",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Styles this featured product section to the GRIP design. Produces no visible storefront content."
+    },
+    { "type": "range", "id": "split", "label": "Media width on desktop", "min": 50, "max": 70, "step": 1, "unit": "%", "default": 62 },
+    { "type": "range", "id": "extra_padding", "label": "Extra top and bottom padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 60 },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" }
+  ],
+  "presets": [
+    {
+      "name": "GRIP product skin",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,111 @@
+{%- liquid
+  assign product = section.settings.product | default: product
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign rating_value = product.metafields.reviews.rating.value.rating
+  assign rating_max = product.metafields.reviews.rating.value.scale_max
+
+  assign has_app = false
+  for review_block in section.blocks
+    if review_block.type == '@app'
+      assign has_app = true
+      break
+    endif
+  endfor
+
+  assign show_section = false
+  if rating_count > 0
+    assign show_section = true
+  elsif has_app and section.settings.hide_apps_without_rating == false
+    assign show_section = true
+  endif
+-%}
+
+{%- if show_section -%}
+  {% capture children %}
+    <div class="grip-reviews">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="grip-display h2">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.show_native_summary and rating_count > 0 and rating_value != blank -%}
+        <p class="grip-reviews__summary">
+          <span class="grip-reviews__score h3">{{ rating_value | round: 1 }}</span>
+          <span class="grip-muted">/ {{ rating_max }}, from {{ rating_count }} reviews</span>
+        </p>
+      {%- endif -%}
+
+      {%- if has_app -%}
+        <div class="grip-reviews__apps">
+          {% content_for 'blocks' %}
+        </div>
+      {%- endif -%}
+    </div>
+  {% endcapture %}
+
+  {% render 'grip-section', section: section, children: children %}
+{%- elsif request.design_mode -%}
+  {% render 'grip-tokens' %}
+  <div class="page-width grip-reviews__editor">
+    <p class="grip-editor-note">
+      Reviews are hidden on the storefront until the selected product has a rating{% if has_app %} (app blocks are suppressed until then){% endif %}.
+    </p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-reviews {
+    display: grid;
+    gap: var(--grip-gap-xl);
+  }
+
+  .grip-reviews__summary {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  .grip-reviews__score {
+    margin: 0;
+  }
+
+  .grip-reviews__editor {
+    padding-block: 1.5rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP reviews",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "@app" }],
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Stays hidden on the storefront until the product has real reviews (reviews.rating_count metafield above 0)."
+    },
+    { "type": "product", "id": "product", "label": "Product", "info": "Leave blank on product pages to use the page's product." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "REVIEWS" },
+    { "type": "checkbox", "id": "show_native_summary", "label": "Show rating summary", "default": true },
+    { "type": "checkbox", "id": "hide_apps_without_rating", "label": "Hide app blocks until the product has a rating", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP reviews",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,162 @@
+{% capture children %}
+  <div
+    class="grip-about-values"
+    style="--grip-value-cols: {{ section.blocks.size | at_least: 1 | at_most: 4 }}; --grip-value-icon: {{ section.settings.icon_color }};"
+  >
+    {%- if section.settings.label != blank or section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="grip-about-values__header">
+        <header class="grip-about-values__lead">
+          {%- if section.settings.label != blank -%}
+            <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="grip-display h2">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+        </header>
+        {%- if section.settings.text != blank -%}
+          <p class="grip-about-values__text grip-muted">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="grip-about-values__list" role="list">
+        {% content_for 'blocks' %}
+      </ul>
+    {%- elsif request.design_mode -%}
+      <p class="grip-editor-note">Values: add value blocks.</p>
+    {%- endif -%}
+
+    {% render 'grip-about-actions',
+      primary_label: section.settings.button_label,
+      primary_link: section.settings.button_link,
+      secondary_label: section.settings.button_2_label,
+      secondary_link: section.settings.button_2_link,
+      arrow: true
+    %}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-about-values {
+    display: grid;
+    gap: var(--grip-gap-2xl);
+
+    & > .grip-actions {
+      margin-block-start: 0;
+    }
+  }
+
+  .grip-about-values__header {
+    display: grid;
+    gap: var(--grip-gap-md);
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--grip-gap-2xl);
+      align-items: end;
+    }
+  }
+
+  .grip-about-values__lead {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .grip-about-values__text {
+    max-width: 32rem;
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .grip-about-values__list {
+    display: grid;
+    gap: var(--grip-gap-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media screen and (min-width: 750px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grip-gap-xl) var(--grip-gap-lg);
+    }
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: repeat(var(--grip-value-cols, 4), minmax(0, 1fr));
+    }
+  }
+
+  .grip-about-value {
+    display: grid;
+    align-content: start;
+    gap: 0.875rem;
+    min-width: 0;
+    padding-block-start: 1.5rem;
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .grip-about-value__icon {
+    display: inline-flex;
+    color: var(--grip-value-icon, var(--grip-accent));
+  }
+
+  .grip-about-value__title,
+  .grip-about-value__text {
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+
+  .grip-about-value__text {
+    line-height: 1.6;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP about values",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "_grip-about-value" }],
+  "max_blocks": 8,
+  "settings": [
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "WHAT WE STAND FOR" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "NO SHORTCUTS." },
+    { "type": "text", "id": "text", "label": "Text", "default": "The same rules we train by go into every stick." },
+    { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#1F6FFF" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label", "default": "SEE WHAT'S INSIDE" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#F1F3F6" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#0B0F16" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#4A5361" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#D3D8E0" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP about values",
+      "category": "GRIP",
+      "blocks": {
+        "label": { "type": "_grip-about-value", "settings": { "icon": "molecule", "title": "LABEL FACTS. NO HYPE.", "text": "1,000mg sodium, 200mg potassium and 100mg magnesium in every stick. We print the numbers and leave the hype out." } },
+        "sugar": { "type": "_grip-about-value", "settings": { "icon": "sugar-free", "title": "ZERO SUGAR.", "text": "Sugar-free and keto-friendly, with no artificial sweeteners and no artificial preservatives." } },
+        "community": { "type": "_grip-about-value", "settings": { "icon": "plus-circle", "title": "BUILT WITH THE COMMUNITY.", "text": "Shaped by the people who show up: at open mats, in wrestling rooms and in the cage." } },
+        "belt": { "type": "_grip-about-value", "settings": { "icon": "check", "title": "ONE BELT AT A TIME.", "text": "New flavors launch when they're ready, not before. The belt system grows the way you do." } }
+      },
+      "block_order": ["label", "sugar", "community", "belt"]
+    }
+  ]
+}
+{% endschema %}

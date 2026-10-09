@@ -1,0 +1,154 @@
+{%- doc -%}
+  Shared GRIP design tokens and utility classes. Outputs no markup.
+  Shopify only ships {% stylesheet %} CSS for files in a page's render tree,
+  so every GRIP section and block must render this snippet.
+
+  @example
+  {% render 'grip-tokens' %}
+{%- enddoc -%}
+
+{% stylesheet %}
+  :root {
+    --grip-ink: #05070a;
+    --grip-s1: #0a0e15;
+    --grip-s2: #111823;
+    --grip-hairline: #1d2634;
+    --grip-bone: #f2f4f7;
+    --grip-muted-default: #8b95a6;
+    --grip-accent: #1f6fff;
+    --grip-light: #f1f3f6;
+    --grip-light-text: #0b0f16;
+    --grip-error: #ff8a80;
+
+    /* One radius for every card, panel, product image and input. Buttons use the theme's pill setting. */
+    --grip-radius: 4px;
+    --grip-button-radius: var(--style-border-radius-buttons-primary, 100px);
+
+    --grip-gap-xs: 0.5rem;
+    --grip-gap-sm: 1rem;
+    --grip-gap-md: 1.5rem;
+    --grip-gap-lg: 2rem;
+    --grip-gap-xl: 3rem;
+    --grip-gap-2xl: 4rem;
+  }
+
+  /* Section shell */
+  .grip-section {
+    --color-error: var(--grip-error);
+    --color-success: var(--color-foreground);
+  }
+
+  .grip-section__inner {
+    position: relative;
+    min-width: 0;
+  }
+
+  .grip-section :focus-visible {
+    outline: 2px solid var(--grip-accent);
+    outline-offset: 3px;
+  }
+
+  /* Content that sits on the page grid inside a full-width section */
+  .grip-page-grid {
+    display: grid;
+    grid-template-columns: var(--full-page-grid-with-margins);
+
+    & > * {
+      grid-column: 2;
+      min-width: 0;
+    }
+  }
+
+  /* Small uppercase tracked label */
+  .grip-label {
+    margin: 0;
+    font-family: var(--font-subheading--family);
+    font-style: var(--font-subheading--style);
+    font-weight: var(--font-subheading--weight);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+  }
+
+  .grip-label--muted {
+    color: var(--grip-muted, var(--grip-muted-default));
+  }
+
+  /* Display type. Size comes from the h1–h6 presets; every GRIP display heading
+     uses the heavy italic accent face. The tripled class outranks Horizon's .hN.hN preset rule. */
+  .grip-display {
+    margin: 0;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .grip-section .grip-display.grip-display {
+    font-family: var(--font-accent--family);
+    font-style: var(--font-accent--style);
+    font-weight: var(--font-accent--weight);
+  }
+
+  .grip-muted {
+    color: var(--grip-muted, var(--grip-muted-default));
+  }
+
+  .grip-rule {
+    margin: 0;
+    border: 0;
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  /* Link buttons rendered by snippets/grip-button */
+  .grip-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block-start: var(--grip-gap-lg);
+  }
+
+  .grip-actions--center {
+    justify-content: center;
+  }
+
+  .grip-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    border-radius: var(--grip-button-radius);
+  }
+
+  .grip-editor-note {
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    border: 1px dashed currentColor;
+    border-radius: var(--grip-radius);
+    opacity: 0.75;
+  }
+
+  .grip-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(var(--color-foreground-rgb) / 0.06);
+    fill: rgb(var(--color-foreground-rgb) / 0.35);
+  }
+
+  /* Reduced motion: Horizon has no global rule, so GRIP scopes its own. */
+  @media (prefers-reduced-motion: reduce) {
+    .grip-section *,
+    .grip-section *::before,
+    .grip-section *::after {
+      /* !important is required to override component-level transitions for users who opt out of motion */
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+{% endstylesheet %}

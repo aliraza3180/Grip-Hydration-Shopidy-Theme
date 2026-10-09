@@ -1,0 +1,57 @@
+{%- doc -%}
+  One label-fact cell in the GRIP spec bar: an icon, a large value and a
+  small unit. Renders nothing when the value is blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.value != blank -%}
+  <li class="grip-spec" {{ block.shopify_attributes }}>
+    {%- render 'grip-icon', icon: block.settings.icon, size: 28, class: 'grip-spec__icon' -%}
+    <span class="grip-spec__text">
+      <span class="grip-spec__value h3">{{ block.settings.value | escape }}</span>
+      {%- if block.settings.unit != blank -%}
+        <span class="grip-spec__unit grip-label grip-label--muted">{{ block.settings.unit | escape }}</span>
+      {%- endif -%}
+    </span>
+  </li>
+{%- elsif request.design_mode -%}
+  <li class="grip-spec" {{ block.shopify_attributes }}>
+    <span class="grip-editor-note">Spec: add a value</span>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP spec",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "drop", "label": "Droplet" },
+        { "value": "bolt", "label": "Bolt" },
+        { "value": "molecule", "label": "Molecule" },
+        { "value": "calcium", "label": "Calcium" },
+        { "value": "leaf", "label": "Leaf" },
+        { "value": "sugar-free", "label": "Sugar-free" },
+        { "value": "flame-off", "label": "Zero calories" },
+        { "value": "plus-circle", "label": "Plus" },
+        { "value": "check", "label": "Check" }
+      ],
+      "default": "drop"
+    },
+    { "type": "text", "id": "value", "label": "Value", "default": "0MG" },
+    { "type": "text", "id": "unit", "label": "Unit", "default": "UNIT" }
+  ],
+  "presets": [
+    {
+      "name": "GRIP spec",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

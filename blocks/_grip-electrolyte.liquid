@@ -1,0 +1,54 @@
+{%- doc -%}
+  One figure in the GRIP science breakdown: name, large amount with unit,
+  Daily Value line and optional text. Renders nothing on the storefront when
+  the name and amount are blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.name != blank or block.settings.amount != blank -%}
+  <li
+    class="grip-electrolyte"
+    {% if block.settings.number_color != blank %}
+      style="--grip-el-color: {{ block.settings.number_color }};"
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.name != blank -%}
+      <h3 class="grip-label grip-electrolyte__name">{{ block.settings.name | escape }}</h3>
+    {%- endif -%}
+    {%- if block.settings.amount != blank -%}
+      <p class="grip-electrolyte__amount">
+        <span class="grip-display grip-electrolyte__number">{{ block.settings.amount | escape }}</span>
+        {%- if block.settings.unit != blank -%}
+          <span class="grip-label">{{ block.settings.unit | escape }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+    {%- if block.settings.dv != blank -%}
+      <p class="grip-electrolyte__dv grip-muted">{{ block.settings.dv | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <p class="grip-electrolyte__text grip-muted">{{ block.settings.text | escape }}</p>
+    {%- endif -%}
+  </li>
+{%- elsif request.design_mode -%}
+  <li class="grip-electrolyte" {{ block.shopify_attributes }}>
+    <p class="grip-editor-note">Figure: add a name or amount</p>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP electrolyte",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "name", "label": "Name", "default": "SODIUM" },
+    { "type": "text", "id": "amount", "label": "Amount", "default": "0" },
+    { "type": "text", "id": "unit", "label": "Unit", "default": "MG" },
+    { "type": "text", "id": "dv", "label": "Daily Value line" },
+    { "type": "textarea", "id": "text", "label": "Text", "info": "Only use manufacturer-approved wording." },
+    { "type": "color", "id": "number_color", "label": "Amount color", "info": "Leave empty to use the text color." }
+  ]
+}
+{% endschema %}

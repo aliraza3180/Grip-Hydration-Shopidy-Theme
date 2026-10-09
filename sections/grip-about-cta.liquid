@@ -1,0 +1,223 @@
+{%- liquid
+  assign gradient = section.settings.gradient_color
+  assign gradient_alpha = section.settings.gradient_opacity | divided_by: 100.0
+
+  assign has_image = false
+  if section.settings.image_desktop != blank or section.settings.image_mobile != blank
+    assign has_image = true
+  endif
+
+  capture cta_style
+    echo '--grip-ac-g: ' | append: gradient.red | append: ' ' | append: gradient.green | append: ' ' | append: gradient.blue | append: ';'
+    echo '--grip-ac-ga: ' | append: gradient_alpha | append: ';'
+    echo '--grip-ac-pad: ' | append: section.settings.content_spacing | append: 'px;'
+    echo '--grip-ac-error: ' | append: section.settings.error_color | append: ';'
+  endcapture
+-%}
+
+{% capture children %}
+  <div
+    class="grip-about-cta grip-about-cta--{{ section.settings.alignment }}{% if section.settings.grayscale %} grip-about-cta--grayscale{% endif %}"
+    style="{{ cta_style | strip_newlines }}"
+  >
+    {%- if has_image -%}
+      <div class="grip-about-cta__media">
+        {% render 'grip-image',
+          desktop: section.settings.image_desktop,
+          mobile: section.settings.image_mobile,
+          widths: '832, 1200, 1600, 1920, 2560',
+          decorative: true
+        %}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.show_gradient -%}
+      <div class="grip-about-cta__gradient" aria-hidden="true"></div>
+    {%- endif -%}
+
+    <div class="grip-page-grid grip-about-cta__content">
+      <div class="grip-about-cta__stack">
+        {%- if section.settings.label != blank -%}
+          <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="grip-display h1">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="grip-about-cta__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <div class="grip-about-cta__form">
+            {% content_for 'blocks' %}
+          </div>
+        {%- endif -%}
+
+        {% render 'grip-about-actions',
+          primary_label: section.settings.button_label,
+          primary_link: section.settings.button_link,
+          secondary_label: section.settings.button_2_label,
+          secondary_link: section.settings.button_2_link,
+          arrow: true
+        %}
+      </div>
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children, width: 'full' %}
+
+{% stylesheet %}
+  .grip-about-cta {
+    --color-error: var(--grip-ac-error, var(--grip-error));
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .grip-about-cta__media,
+  .grip-about-cta__gradient {
+    position: absolute;
+    inset: 0;
+  }
+
+  .grip-about-cta__media {
+    z-index: -2;
+  }
+
+  .grip-about-cta--grayscale .grip-about-cta__media img {
+    filter: grayscale(1);
+  }
+
+  .grip-about-cta__gradient {
+    z-index: -1;
+    background: linear-gradient(
+      to top,
+      rgb(var(--grip-ac-g) / var(--grip-ac-ga)) 0%,
+      rgb(var(--grip-ac-g) / calc(var(--grip-ac-ga) * 0.6)) 45%,
+      rgb(var(--grip-ac-g) / calc(var(--grip-ac-ga) * 0.15)) 100%
+    );
+  }
+
+  .grip-about-cta__content {
+    padding-block: var(--grip-ac-pad, 160px);
+
+    @media screen and (max-width: 749px) {
+      padding-block: calc(var(--grip-ac-pad, 160px) * 0.55);
+    }
+  }
+
+  .grip-about-cta__stack {
+    display: grid;
+    justify-items: center;
+    justify-self: center;
+    gap: 1.25rem;
+    width: 100%;
+    max-width: 40rem;
+    text-align: center;
+
+    & .grip-actions {
+      justify-content: center;
+      margin-block-start: 0.25rem;
+    }
+  }
+
+  .grip-about-cta--left .grip-about-cta__stack {
+    justify-items: start;
+    justify-self: start;
+    text-align: start;
+
+    & .grip-actions {
+      justify-content: flex-start;
+    }
+  }
+
+  .grip-about-cta__text {
+    max-width: 32rem;
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.55;
+  }
+
+  .grip-about-cta__form {
+    width: 100%;
+    max-width: 32rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP about call to action",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "email-signup" }],
+  "max_blocks": 1,
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image", "info": "Optional. 21:9 recommended." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "Optional. 4:5 recommended. Shown below 750px." },
+    { "type": "checkbox", "id": "grayscale", "label": "Black and white", "default": false },
+    { "type": "header", "content": "Gradient" },
+    { "type": "checkbox", "id": "show_gradient", "label": "Show gradient", "default": true },
+    { "type": "color", "id": "gradient_color", "label": "Color", "default": "#0A2350", "visible_if": "{{ section.settings.show_gradient }}" },
+    { "type": "range", "id": "gradient_opacity", "label": "Opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 90, "visible_if": "{{ section.settings.show_gradient }}" },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "JOIN THE GRIP." },
+    { "type": "text", "id": "text", "label": "Text", "default": "Early access to new belts, and nothing else." },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label", "default": "SHOP BLUE BELT" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    },
+    { "type": "range", "id": "content_spacing", "label": "Content spacing", "info": "Space above and below the content. Reduced on mobile.", "min": 40, "max": 240, "step": 8, "unit": "px", "default": 160 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "error_color", "label": "Form error text", "default": "#FF8A80" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP about call to action",
+      "category": "GRIP",
+      "blocks": {
+        "signup": {
+          "type": "email-signup",
+          "settings": {
+            "border_style": "all",
+            "input_style": "custom",
+            "border_width": 1,
+            "border_radius": 4,
+            "input_background_color": "#111823",
+            "input_text_color": "#F2F4F7",
+            "input_border_color": "#8B95A6",
+            "style_class": "button",
+            "display_type": "text",
+            "label": "SIGN UP",
+            "integrated_button": false
+          }
+        }
+      },
+      "block_order": ["signup"]
+    }
+  ]
+}
+{% endschema %}

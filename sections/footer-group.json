@@ -1,0 +1,74 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "t:names.footer",
+  "sections": {
+    "grip_footer": {
+      "type": "grip-footer",
+      "blocks": {
+        "shop": {
+          "type": "grip-footer-menu",
+          "settings": {
+            "heading": "SHOP",
+            "menu": "shop"
+          },
+          "blocks": {}
+        },
+        "company": {
+          "type": "grip-footer-menu",
+          "settings": {
+            "heading": "COMPANY",
+            "menu": "footer-company"
+          },
+          "blocks": {}
+        },
+        "support": {
+          "type": "grip-footer-menu",
+          "settings": {
+            "heading": "SUPPORT",
+            "menu": "footer-support"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "shop",
+        "company",
+        "support"
+      ],
+      "settings": {
+        "logo_width": 164,
+        "tagline": "BUILT FOR THE MATS. MADE FOR EVERY ROUND.",
+        "instagram_url": "",
+        "facebook_url": "",
+        "tiktok_url": "",
+        "youtube_url": "",
+        "x_url": "",
+        "copyright_text": "© [year] GRIP Hydration. All rights reserved.",
+        "show_policies": true,
+        "show_payment_icons": false,
+        "payment_label": "Payment methods",
+        "show_country_selector": false,
+        "show_language_selector": false,
+        "column_gap": 48,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 96,
+        "padding-block-end": 48
+      }
+    }
+  },
+  "order": [
+    "grip_footer"
+  ]
+}

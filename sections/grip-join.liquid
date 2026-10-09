@@ -1,0 +1,222 @@
+{%- liquid
+  assign overlay = section.settings.overlay_color
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+
+  assign has_image = false
+  if section.settings.image_desktop != blank or section.settings.image_mobile != blank
+    assign has_image = true
+  endif
+
+  capture join_style
+    echo '--grip-overlay-rgb: ' | append: overlay.red | append: ' ' | append: overlay.green | append: ' ' | append: overlay.blue | append: ';'
+    echo '--grip-overlay-a: ' | append: overlay_alpha | append: ';'
+    echo '--grip-join-h: ' | append: section.settings.min_height_desktop | append: 'px;'
+    echo '--grip-join-h-m: ' | append: section.settings.min_height_mobile | append: 'svh;'
+    echo '--grip-join-error: ' | append: section.settings.error_color | append: ';'
+  endcapture
+-%}
+
+{% capture children %}
+  <div
+    class="grip-join grip-join--{{ section.settings.alignment }}{% if section.settings.grayscale %} grip-join--grayscale{% endif %}"
+    style="{{ join_style | strip_newlines }}"
+  >
+    <div class="grip-join__media">
+      {%- if has_image -%}
+        {% render 'grip-image',
+          desktop: section.settings.image_desktop,
+          mobile: section.settings.image_mobile,
+          widths: '832, 1200, 1600, 1920, 2560',
+          decorative: true
+        %}
+      {%- elsif request.design_mode -%}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'grip-placeholder' }}
+      {%- endif -%}
+    </div>
+    <div class="grip-join__scrim" aria-hidden="true"></div>
+
+    <div class="grip-page-grid grip-join__content">
+      <div class="grip-join__stack">
+        {%- if section.settings.label != blank -%}
+          <p class="grip-label">{{ section.settings.label | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="grip-display h1 grip-join__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="grip-join__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <div class="grip-join__form">
+            {% content_for 'blocks' %}
+          </div>
+        {%- elsif request.design_mode -%}
+          <p class="grip-editor-note">Join: add an email signup block.</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children, width: 'full' %}
+
+{% stylesheet %}
+  .grip-join {
+    --color-error: var(--grip-join-error, var(--grip-error));
+
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: var(--grip-join-h, 620px);
+    isolation: isolate;
+    overflow: hidden;
+
+    @media screen and (max-width: 749px) {
+      align-items: end;
+      min-height: var(--grip-join-h-m, 80svh);
+    }
+  }
+
+  .grip-join__media,
+  .grip-join__scrim {
+    position: absolute;
+    inset: 0;
+  }
+
+  .grip-join__media {
+    z-index: -2;
+  }
+
+  .grip-join--grayscale .grip-join__media img {
+    filter: grayscale(1);
+  }
+
+  .grip-join__scrim {
+    z-index: -1;
+    background: linear-gradient(
+      90deg,
+      rgb(var(--grip-overlay-rgb) / var(--grip-overlay-a)) 0%,
+      rgb(var(--grip-overlay-rgb) / calc(var(--grip-overlay-a) * 0.65)) 38%,
+      rgb(var(--grip-overlay-rgb) / 0.05) 72%
+    );
+
+    @media screen and (max-width: 749px) {
+      background: linear-gradient(
+        0deg,
+        rgb(var(--grip-overlay-rgb) / var(--grip-overlay-a)) 0%,
+        rgb(var(--grip-overlay-rgb) / calc(var(--grip-overlay-a) * 0.7)) 50%,
+        rgb(var(--grip-overlay-rgb) / 0.1) 85%
+      );
+    }
+  }
+
+  .grip-join--center .grip-join__scrim {
+    background: rgb(var(--grip-overlay-rgb) / calc(var(--grip-overlay-a) * 0.7));
+  }
+
+  .grip-join__content {
+    padding-block: var(--grip-gap-2xl);
+  }
+
+  .grip-join__stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    gap: 1.25rem;
+    max-width: 28rem;
+  }
+
+  .grip-join--center .grip-join__stack {
+    justify-items: center;
+    justify-self: center;
+    text-align: center;
+  }
+
+  .grip-join__heading.grip-join__heading.grip-join__heading {
+    max-width: 8ch;
+    font-size: clamp(3rem, 6.4vw, 5.75rem);
+    line-height: 0.9;
+  }
+
+  .grip-join__text {
+    max-width: 22rem;
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.45;
+  }
+
+  .grip-join__form {
+    width: min(26.5rem, 100%);
+    margin-block-start: 0.75rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP join",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "email-signup" }],
+  "max_blocks": 1,
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image", "info": "Wide image with the subject on the right." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "4:5 recommended. Shown below 750px." },
+    { "type": "checkbox", "id": "grayscale", "label": "Black and white", "default": false },
+    { "type": "color", "id": "overlay_color", "label": "Overlay color", "default": "#05070A" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 90 },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "min_height_desktop", "label": "Desktop height", "min": 400, "max": 900, "step": 20, "unit": "px", "default": 620 },
+    { "type": "range", "id": "min_height_mobile", "label": "Mobile height", "min": 40, "max": 100, "step": 2, "unit": "%", "default": 80 },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "JOIN THE GRIP" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "STAY IN THE LOOP." },
+    { "type": "text", "id": "text", "label": "Text", "default": "Be the first to know about new flavors, drops and other updates." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "error_color", "label": "Form error text", "default": "#FF8A80" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP join",
+      "category": "GRIP",
+      "blocks": {
+        "signup": {
+          "type": "email-signup",
+          "settings": {
+            "border_style": "all",
+            "input_style": "custom",
+            "border_width": 1,
+            "border_radius": 100,
+            "input_background_color": "#0A0E15",
+            "input_text_color": "#F2F4F7",
+            "input_border_color": "#8B95A6",
+            "style_class": "button",
+            "display_type": "text",
+            "label": "SIGN UP",
+            "integrated_button": true
+          }
+        }
+      },
+      "block_order": ["signup"]
+    }
+  ]
+}
+{% endschema %}

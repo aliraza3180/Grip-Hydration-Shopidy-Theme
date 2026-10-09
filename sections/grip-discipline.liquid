@@ -1,0 +1,210 @@
+{%- liquid
+  assign overlay = section.settings.overlay_color
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+  assign text_tag = section.settings.text_tag | default: 'p'
+
+  assign has_image = false
+  if section.settings.image_desktop != blank or section.settings.image_mobile != blank
+    assign has_image = true
+  endif
+
+  capture band_style
+    echo '--grip-overlay-rgb: ' | append: overlay.red | append: ' ' | append: overlay.green | append: ' ' | append: overlay.blue | append: ';'
+    echo '--grip-overlay-a: ' | append: overlay_alpha | append: ';'
+    echo '--grip-band-h: ' | append: section.settings.min_height_desktop | append: 'px;'
+    echo '--grip-band-h-m: ' | append: section.settings.min_height_mobile | append: 'svh;'
+  endcapture
+-%}
+
+{% capture children %}
+  <div
+    class="grip-band grip-band--{{ section.settings.alignment }}{% if section.settings.grayscale %} grip-band--grayscale{% endif %}"
+    style="{{ band_style | strip_newlines }}"
+  >
+    <div class="grip-band__media">
+      {%- if has_image -%}
+        {% render 'grip-image',
+          desktop: section.settings.image_desktop,
+          mobile: section.settings.image_mobile,
+          widths: '832, 1200, 1600, 1920, 2560',
+          decorative: true
+        %}
+      {%- elsif request.design_mode -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'grip-placeholder' }}
+      {%- endif -%}
+    </div>
+    <div class="grip-band__scrim" aria-hidden="true"></div>
+
+    <div class="grip-page-grid grip-band__content">
+      <div class="grip-band__stack">
+        {%- if section.settings.text != blank -%}
+          <{{ text_tag }} class="grip-display h1 grip-band__text">
+            {{- section.settings.text | escape -}}
+          </{{ text_tag }}>
+        {%- endif -%}
+        {%- render 'grip-button',
+          label: section.settings.button_label,
+          link: section.settings.button_link,
+          style: section.settings.button_style,
+          arrow: section.settings.button_arrow
+        -%}
+      </div>
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children, width: 'full' %}
+
+{% stylesheet %}
+  .grip-band {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: var(--grip-band-h, 560px);
+    isolation: isolate;
+    overflow: hidden;
+
+    @media screen and (max-width: 749px) {
+      align-items: end;
+      min-height: var(--grip-band-h-m, 70svh);
+    }
+  }
+
+  .grip-band__media,
+  .grip-band__scrim {
+    position: absolute;
+    inset: 0;
+  }
+
+  .grip-band__media {
+    z-index: -2;
+  }
+
+  .grip-band--grayscale .grip-band__media img {
+    filter: grayscale(1);
+  }
+
+  .grip-band__scrim {
+    z-index: -1;
+    background: linear-gradient(
+      90deg,
+      rgb(var(--grip-overlay-rgb) / var(--grip-overlay-a)) 0%,
+      rgb(var(--grip-overlay-rgb) / calc(var(--grip-overlay-a) * 0.45)) 45%,
+      rgb(var(--grip-overlay-rgb) / calc(var(--grip-overlay-a) * 0.1)) 100%
+    );
+
+    @media screen and (max-width: 749px) {
+      background: linear-gradient(
+        0deg,
+        rgb(var(--grip-overlay-rgb) / var(--grip-overlay-a)) 0%,
+        rgb(var(--grip-overlay-rgb) / calc(var(--grip-overlay-a) * 0.5)) 50%,
+        rgb(var(--grip-overlay-rgb) / 0) 85%
+      );
+    }
+  }
+
+  .grip-band--center .grip-band__scrim {
+    background: rgb(var(--grip-overlay-rgb) / calc(var(--grip-overlay-a) * 0.6));
+  }
+
+  .grip-band__content {
+    padding-block: var(--grip-gap-2xl);
+
+    @media screen and (max-width: 749px) {
+      padding-block: var(--grip-gap-xl);
+    }
+  }
+
+  .grip-band__stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    max-width: 48rem;
+
+    & .grip-actions {
+      margin-block-start: var(--grip-gap-lg);
+    }
+  }
+
+  .grip-band--center .grip-band__stack {
+    justify-items: center;
+    justify-self: center;
+    text-align: center;
+  }
+
+  .grip-band__text.grip-band__text.grip-band__text {
+    max-width: 14ch;
+    font-size: clamp(2.75rem, 7vw, 6.5rem);
+    line-height: 0.9;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP discipline band",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image", "info": "Wide image with the subject on the right." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "4:5 recommended. Shown below 750px." },
+    { "type": "checkbox", "id": "grayscale", "label": "Black and white", "default": true },
+    { "type": "color", "id": "overlay_color", "label": "Overlay color", "default": "#05070A" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 70 },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "text", "label": "Heading", "default": "DISCIPLINE FUELS FREEDOM." },
+    {
+      "type": "select",
+      "id": "text_tag",
+      "label": "HTML tag",
+      "options": [
+        { "value": "p", "label": "Paragraph" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "p"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "OUR STORY" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "The button is hidden until a link is set." },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ],
+      "default": "secondary"
+    },
+    { "type": "checkbox", "id": "button_arrow", "label": "Show arrow", "default": true },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "min_height_desktop", "label": "Desktop height", "min": 320, "max": 900, "step": 20, "unit": "px", "default": 560 },
+    { "type": "range", "id": "min_height_mobile", "label": "Mobile height", "min": 40, "max": 100, "step": 2, "unit": "%", "default": 70 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP discipline band",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

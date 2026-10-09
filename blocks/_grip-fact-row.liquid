@@ -1,0 +1,56 @@
+{%- doc -%}
+  One row of the GRIP Supplement Facts table: nutrient, amount and % Daily
+  Value, with a bold or indented style and the rule weight below it.
+  Renders nothing on the storefront when the nutrient is blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.nutrient != blank -%}
+  <tr
+    class="grip-fact-row grip-fact-row--{{ block.settings.style }} grip-fact-row--rule-{{ block.settings.rule }}"
+    {{ block.shopify_attributes }}
+  >
+    <th scope="row">{{ block.settings.nutrient | escape }}</th>
+    <td>{{ block.settings.amount | escape }}</td>
+    <td>{{ block.settings.dv | escape }}</td>
+  </tr>
+{%- elsif request.design_mode -%}
+  <tr {{ block.shopify_attributes }}>
+    <td colspan="3"><p class="grip-editor-note">Row: add a nutrient</p></td>
+  </tr>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP label row",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "nutrient", "label": "Nutrient", "default": "Nutrient" },
+    { "type": "text", "id": "amount", "label": "Amount", "info": "For example: 1,000mg" },
+    { "type": "text", "id": "dv", "label": "% Daily Value", "info": "For example: 43%, or † when not established" },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "bold", "label": "Bold" },
+        { "value": "normal", "label": "Regular" },
+        { "value": "indent", "label": "Indented" }
+      ],
+      "default": "bold"
+    },
+    {
+      "type": "select",
+      "id": "rule",
+      "label": "Rule below",
+      "options": [
+        { "value": "thin", "label": "Thin" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "thick", "label": "Thick" }
+      ],
+      "default": "thin"
+    }
+  ]
+}
+{% endschema %}

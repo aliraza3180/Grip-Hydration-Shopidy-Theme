@@ -1,0 +1,54 @@
+{%- doc -%}
+  One numbered stage on the GRIP roadmap timeline. The number comes from a
+  CSS counter on the parent list. Live stages get an accent ring and
+  aria-current="step".
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+<li
+  class="grip-stage grip-stage--{{ block.settings.status }}"
+  {% if block.settings.status == 'live' %}
+    aria-current="step"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  <span class="grip-stage__num" aria-hidden="true"></span>
+  {%- if block.settings.name != blank -%}
+    <h3 class="grip-stage__name grip-label">{{ block.settings.name | escape }}</h3>
+  {%- endif -%}
+  {%- if block.settings.line_1 != blank -%}
+    <p class="grip-stage__line">{{ block.settings.line_1 | escape }}</p>
+  {%- endif -%}
+  {%- if block.settings.line_2 != blank -%}
+    <p class="grip-stage__line">{{ block.settings.line_2 | escape }}</p>
+  {%- endif -%}
+</li>
+
+{% schema %}
+{
+  "name": "GRIP roadmap stage",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "name", "label": "Name", "default": "BELT" },
+    {
+      "type": "select",
+      "id": "status",
+      "label": "Status",
+      "options": [
+        { "value": "live", "label": "Live" },
+        { "value": "in_development", "label": "Upcoming" }
+      ],
+      "default": "in_development"
+    },
+    { "type": "text", "id": "line_1", "label": "First line", "default": "Coming Soon" },
+    { "type": "text", "id": "line_2", "label": "Second line", "default": "Next" }
+  ],
+  "presets": [
+    {
+      "name": "GRIP roadmap stage",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

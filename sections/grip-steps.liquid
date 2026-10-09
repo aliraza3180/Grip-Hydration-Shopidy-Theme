@@ -1,0 +1,168 @@
+{% capture children %}
+  <div class="grip-steps" style="--grip-step-cols: {{ section.blocks.size | at_least: 1 | at_most: 4 }};">
+    {%- if section.settings.label != blank or section.settings.heading != blank or section.settings.text != blank -%}
+      <header class="grip-steps__header">
+        {%- if section.settings.label != blank -%}
+          <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="grip-display h2">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="grip-steps__text grip-muted">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ol class="grip-steps__list" role="list">
+        {% content_for 'blocks' %}
+      </ol>
+    {%- elsif request.design_mode -%}
+      <p class="grip-editor-note">Steps: add step blocks.</p>
+    {%- endif -%}
+
+    {%- if section.settings.note != blank -%}
+      <p class="grip-steps__note grip-muted">{{ section.settings.note | escape }}</p>
+    {%- endif -%}
+
+    {% render 'grip-about-actions',
+      primary_label: section.settings.button_label,
+      primary_link: section.settings.button_link,
+      secondary_label: section.settings.button_2_label,
+      secondary_link: section.settings.button_2_link,
+      arrow: true
+    %}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-steps {
+    display: grid;
+    gap: var(--grip-gap-2xl);
+
+    & > .grip-actions {
+      margin-block-start: 0;
+    }
+  }
+
+  .grip-steps__header {
+    display: grid;
+    gap: 1rem;
+    max-width: 48rem;
+  }
+
+  .grip-steps__text {
+    max-width: 36rem;
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .grip-steps__list {
+    display: grid;
+    gap: var(--grip-gap-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: grip-step;
+
+    @media screen and (min-width: 750px) {
+      grid-template-columns: repeat(var(--grip-step-cols, 3), minmax(0, 1fr));
+    }
+  }
+
+  .grip-step {
+    counter-increment: grip-step;
+    display: grid;
+    align-content: start;
+    gap: 0.875rem;
+    min-width: 0;
+    padding-block-start: 1.5rem;
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .grip-step__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .grip-step__num {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    line-height: 0.9;
+    color: var(--grip-accent);
+
+    &::before {
+      content: counter(grip-step, decimal-leading-zero);
+    }
+  }
+
+  .grip-step__icon {
+    display: inline-flex;
+    color: var(--grip-accent);
+  }
+
+  .grip-step__title,
+  .grip-step__text {
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+
+  .grip-step__text {
+    line-height: 1.6;
+  }
+
+  .grip-steps__note {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP steps",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "_grip-step" }],
+  "max_blocks": 4,
+  "settings": [
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "HOW TO USE" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "TEAR. POUR. SHAKE." },
+    { "type": "text", "id": "text", "label": "Text" },
+    { "type": "text", "id": "note", "label": "Note below steps", "default": "Check the box for how much water to use." },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP steps",
+      "category": "GRIP",
+      "blocks": {
+        "tear": { "type": "_grip-step", "settings": { "title": "TEAR.", "text": "Open one stick." } },
+        "pour": { "type": "_grip-step", "settings": { "title": "POUR.", "text": "Empty it into your water bottle." } },
+        "shake": { "type": "_grip-step", "settings": { "title": "SHAKE.", "text": "Shake or stir until it dissolves." } }
+      },
+      "block_order": ["tear", "pour", "shake"]
+    }
+  ]
+}
+{% endschema %}

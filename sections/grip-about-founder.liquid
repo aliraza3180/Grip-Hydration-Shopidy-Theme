@@ -1,0 +1,219 @@
+{%- liquid
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
+
+  assign show_media = has_image
+  if request.design_mode
+    assign show_media = true
+  endif
+-%}
+
+{% capture children %}
+  <div class="grip-about-founder grip-about-founder--image-{{ section.settings.image_position }}{% unless show_media %} grip-about-founder--no-image{% endunless %}{% if section.settings.grayscale %} grip-about-founder--grayscale{% endif %}">
+    {%- if show_media -%}
+      <div class="grip-about-founder__media">
+        {%- if has_image -%}
+          {% render 'grip-image',
+            desktop: section.settings.image,
+            widths: '416, 600, 800, 1200, 1600',
+            sizes: '(min-width: 990px) 40vw, (min-width: 750px) 45vw, 100vw',
+            alt: section.settings.signature_name
+          %}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'grip-placeholder' }}
+          <p class="grip-editor-note grip-about-founder__note">Add a real photo of the founder. It is hidden on the storefront until then.</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <figure class="grip-about-founder__content">
+      {%- if section.settings.label != blank -%}
+        <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.quote != blank -%}
+        <blockquote class="grip-about-founder__quote">{{ section.settings.quote }}</blockquote>
+      {%- elsif request.design_mode -%}
+        <p class="grip-editor-note">Founder note: add text</p>
+      {%- endif -%}
+
+      {%- if section.settings.signature_name != blank or section.settings.signature_role != blank -%}
+        <figcaption class="grip-about-founder__signature">
+          {%- if section.settings.show_rule -%}
+            <hr class="grip-rule">
+          {%- endif -%}
+          {%- if section.settings.signature_name != blank -%}
+            <span class="grip-label">{{ section.settings.signature_name | escape }}</span>
+          {%- endif -%}
+          {%- if section.settings.signature_role != blank -%}
+            <span class="grip-about-founder__role grip-muted">{{ section.settings.signature_role | escape }}</span>
+          {%- endif -%}
+        </figcaption>
+      {%- endif -%}
+
+      {% render 'grip-about-actions',
+        primary_label: section.settings.button_label,
+        primary_link: section.settings.button_link,
+        secondary_label: section.settings.button_2_label,
+        secondary_link: section.settings.button_2_link,
+        arrow: true
+      %}
+    </figure>
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-about-founder {
+    display: grid;
+    gap: var(--grip-gap-xl);
+
+    @media screen and (min-width: 750px) {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: clamp(2rem, 6vw, 7rem);
+      align-items: center;
+    }
+  }
+
+  .grip-about-founder--image-right {
+    @media screen and (min-width: 750px) {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+
+      & .grip-about-founder__media {
+        order: 2;
+      }
+    }
+  }
+
+  .grip-about-founder--no-image {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+
+    @media screen and (min-width: 750px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    & .grip-about-founder__content {
+      max-width: 48rem;
+    }
+  }
+
+  .grip-about-founder__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--grip-s2);
+    border-radius: var(--grip-radius);
+
+    & .grip-image,
+    & .grip-placeholder {
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  .grip-about-founder--grayscale .grip-about-founder__media img {
+    filter: grayscale(1);
+  }
+
+  .grip-about-founder__note {
+    position: absolute;
+    inset-inline: 1rem;
+    inset-block-end: 1rem;
+    background: var(--grip-ink);
+  }
+
+  .grip-about-founder__content {
+    display: grid;
+    gap: var(--grip-gap-md);
+    min-width: 0;
+    margin: 0;
+  }
+
+  .grip-about-founder__quote {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    font-size: clamp(1.25rem, 2.1vw, 1.75rem);
+    font-weight: 500;
+    line-height: 1.45;
+    text-wrap: pretty;
+
+    & p {
+      margin: 0;
+    }
+  }
+
+  .grip-about-founder__signature {
+    display: grid;
+    gap: 0.375rem;
+
+    & .grip-rule {
+      width: 100%;
+      margin-block-end: 0.75rem;
+    }
+  }
+
+  .grip-about-founder__role {
+    font-size: 0.9375rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP about founder",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Founder photo", "info": "Portrait, 4:5. Use a real photo taken in the gym." },
+    { "type": "checkbox", "id": "grayscale", "label": "Black and white", "default": true },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "A NOTE FROM THE FOUNDER" },
+    {
+      "type": "richtext",
+      "id": "quote",
+      "label": "Note",
+      "default": "<p>I didn't set out to build a supplement company. I wanted something I'd actually drink between rounds, and something the people on my mats would drink too.</p><p>GRIP isn't mine. It belongs to everyone who shows up and trains.</p>"
+    },
+    { "type": "text", "id": "signature_name", "label": "Name", "default": "ARTURO SALINAS" },
+    { "type": "text", "id": "signature_role", "label": "Role", "default": "Founder, GRIP Hydration" },
+    { "type": "checkbox", "id": "show_rule", "label": "Show rule above name", "default": true },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0A0E15" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP about founder",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,369 @@
+{%- liquid
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
+
+  assign show_media = has_image
+  if request.design_mode
+    assign show_media = true
+  endif
+-%}
+
+{% capture children %}
+  <div
+    class="grip-facts-section grip-facts-section--label-{{ section.settings.label_position }}{% unless show_media %} grip-facts-section--no-media{% endunless %}"
+    style="--grip-panel-bg: {{ section.settings.panel_background }}; --grip-panel-text: {{ section.settings.panel_text }};"
+  >
+    <div class="grip-facts-section__head">
+      {%- if section.settings.label != blank -%}
+        <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="grip-display h2">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="grip-facts-section__text grip-muted">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+      {% render 'grip-about-actions',
+        primary_label: section.settings.button_label,
+        primary_link: section.settings.button_link,
+        secondary_label: section.settings.button_2_label,
+        secondary_link: section.settings.button_2_link,
+        arrow: true
+      %}
+    </div>
+
+    {%- if show_media -%}
+      <div class="grip-facts-section__media">
+        {%- if has_image -%}
+          {% render 'grip-image',
+            desktop: section.settings.image,
+            widths: '600, 900, 1200, 1600, 2000',
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            alt: section.settings.heading
+          %}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'grip-placeholder' }}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="grip-facts-section__panel">
+      <div class="grip-facts">
+        {%- if section.settings.panel_title != blank -%}
+          <p class="grip-facts__title">{{ section.settings.panel_title | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.serving_size != blank or section.settings.servings != blank -%}
+          <p class="grip-facts__serving">
+            {%- if section.settings.serving_size != blank -%}
+              <span>{{ section.settings.serving_size | escape }}</span>
+            {%- endif -%}
+            {%- if section.settings.servings != blank -%}
+              <span>{{ section.settings.servings | escape }}</span>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+
+        <table class="grip-facts__table">
+          <thead>
+            <tr>
+              <th scope="col">{{ section.settings.amount_header | escape }}</th>
+              <th scope="col"><span class="visually-hidden">Amount</span></th>
+              <th scope="col">{{ section.settings.dv_header | escape }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- if section.blocks.size > 0 -%}
+              {% content_for 'blocks' %}
+            {%- elsif request.design_mode -%}
+              <tr>
+                <td colspan="3"><p class="grip-editor-note">Add label row blocks.</p></td>
+              </tr>
+            {%- endif -%}
+          </tbody>
+        </table>
+
+        {%- if section.settings.footnote != blank -%}
+          <p class="grip-facts__footnote">{{ section.settings.footnote | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.ingredients != blank -%}
+        <div class="grip-facts__ingredients">{{ section.settings.ingredients }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.show_note and section.settings.note != blank -%}
+        <p class="grip-facts__note grip-muted" role="note">{{ section.settings.note | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.show_disclaimer and section.settings.disclaimer != blank -%}
+        <p class="grip-facts__disclaimer grip-muted">{{ section.settings.disclaimer | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-facts-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'head'
+      'panel'
+      'media';
+    gap: var(--grip-gap-xl);
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        'head panel'
+        'media panel';
+      column-gap: clamp(3rem, 6vw, 7rem);
+      align-items: start;
+    }
+  }
+
+  .grip-facts-section--label-left {
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      grid-template-areas:
+        'panel head'
+        'panel media';
+    }
+  }
+
+  .grip-facts-section--no-media {
+    @media screen and (min-width: 990px) {
+      grid-template-rows: auto;
+      grid-template-areas: 'head panel';
+    }
+  }
+
+  .grip-facts-section--no-media.grip-facts-section--label-left {
+    @media screen and (min-width: 990px) {
+      grid-template-areas: 'panel head';
+    }
+  }
+
+  .grip-facts-section__head {
+    grid-area: head;
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    min-width: 0;
+
+    & .grip-actions {
+      margin-block-start: 0.5rem;
+    }
+  }
+
+  .grip-facts-section__text {
+    max-width: 32rem;
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .grip-facts-section__media {
+    grid-area: media;
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--grip-radius);
+
+    & .grip-image,
+    & .grip-placeholder {
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  .grip-facts-section__panel {
+    grid-area: panel;
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .grip-facts {
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.875rem 1rem 0.75rem;
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.35;
+    font-variant-numeric: tabular-nums;
+    color: var(--grip-panel-text);
+    background: var(--grip-panel-bg);
+    border: 2px solid var(--grip-panel-text);
+    border-radius: var(--grip-radius);
+  }
+
+  .grip-facts__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.875rem, 3vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .grip-facts__serving {
+    margin: 0.25rem 0 0;
+    padding-block-end: 0.5rem;
+    border-block-end: 10px solid currentColor;
+
+    & span {
+      display: block;
+    }
+  }
+
+  .grip-facts__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    & :is(th, td) {
+      padding-block: 0.3125rem;
+      padding-inline: 0;
+      font-weight: 400;
+      text-align: start;
+      vertical-align: baseline;
+      border-block-end: 1px solid currentColor;
+    }
+
+    & :is(th, td):not(:first-child) {
+      padding-inline-start: 0.75rem;
+      text-align: end;
+      white-space: nowrap;
+    }
+
+    & thead :is(th, td) {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      border-block-end-width: 5px;
+    }
+  }
+
+  .grip-fact-row--bold th {
+    font-weight: 700;
+  }
+
+  .grip-fact-row--indent th {
+    padding-inline-start: 1rem;
+  }
+
+  .grip-fact-row--rule-medium > * {
+    border-block-end-width: 3px;
+  }
+
+  .grip-fact-row--rule-thick > * {
+    border-block-end-width: 8px;
+  }
+
+  .grip-facts__footnote {
+    margin: 0.5rem 0 0;
+    font-size: 0.8125rem;
+  }
+
+  .grip-facts__ingredients {
+    max-width: 28rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+
+    & p {
+      margin: 0;
+    }
+  }
+
+  .grip-facts__note {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-style: italic;
+  }
+
+  .grip-facts__disclaimer {
+    max-width: 28rem;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    border: 1px solid var(--color-border);
+    border-radius: var(--grip-radius);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP supplement facts",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "_grip-fact-row" }],
+  "max_blocks": 20,
+  "settings": [
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "THE LABEL" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "WHAT'S ACTUALLY IN IT." },
+    { "type": "text", "id": "text", "label": "Text" },
+    { "type": "header", "content": "Label panel" },
+    { "type": "text", "id": "panel_title", "label": "Title", "default": "Supplement Facts" },
+    { "type": "text", "id": "serving_size", "label": "Serving size line", "default": "Serving Size 1 Stick" },
+    { "type": "text", "id": "servings", "label": "Servings line", "default": "Servings Per Container 25" },
+    { "type": "text", "id": "amount_header", "label": "Amount column heading", "default": "Amount Per Serving" },
+    { "type": "text", "id": "dv_header", "label": "Daily Value column heading", "default": "% Daily Value" },
+    { "type": "text", "id": "footnote", "label": "Footnote", "default": "† Daily Value not established." },
+    { "type": "richtext", "id": "ingredients", "label": "Other ingredients" },
+    {
+      "type": "select",
+      "id": "label_position",
+      "label": "Panel position on desktop",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    { "type": "color", "id": "panel_background", "label": "Panel background", "default": "#FFFFFF" },
+    { "type": "color", "id": "panel_text", "label": "Panel text and rules", "default": "#0B0F16" },
+    { "type": "header", "content": "Notes" },
+    { "type": "checkbox", "id": "show_note", "label": "Show placeholder note", "default": true },
+    { "type": "text", "id": "note", "label": "Placeholder note", "default": "Placeholder — pending manufacturer approval" },
+    { "type": "checkbox", "id": "show_disclaimer", "label": "Show disclaimer", "default": false },
+    { "type": "textarea", "id": "disclaimer", "label": "Disclaimer", "default": "*These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease." },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Optional. 4:3 recommended." },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#F1F3F6" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#0B0F16" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#4A5361" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#D3D8E0" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP supplement facts",
+      "category": "GRIP",
+      "blocks": {
+        "calories": { "type": "_grip-fact-row", "settings": { "nutrient": "Calories", "amount": "0", "style": "bold", "rule": "medium" } },
+        "sodium": { "type": "_grip-fact-row", "settings": { "nutrient": "Sodium", "amount": "1,000mg", "dv": "43%", "style": "bold" } },
+        "potassium": { "type": "_grip-fact-row", "settings": { "nutrient": "Potassium", "amount": "200mg", "dv": "4%", "style": "bold", "rule": "thick" } }
+      },
+      "block_order": ["calories", "sodium", "potassium"]
+    }
+  ]
+}
+{% endschema %}

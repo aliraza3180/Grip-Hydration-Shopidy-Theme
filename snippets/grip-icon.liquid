@@ -1,0 +1,88 @@
+{%- doc -%}
+  Renders a GRIP inline SVG icon. UI icons use a 24px grid with a 1.5px
+  square-capped, miter-joined stroke. Social brand icons reuse Horizon's
+  official glyph paths from the `icon` snippet (filled, 20px grid).
+  Renders nothing for 'none', blank or unknown names.
+
+  @param {string} icon - drop | bolt | molecule | calcium | leaf | sugar-free | flame-off | plus-circle | lock | plus | minus | arrow-right | arrow-left | check | instagram | facebook | tiktok | youtube | x
+  @param {number} [size] - Rendered width and height in px, default 24
+  @param {string} [class] - Extra class names
+
+  @example
+  {% render 'grip-icon', icon: 'drop', size: 28 %}
+{%- enddoc -%}
+
+{%- liquid
+  assign icon_size = size | default: 24
+  assign brand_icons = 'instagram,facebook,tiktok,youtube,x' | split: ','
+  assign ui_icons = 'drop,bolt,molecule,calcium,leaf,sugar-free,flame-off,plus-circle,lock,plus,minus,arrow-right,arrow-left,check' | split: ','
+-%}
+
+{%- if icon != blank and icon != 'none' -%}
+  {%- if brand_icons contains icon -%}
+    <svg
+      class="grip-icon grip-icon--{{ icon }} {{ class }}"
+      width="{{ icon_size }}"
+      height="{{ icon_size }}"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {%- render 'icon', icon: icon -%}
+    </svg>
+  {%- elsif ui_icons contains icon -%}
+    <svg
+      class="grip-icon grip-icon--{{ icon }} {{ class }}"
+      width="{{ icon_size }}"
+      height="{{ icon_size }}"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="square"
+      stroke-linejoin="miter"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {%- case icon -%}
+        {%- when 'drop' -%}
+          <path d="M12 3.5c3.3 4.1 5.5 7.2 5.5 10.2a5.5 5.5 0 0 1-11 0c0-3 2.2-6.1 5.5-10.2Z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/>
+        {%- when 'bolt' -%}
+          <path d="M13.5 2.5 5.5 13.5h6l-1 8 8-11h-6l1-8Z"/>
+        {%- when 'molecule' -%}
+          <path d="M12 2.8 20 7.4v9.2l-8 4.6-8-4.6V7.4l8-4.6Z"/><circle cx="12" cy="12" r="2.6"/>
+        {%- when 'calcium' -%}
+          <path d="M12 3.2 19 9l-7 11.8L5 9l7-5.8Z"/><path d="M5 9h14"/><path d="M9.4 9 12 20.8 14.6 9"/>
+        {%- when 'leaf' -%}
+          <path d="M5 19C5 10.5 10 5 20 4c-.5 10-6 15.5-14.5 15.5"/><path d="M5 19l7.5-7.5"/>
+        {%- when 'sugar-free' -%}
+          <path d="M6.5 6.5h11v11h-11z"/><path d="M6.5 12h11M12 6.5v11"/><path d="M3.5 3.5l17 17"/>
+        {%- when 'flame-off' -%}
+          <path d="M12 21a6 6 0 0 0 6-6c0-3.6-2.4-5.6-3.6-8.6-1.2 2.1-2.6 3.1-2.6 3.1s-.7-3.5-3.3-6c0 3.5-2.5 6-2.5 11.5a6 6 0 0 0 6 6Z"/><path d="M3.5 3.5l17 17"/>
+        {%- when 'plus-circle' -%}
+          <circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/>
+        {%- when 'lock' -%}
+          <rect x="5" y="11" width="14" height="9"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+        {%- when 'plus' -%}
+          <path d="M12 5v14M5 12h14"/>
+        {%- when 'minus' -%}
+          <path d="M5 12h14"/>
+        {%- when 'arrow-right' -%}
+          <path d="M4 12h15M13 6l6 6-6 6"/>
+        {%- when 'arrow-left' -%}
+          <path d="M20 12H5M11 6l-6 6 6 6"/>
+        {%- when 'check' -%}
+          <path d="M5 12.5l4.5 4.5L19 7.5"/>
+      {%- endcase -%}
+    </svg>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
+{% endstylesheet %}

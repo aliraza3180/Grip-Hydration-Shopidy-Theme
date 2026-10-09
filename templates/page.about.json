@@ -1,0 +1,381 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "about_hero": {
+      "type": "grip-about-hero",
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_54_06_AM.png",
+        "grayscale": false,
+        "image_decorative": true,
+        "label": "OUR STORY",
+        "heading": "BUILT BY A GRAPPLER, FOR GRAPPLERS.",
+        "accent_word": "GRAPPLERS.",
+        "accent_color": "#1f6fff",
+        "heading_tag": "h1",
+        "text": "A hydration brand from Edinburg, Texas. Started on the mats, built for everyone who trains.",
+        "button_label": "SHOP BLUE BELT",
+        "button_link": "shopify://collections/all",
+        "button_2_label": "",
+        "button_2_link": "",
+        "content_position": "bottom_left",
+        "height_desktop": 72,
+        "height_mobile": 80,
+        "content_max_width": 760,
+        "content_offset_bottom": 96,
+        "scrim_color": "#05070a",
+        "scrim_opacity": 0,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "about_origin": {
+      "type": "grip-about-origin",
+      "blocks": {
+        "based": {
+          "type": "_grip-about-fact",
+          "settings": {
+            "label": "BASED IN",
+            "value": "EDINBURG, TEXAS",
+            "icon": "none"
+          },
+          "blocks": {}
+        },
+        "built": {
+          "type": "_grip-about-fact",
+          "settings": {
+            "label": "BUILT FOR",
+            "value": "JIU-JITSU, GRAPPLING, WRESTLING, MMA",
+            "icon": "none"
+          },
+          "blocks": {}
+        },
+        "first": {
+          "type": "_grip-about-fact",
+          "settings": {
+            "label": "FIRST RELEASE",
+            "value": "BLUE BELT, BLUE RASPBERRY",
+            "icon": "none"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "based",
+        "built",
+        "first"
+      ],
+      "settings": {
+        "label": "WHERE IT STARTED",
+        "heading": "BUILT FROM INSIDE THE GRAPPLING COMMUNITY.",
+        "heading_size": "h2",
+        "body": "<p>From stepping onto the mats for the first time in May 2025 to earning a blue belt just nine months later, Brazilian Jiu-Jitsu quickly became far more than a sport\u2014it became a lifestyle.</p><p>The relentless grind, endless rounds, and constant test of discipline revealed a common struggle every grappler faces: staying properly hydrated to survive the toughest training sessions. Traditional sports drinks were packed with sugar, and generic hydration powders lacked the heavy-duty electrolyte balance needed for combat sports.</p><p>That gap on the mats birthed GRIP Hydration. Built from deep within the grappling community, GRIP wasn\u2019t created by an outside supplement company guessing what fighters need; it was engineered by grapplers, for grapplers. Inspired by the BJJ belt progression system, each stick pack represents the dedication, resilience, and drive required to level up both on and off the mats.</p><p>Whether you are stepping into your first class as a White Belt or sharpening your game as a Black Belt, GRIP is crafted to keep you performing at your absolute peak.</p><p>Never Lose Your Grip.</p>",
+        "show_page_content": false,
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "",
+        "button_2_link": "",
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "about_belts": {
+      "type": "grip-about-belts",
+      "blocks": {
+        "white": {
+          "type": "_grip-about-belt",
+          "settings": {
+            "status": "coming_soon",
+            "name": "WHITE BELT",
+            "flavor": "Lemon Lime",
+            "tagline": "Begin your journey",
+            "image": "shopify://shop_images/ChatGPTImageSep15_2026_01_12_23AM.png",
+            "belt_color": "#f2f4f7",
+            "bar_color": "#05070a",
+            "link_label": "",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "blue": {
+          "type": "_grip-about-belt",
+          "settings": {
+            "status": "live",
+            "name": "BLUE BELT",
+            "flavor": "Blue Raspberry",
+            "tagline": "Stay consistent",
+            "image": "shopify://shop_images/ChatGPTImageSep15_2026_01_15_59AM.png",
+            "belt_color": "#1f6fff",
+            "bar_color": "#05070a",
+            "link_label": "SHOP NOW",
+            "link": "shopify://collections/all"
+          },
+          "blocks": {}
+        },
+        "purple": {
+          "type": "_grip-about-belt",
+          "settings": {
+            "status": "coming_soon",
+            "name": "PURPLE BELT",
+            "flavor": "Grape",
+            "tagline": "Push your limits",
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_16_10_AM.png",
+            "belt_color": "#7b3fe4",
+            "bar_color": "#05070a",
+            "link_label": "",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "brown": {
+          "type": "_grip-about-belt",
+          "settings": {
+            "status": "coming_soon",
+            "name": "BROWN BELT",
+            "flavor": "Tropical Punch",
+            "tagline": "Trust the process",
+            "image": "shopify://shop_images/ChatGPTImageSep15_2026_01_20_13AM.png",
+            "belt_color": "#8a5a2e",
+            "bar_color": "#05070a",
+            "link_label": "",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "black": {
+          "type": "_grip-about-belt",
+          "settings": {
+            "status": "coming_soon",
+            "name": "BLACK BELT",
+            "flavor": "Black Cherry",
+            "tagline": "Live the lifestyle",
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_20_13_AM.png",
+            "belt_color": "#26262a",
+            "bar_color": "#b3261e",
+            "link_label": "",
+            "link": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "white",
+        "blue",
+        "purple",
+        "brown",
+        "black"
+      ],
+      "settings": {
+        "label": "THE BELT SYSTEM",
+        "heading": "EVERY BELT IS A STAGE.",
+        "text": "The GRIP belt system follows the path every grappler walks. Blue Belt is out now. The rest are on the way.",
+        "live_label": "AVAILABLE NOW",
+        "soon_label": "COMING SOON",
+        "button_label": "SHOP BLUE BELT",
+        "button_link": "shopify://collections/all",
+        "button_2_label": "",
+        "button_2_link": "",
+        "background_color": "#0a0e15",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "about_manifesto": {
+      "type": "grip-about-manifesto",
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_35_50_AM.png",
+        "grayscale": true,
+        "overlay_color": "#05070a",
+        "overlay_opacity": 50,
+        "text": "DISCIPLINE FUELS FREEDOM.",
+        "subtext": "",
+        "text_tag": "p",
+        "text_size": "h1",
+        "alignment": "center",
+        "height_desktop": 60,
+        "height_mobile": 70,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "about_values": {
+      "type": "grip-about-values",
+      "blocks": {
+        "label": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "molecule",
+            "icon_size": 28,
+            "title": "LABEL FACTS. NO HYPE.",
+            "text": "1,000mg sodium, 200mg potassium and 100mg magnesium in every stick. We print the numbers and leave the hype out."
+          },
+          "blocks": {}
+        },
+        "sugar": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "sugar-free",
+            "icon_size": 28,
+            "title": "ZERO SUGAR.",
+            "text": "Sugar-free and keto-friendly, with no artificial sweeteners and no artificial preservatives."
+          },
+          "blocks": {}
+        },
+        "community": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "plus-circle",
+            "icon_size": 28,
+            "title": "BUILT WITH THE COMMUNITY.",
+            "text": "Shaped by the people who show up: at open mats, in wrestling rooms and in the cage."
+          },
+          "blocks": {}
+        },
+        "belt": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "check",
+            "icon_size": 28,
+            "title": "ONE BELT AT A TIME.",
+            "text": "New flavors launch when they're ready, not before. The belt system grows the way you do."
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "label",
+        "sugar",
+        "community",
+        "belt"
+      ],
+      "settings": {
+        "label": "WHAT WE STAND FOR",
+        "heading": "NO SHORTCUTS.",
+        "text": "The same rules we train by go into every stick.",
+        "icon_color": "#1f6fff",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "SEE WHAT'S INSIDE",
+        "button_2_link": "shopify://pages/science",
+        "background_color": "#f1f3f6",
+        "text_color": "#0b0f16",
+        "muted_color": "#4a5361",
+        "hairline_color": "#d3d8e0",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "about_founder": {
+      "type": "grip-about-founder",
+      "settings": {
+        "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_15_21_AM.png",
+        "grayscale": true,
+        "image_position": "left",
+        "label": "A NOTE FROM THE FOUNDER",
+        "quote": "<p>I didn't set out to build a supplement company. I wanted something I'd actually drink between rounds, and something the people on my mats would drink too.</p><p>GRIP isn't mine. It belongs to everyone who shows up and trains.</p>",
+        "signature_name": "ARTURO SALINAS",
+        "signature_role": "Founder, GRIP Hydration",
+        "show_rule": true,
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "",
+        "button_2_link": "",
+        "background_color": "#0a0e15",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "about_cta": {
+      "type": "grip-about-cta",
+      "blocks": {
+        "signup": {
+          "type": "email-signup",
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "heading": "",
+            "heading_text_color": "",
+            "heading_preset": "h3",
+            "border_style": "all",
+            "input_style": "custom",
+            "border_width": 1,
+            "border_radius": 4,
+            "input_background_color": "#111823",
+            "input_text_color": "#f2f4f7",
+            "input_border_color": "#8b95a6",
+            "input_type_preset": "paragraph",
+            "style_class": "button",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
+            "display_type": "text",
+            "label": "SIGN UP",
+            "integrated_button": false,
+            "button_type_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "signup"
+      ],
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_35_02_AM.png",
+        "grayscale": false,
+        "show_gradient": false,
+        "gradient_color": "#0a2350",
+        "gradient_opacity": 90,
+        "label": "",
+        "heading": "JOIN THE GRIP.",
+        "text": "Early access to new belts, and nothing else.",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "SHOP BLUE BELT",
+        "button_2_link": "shopify://collections/all",
+        "alignment": "left",
+        "content_spacing": 160,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "error_color": "#ff8a80",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "about_hero",
+    "about_origin",
+    "about_belts",
+    "about_manifesto",
+    "about_values",
+    "about_founder",
+    "about_cta"
+  ]
+}

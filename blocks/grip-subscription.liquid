@@ -1,0 +1,266 @@
+{%- doc -%}
+  Subscribe & Save selector for Horizon product details. Renders one-time and
+  selling plan options from the product's real selling plan data. Posts
+  exactly one field, a hidden `selling_plan` input linked to the buy-buttons
+  form, disabled when one-time purchase is selected. Hidden on the storefront
+  when the product has no selling plans.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign product = closest.product
+  assign variant = product.selected_or_first_available_variant
+  assign form_id = 'BuyButtons-ProductForm-' | append: section.id
+  assign use_currency = settings.currency_code_enabled_product_pages
+
+  assign preselected = product.selected_selling_plan.id
+  if preselected == blank and product.requires_selling_plan
+    assign preselected = product.selected_or_first_available_selling_plan_allocation.selling_plan.id
+  endif
+  if preselected == blank and block.settings.default_selection == 'first_plan'
+    assign preselected = variant.selling_plan_allocations.first.selling_plan.id
+  endif
+-%}
+
+{%- if product == blank or product.selling_plan_groups.size == 0 -%}
+  {%- if request.design_mode -%}
+    <p class="grip-editor-note" {{ block.shopify_attributes }}>
+      Subscribe &amp; Save: this product has no selling plans yet, so the selector is hidden on the storefront.
+    </p>
+  {%- endif -%}
+{%- else -%}
+  <script src="{{ 'grip-subscription.js' | asset_url }}" type="module" defer></script>
+
+  <grip-subscription
+    class="grip-subscription spacing-style"
+    style="{% render 'spacing-style', settings: block.settings %}"
+    data-sync-price="{{ block.settings.sync_main_price }}"
+    {{ block.shopify_attributes }}
+  >
+    <input
+      type="hidden"
+      name="selling_plan"
+      form="{{ form_id }}"
+      value="{{ preselected }}"
+      data-grip-selling-plan
+      {% if preselected == blank %}
+        disabled
+      {% endif %}
+    >
+
+    <fieldset class="grip-subscription__fieldset">
+      <legend class="grip-label grip-subscription__legend">{{ block.settings.legend | escape }}</legend>
+
+      {%- unless product.requires_selling_plan -%}
+        {%- liquid
+          assign one_time_price = variant.price | money
+          if use_currency
+            assign one_time_price = variant.price | money_with_currency
+          endif
+        -%}
+        <label class="grip-subscription__option" for="GripPlan-{{ block.id }}-once">
+          <input
+            class="grip-subscription__radio"
+            type="radio"
+            id="GripPlan-{{ block.id }}-once"
+            name="grip-purchase-{{ block.id }}"
+            value=""
+            data-price="{{ one_time_price | escape }}"
+            {% if preselected == blank %}
+              checked
+            {% endif %}
+          >
+          <span class="grip-subscription__name">{{ block.settings.one_time_label | escape }}</span>
+          <span class="grip-subscription__price">{{ one_time_price }}</span>
+        </label>
+      {%- endunless -%}
+
+      {%- for group in product.selling_plan_groups -%}
+        {%- assign allocations = variant.selling_plan_allocations | where: 'selling_plan_group_id', group.id -%}
+        {%- if product.selling_plan_groups.size > 1 -%}
+          <p class="grip-label grip-label--muted grip-subscription__group">{{ group.name | escape }}</p>
+        {%- endif -%}
+
+        {%- for allocation in allocations -%}
+          {%- liquid
+            assign plan = allocation.selling_plan
+            assign savings = 0
+            if allocation.compare_at_price > allocation.price
+              assign savings = allocation.compare_at_price | minus: allocation.price | times: 100.0 | divided_by: allocation.compare_at_price | round
+            elsif plan.price_adjustments.first.value_type == 'percentage'
+              assign savings = plan.price_adjustments.first.value
+            endif
+
+            assign plan_price = allocation.price | money
+            if use_currency
+              assign plan_price = allocation.price | money_with_currency
+            endif
+          -%}
+          <label class="grip-subscription__option" for="GripPlan-{{ block.id }}-{{ plan.id }}">
+            <input
+              class="grip-subscription__radio"
+              type="radio"
+              id="GripPlan-{{ block.id }}-{{ plan.id }}"
+              name="grip-purchase-{{ block.id }}"
+              value="{{ plan.id }}"
+              data-price="{{ plan_price | escape }}"
+              {% if preselected == plan.id %}
+                checked
+              {% endif %}
+              {% if block.settings.show_plan_description and plan.description != blank %}
+                aria-describedby="GripPlanDesc-{{ block.id }}-{{ plan.id }}"
+              {% endif %}
+            >
+            <span class="grip-subscription__name">{{ plan.name | escape }}</span>
+            <span class="grip-subscription__price">{{ plan_price }}</span>
+            {%- if savings > 0 -%}
+              <span class="grip-label grip-subscription__badge">
+                {{- block.settings.savings_label | escape | replace: '[percent]', savings -}}
+              </span>
+            {%- endif -%}
+            {%- if block.settings.show_plan_description and plan.description != blank -%}
+              <span class="grip-subscription__desc" id="GripPlanDesc-{{ block.id }}-{{ plan.id }}">
+                {{- plan.description | escape -}}
+              </span>
+            {%- endif -%}
+          </label>
+        {%- endfor -%}
+      {%- endfor -%}
+    </fieldset>
+
+    {%- if block.settings.show_policy_link and shop.subscription_policy.body != blank -%}
+      <a class="grip-subscription__policy" href="{{ shop.subscription_policy.url }}">
+        {{- block.settings.policy_label | escape -}}
+      </a>
+    {%- endif -%}
+
+    <p class="visually-hidden" aria-live="polite" data-grip-live></p>
+  </grip-subscription>
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-subscription {
+    display: block;
+  }
+
+  .grip-subscription__fieldset {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .grip-subscription__legend {
+    margin-block-end: 0.5rem;
+    padding: 0;
+  }
+
+  .grip-subscription__group {
+    margin-block-start: 0.5rem;
+  }
+
+  .grip-subscription__option {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.25rem 0.875rem;
+    min-height: 3.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--grip-radius);
+    cursor: pointer;
+    transition: border-color var(--animation-speed) var(--animation-timing-hover);
+
+    &:hover {
+      border-color: rgb(var(--color-foreground-rgb) / 0.5);
+    }
+
+    &:has(.grip-subscription__radio:checked) {
+      border-color: var(--grip-accent);
+    }
+
+    &:has(.grip-subscription__radio:focus-visible) {
+      outline: 2px solid var(--grip-accent);
+      outline-offset: 2px;
+    }
+  }
+
+  .grip-subscription__radio {
+    grid-row: span 2;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    accent-color: var(--grip-accent);
+  }
+
+  .grip-subscription__name {
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .grip-subscription__price {
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+  }
+
+  .grip-subscription__badge {
+    grid-column: 2;
+    color: var(--grip-accent);
+  }
+
+  .grip-subscription__desc {
+    grid-column: 2 / -1;
+    font-size: 0.875rem;
+    color: var(--grip-muted, var(--grip-muted-default));
+  }
+
+  .grip-subscription__policy {
+    display: inline-block;
+    margin-block-start: 0.75rem;
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP subscribe & save",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows purchase options from the product's selling plans. Requires a subscription app (for example Shopify Subscriptions). Hidden when the product has no plans."
+    },
+    { "type": "text", "id": "legend", "label": "Heading", "default": "PURCHASE OPTIONS" },
+    { "type": "text", "id": "one_time_label", "label": "One-time label", "default": "ONE-TIME PURCHASE" },
+    { "type": "text", "id": "savings_label", "label": "Savings label", "info": "[percent] is replaced with the plan's real discount.", "default": "SAVE [percent]%" },
+    {
+      "type": "select",
+      "id": "default_selection",
+      "label": "Selected by default",
+      "options": [
+        { "value": "one_time", "label": "One-time purchase" },
+        { "value": "first_plan", "label": "First subscription plan" }
+      ],
+      "default": "one_time"
+    },
+    { "type": "checkbox", "id": "show_plan_description", "label": "Show plan descriptions", "default": true },
+    { "type": "checkbox", "id": "show_policy_link", "label": "Show subscription policy link", "default": true },
+    { "type": "text", "id": "policy_label", "label": "Policy link label", "default": "Subscription policy" },
+    { "type": "checkbox", "id": "sync_main_price", "label": "Update the main price when an option is selected", "default": true },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 64, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 64, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP subscribe & save",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

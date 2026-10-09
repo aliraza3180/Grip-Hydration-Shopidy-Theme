@@ -1,0 +1,220 @@
+{%- liquid
+  assign source_products = collections.all.products
+  if section.settings.collection != blank
+    assign source_products = section.settings.collection.products
+  endif
+
+  assign current_product_id = product.id
+  assign max_products = section.settings.max_products
+
+  capture belt_colors
+    echo 'white-belt:' | append: section.settings.color_white | append: '|'
+    echo 'blue-belt:' | append: section.settings.color_blue | append: '|'
+    echo 'purple-belt:' | append: section.settings.color_purple | append: '|'
+    echo 'brown-belt:' | append: section.settings.color_brown | append: '|'
+    echo 'black-belt:' | append: section.settings.color_black
+  endcapture
+
+  assign shown = 0
+-%}
+
+{%- capture cards -%}
+  {%- for card_product in source_products -%}
+    {%- if card_product.id == current_product_id -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- if shown >= max_products -%}
+      {%- break -%}
+    {%- endif -%}
+    {%- assign shown = shown | plus: 1 -%}
+    {%- assign card_key = section.id | append: '-' | append: card_product.id -%}
+    <li class="grip-related__item">
+      {% render 'grip-product-card',
+        key: card_key,
+        section_id: section.id,
+        product: card_product,
+        status: 'auto',
+        coming_soon_tag: section.settings.coming_soon_tag,
+        belt_colors: belt_colors,
+        pack_text: section.settings.pack_text,
+        live_label: section.settings.status_live_label,
+        sold_out_label: section.settings.status_sold_out_label,
+        soon_label: section.settings.status_soon_label,
+        add_label: section.settings.add_label,
+        choose_label: section.settings.choose_label,
+        image_sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 78vw',
+        show_notify: section.settings.show_notify,
+        notify_label: section.settings.notify_label,
+        submit_label: section.settings.submit_label,
+        email_label: section.settings.email_label,
+        email_placeholder: section.settings.email_placeholder,
+        success_text: section.settings.success_text,
+        consent_note: section.settings.consent_note
+      %}
+    </li>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if shown > 0 or request.design_mode -%}
+  {% capture children %}
+    <div class="grip-related">
+      <div class="grip-related__head">
+        <div class="grip-related__intro">
+          {%- if section.settings.label != blank -%}
+            <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="grip-display h2 grip-related__heading">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+        </div>
+        {%- render 'grip-button',
+          label: section.settings.button_label,
+          link: section.settings.button_link,
+          style: 'secondary',
+          arrow: true
+        -%}
+      </div>
+
+      {%- if shown > 0 -%}
+        <ul
+          class="grip-related__list"
+          role="list"
+          style="--grip-card-bg: {{ section.settings.card_background }}; --grip-card-border: {{ section.settings.card_border }};"
+        >
+          {{ cards }}
+        </ul>
+      {%- else -%}
+        <p class="grip-editor-note">Related products: the selected collection has no other products.</p>
+      {%- endif -%}
+    </div>
+  {% endcapture %}
+
+  {% render 'grip-section', section: section, children: children %}
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-related {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--grip-gap-xl, 2.5rem);
+  }
+
+  .grip-related__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+
+  .grip-related__intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .grip-related__intro .grip-label {
+    margin: 0;
+  }
+
+  .grip-related__heading.grip-related__heading.grip-related__heading {
+    margin: 0;
+    font-size: clamp(2rem, 1.25rem + 3vw, 3.5rem);
+    line-height: 0.92;
+  }
+
+  .grip-related__head .grip-actions {
+    margin: 0;
+  }
+
+  .grip-related__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(max(15rem, calc((100% - 3rem) / 4)), 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media screen and (max-width: 749px) {
+      display: flex;
+      gap: 0.75rem;
+      padding-block-end: 0.25rem;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+  }
+
+  .grip-related__item {
+    display: flex;
+    min-width: 0;
+
+    @media screen and (max-width: 749px) {
+      flex: 0 0 78%;
+      scroll-snap-align: start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP related products",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "GRIP product cards for other products in a collection. On a product page the current product is left out."
+    },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave blank to use all products. Use a manual collection to control the order." },
+    { "type": "range", "id": "max_products", "label": "Products shown", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "label", "label": "Label", "default": "RELATED PRODUCTS" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "MORE FROM THE BELT SYSTEM." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "VIEW ALL PRODUCTS" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "The button is hidden until a link is set." },
+    { "type": "header", "content": "Cards" },
+    { "type": "text", "id": "pack_text", "label": "Pack size text", "default": "25 Stick Packs" },
+    { "type": "text", "id": "add_label", "label": "Add to cart label", "default": "ADD TO CART" },
+    { "type": "text", "id": "choose_label", "label": "Product page button label", "default": "VIEW PRODUCT", "info": "Used for products with several variants or a required subscription." },
+    { "type": "text", "id": "status_live_label", "label": "In stock badge", "default": "AVAILABLE NOW" },
+    { "type": "text", "id": "status_sold_out_label", "label": "Sold out badge", "default": "SOLD OUT" },
+    { "type": "text", "id": "status_soon_label", "label": "Coming soon badge", "default": "COMING SOON" },
+    { "type": "text", "id": "coming_soon_tag", "label": "Coming soon product tag", "default": "coming-soon", "info": "Out-of-stock products with this tag hide their price and show the coming soon badge." },
+    { "type": "color", "id": "card_background", "label": "Card background", "default": "#0A0E15" },
+    { "type": "color", "id": "card_border", "label": "Card border", "default": "#1D2634" },
+    { "type": "header", "content": "Flavor colors" },
+    { "type": "color", "id": "color_white", "label": "White Belt", "info": "Leave blank to use the text color." },
+    { "type": "color", "id": "color_blue", "label": "Blue Belt", "default": "#3D82FF" },
+    { "type": "color", "id": "color_purple", "label": "Purple Belt", "default": "#A07CF0" },
+    { "type": "color", "id": "color_brown", "label": "Brown Belt" },
+    { "type": "color", "id": "color_black", "label": "Black Belt" },
+    { "type": "header", "content": "Notify me (out of stock)" },
+    { "type": "checkbox", "id": "show_notify", "label": "Show notify button", "default": true },
+    { "type": "text", "id": "notify_label", "label": "Button label", "default": "NOTIFY ME" },
+    { "type": "text", "id": "submit_label", "label": "Submit label", "default": "NOTIFY ME" },
+    { "type": "text", "id": "email_label", "label": "Email field label (screen readers)", "default": "Email for stock updates" },
+    { "type": "text", "id": "email_placeholder", "label": "Email placeholder", "default": "Email address" },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "You're on the list. We'll let you know when this Belt drops." },
+    { "type": "text", "id": "consent_note", "label": "Consent note", "default": "We'll email you when it's available. Unsubscribe anytime." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Lines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 96 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP related products",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

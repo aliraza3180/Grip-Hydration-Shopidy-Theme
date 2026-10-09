@@ -1,0 +1,376 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "faq_hero": {
+      "type": "grip-contact-hero",
+      "settings": {
+        "label": "FAQ",
+        "heading": "REAL QUESTIONS. STRAIGHT ANSWERS.",
+        "accent_word": "ANSWERS.",
+        "accent_color": "#1f6fff",
+        "heading_tag": "h1",
+        "text": "What people ask before and after they order. Can't find yours? Get in touch.",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "CONTACT US",
+        "button_2_link": "shopify://pages/contact",
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_10_33_40_PM.png",
+        "overlay_color": "#05070a",
+        "overlay_opacity": 70,
+        "alignment": "left",
+        "content_padding_top": 120,
+        "content_padding_bottom": 56,
+        "show_rule": false,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "faq_nav": {
+      "type": "grip-faq-nav",
+      "blocks": {
+        "product": {
+          "type": "_grip-faq-link",
+          "settings": {
+            "label": "THE PRODUCT",
+            "target": "product"
+          },
+          "blocks": {}
+        },
+        "orders": {
+          "type": "_grip-faq-link",
+          "settings": {
+            "label": "ORDERS & SHIPPING",
+            "target": "orders"
+          },
+          "blocks": {}
+        },
+        "belts": {
+          "type": "_grip-faq-link",
+          "settings": {
+            "label": "THE BELT SYSTEM",
+            "target": "belt-system"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "product",
+        "orders",
+        "belts"
+      ],
+      "settings": {
+        "label": "JUMP TO",
+        "nav_label": "FAQ topics",
+        "alignment": "left",
+        "show_rule": true,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 20,
+        "padding-block-end": 0
+      }
+    },
+    "faq_product": {
+      "type": "grip-contact-faq",
+      "blocks": {
+        "inside": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "What's in a stick of Blue Belt?",
+            "answer": "<p>Each stick has 1,000mg sodium, 200mg potassium, 100mg magnesium and 30mg calcium, with 0g sugar. The full label is on The Science page.</p>",
+            "open": true
+          },
+          "blocks": {}
+        },
+        "taste": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "What does it taste like?",
+            "answer": "<p>Blue Belt is Blue Raspberry flavored.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "sugar": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "Is it sugar-free?",
+            "answer": "<p>Yes. Blue Belt is sugar-free, with no artificial sweeteners and no artificial preservatives.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "diet": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "Is it vegan and keto-friendly?",
+            "answer": "<p>Yes. Blue Belt is vegan, keto-friendly and non-GMO.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "caffeine": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "Does it contain caffeine?",
+            "answer": "<p>No. GRIP is caffeine-free. It's an electrolyte formula \u2014 sodium, potassium, magnesium and calcium \u2014 with no stimulants.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "use": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "How do I use it?",
+            "answer": "<p>Mix 1 stick pack with 16–20 oz of cold water. Shake or stir thoroughly before, during, or after training.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "box": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "How many sticks are in a box?",
+            "answer": "<p>25 sticks per box.</p>",
+            "open": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "inside",
+        "taste",
+        "sugar",
+        "diet",
+        "caffeine",
+        "use",
+        "box"
+      ],
+      "settings": {
+        "anchor": "product",
+        "label": "THE PRODUCT",
+        "heading": "WHAT'S IN THE STICK.",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "SEE THE FULL LABEL",
+        "button_2_link": "shopify://pages/science",
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 120,
+        "padding-block-end": 160
+      }
+    },
+    "faq_orders": {
+      "type": "grip-contact-faq",
+      "blocks": {
+        "where": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "Where is my order?",
+            "answer": "<p>Your shipping confirmation email has a tracking link. If your order hasn't arrived or tracking hasn't updated, send us a message with your order number.</p>",
+            "open": true
+          },
+          "blocks": {}
+        },
+        "subscribe": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "Do you offer Subscribe & Save?",
+            "answer": "<p>Yes. Subscribe &amp; Save takes 15% off each box: $42.49 instead of $49.99.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "shipping": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "How much is shipping?",
+            "answer": "<p>Shipping is calculated at checkout based on your delivery address. Full rates and delivery options will be published before Blue Belt ships in December.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "international": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>We currently ship across the United States. International shipping options will roll out soon.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "returns": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>Nothing has shipped yet \u2014 Blue Belt arrives in December. Full returns and refund details will be published before the first orders go out. If you have a question in the meantime, <a href=\"/pages/contact\">get in touch</a>.</p>",
+            "open": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "where",
+        "subscribe",
+        "shipping",
+        "international",
+        "returns"
+      ],
+      "settings": {
+        "anchor": "orders",
+        "label": "ORDERS",
+        "heading": "ORDERS & SHIPPING.",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "CONTACT US",
+        "button_2_link": "shopify://pages/contact",
+        "background_color": "#0a0e15",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "faq_belts": {
+      "type": "grip-contact-faq",
+      "blocks": {
+        "what": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "What is the belt system?",
+            "answer": "<p>Each GRIP flavor is named after a jiu-jitsu belt, from White to Black. Blue Belt is the first one out.</p>",
+            "open": true
+          },
+          "blocks": {}
+        },
+        "when": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "When do the other belts launch?",
+            "answer": "<p>Blue Belt is available now. White, Purple, Brown and Black are coming soon.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "notify": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "How do I hear about new belts?",
+            "answer": "<p>Join the GRIP email list at the bottom of this page to hear about new belts as they launch.</p>",
+            "open": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "what",
+        "when",
+        "notify"
+      ],
+      "settings": {
+        "anchor": "belt-system",
+        "label": "THE BELT SYSTEM",
+        "heading": "WHAT'S COMING.",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "SEE THE BELT SYSTEM",
+        "button_2_link": "shopify://pages/about",
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "faq_cta": {
+      "type": "grip-about-cta",
+      "blocks": {
+        "signup": {
+          "type": "email-signup",
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "heading": "",
+            "heading_text_color": "",
+            "heading_preset": "h3",
+            "border_style": "all",
+            "input_style": "custom",
+            "border_width": 1,
+            "border_radius": 4,
+            "input_background_color": "#111823",
+            "input_text_color": "#f2f4f7",
+            "input_border_color": "#8b95a6",
+            "input_type_preset": "paragraph",
+            "style_class": "button",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
+            "display_type": "text",
+            "label": "SIGN UP",
+            "integrated_button": false,
+            "button_type_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "signup"
+      ],
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_36_00_AM.png",
+        "grayscale": false,
+        "show_gradient": false,
+        "gradient_color": "#0a2350",
+        "gradient_opacity": 90,
+        "label": "STILL HAVE A QUESTION?",
+        "heading": "JOIN THE GRIP.",
+        "text": "New belts, launch news and answers to the questions people ask most. Nothing else.",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "CONTACT US",
+        "button_2_link": "shopify://pages/contact",
+        "alignment": "center",
+        "content_spacing": 160,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "error_color": "#ff8a80",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "faq_hero",
+    "faq_nav",
+    "faq_product",
+    "faq_orders",
+    "faq_belts",
+    "faq_cta"
+  ]
+}

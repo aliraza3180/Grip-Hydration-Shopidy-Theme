@@ -1,0 +1,53 @@
+{%- doc -%}
+  One photo panel in the GRIP "Built for the mats" row. The parent section
+  applies the optional tint in CSS, so images stay reusable.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{% capture panel_inner %}
+  <div class="grip-sport-panel__media">
+    {%- if block.settings.image != blank -%}
+      {{
+        block.settings.image
+        | image_url: width: 1440
+        | image_tag:
+          widths: '360, 540, 720, 1080, 1440',
+          sizes: '(min-width: 990px) 25vw, 50vw',
+          loading: 'lazy',
+          class: 'grip-sport-panel__image'
+      }}
+    {%- elsif request.design_mode -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'grip-placeholder' }}
+    {%- endif -%}
+  </div>
+  {%- if block.settings.label != blank -%}
+    <h3 class="grip-display h2 grip-sport-panel__label">{{ block.settings.label | escape }}</h3>
+  {%- endif -%}
+{% endcapture %}
+
+<li class="grip-sport-panel" {{ block.shopify_attributes }}>
+  {%- if block.settings.link != blank -%}
+    <a class="grip-sport-panel__link" href="{{ block.settings.link }}">{{ panel_inner }}</a>
+  {%- else -%}
+    <div class="grip-sport-panel__link">{{ panel_inner }}</div>
+  {%- endif -%}
+</li>
+
+{% schema %}
+{
+  "name": "GRIP sport panel",
+  "tag": null,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait or square action photo." },
+    { "type": "text", "id": "label", "label": "Label", "default": "DISCIPLINE" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ],
+  "presets": [
+    {
+      "name": "GRIP sport panel",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

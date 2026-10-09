@@ -1,0 +1,648 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "product-information",
+      "blocks": {
+        "media-gallery": {
+          "type": "_product-media-gallery",
+          "static": true,
+          "settings": {
+            "media_presentation": "grid",
+            "media_columns": "two",
+            "image_gap": 8,
+            "large_first_image": true,
+            "icons_style": "arrow",
+            "slideshow_controls_style": "counter",
+            "slideshow_mobile_controls_style": "dots",
+            "thumbnail_position": "bottom",
+            "thumbnail_width": 64,
+            "thumbnail_radius": 4,
+            "aspect_ratio": "1",
+            "constrain_to_viewport": false,
+            "media_fit": "cover",
+            "media_radius": 4,
+            "extend_media": false,
+            "zoom": true,
+            "video_loop": false,
+            "hide_variants": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "details_position": "flex-start",
+            "gap": 20,
+            "sticky_details_desktop": true,
+            "background_media": "none",
+            "border": "none",
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "header": {
+              "type": "grip-product-header",
+              "settings": {}
+            },
+            "price": {
+              "type": "price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "type_preset": "h3",
+                "width": "100%",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              }
+            },
+            "divider": {
+              "type": "_divider",
+              "settings": {
+                "thickness": 1,
+                "corner_radius": "square",
+                "divider_color": "#1D2634",
+                "width_percent": 100,
+                "padding-block-start": 4,
+                "padding-block-end": 4
+              }
+            },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": false,
+                "option_label_text_color": "",
+                "variant_style_class": "default",
+                "custom_variant_background": "{{ settings.color_palette.background }}",
+                "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                "selected_variant_style_class": "default",
+                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "grip_subscription": {
+              "type": "grip-subscription",
+              "settings": {}
+            },
+            "buy_buttons_eYQEYi": {
+              "type": "buy-buttons",
+              "settings": {
+                "stacking": true,
+                "text_color": "",
+                "show_pickup_availability": false,
+                "gift_card_form": false,
+                "recipient_button_style": "default",
+                "recipient_button_background": "{{ settings.color_palette.background }}",
+                "recipient_button_text": "{{ settings.color_palette.foreground }}",
+                "recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_style": "default",
+                "selected_recipient_button_background": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_text": "{{ settings.color_palette.background }}",
+                "selected_recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "input_style": "default",
+                "input_background_color": "{{ settings.color_palette.background }}",
+                "input_text_color": "{{ settings.color_palette.foreground }}",
+                "input_border_color": "{{ settings.color_palette.color1 }}",
+                "border_width": 1,
+                "border_radius": 4,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true,
+                  "settings": {
+                    "input_style": "default",
+                    "input_background_color": "{{ settings.color_palette.background }}",
+                    "input_text_color": "{{ settings.color_palette.foreground }}",
+                    "input_border_color": "{{ settings.color_palette.color1 }}",
+                    "border_width": 1,
+                    "border_radius": 4
+                  },
+                  "blocks": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button",
+                    "custom_button_background": "#1A5CE0",
+                    "custom_button_text": "#F2F4F7",
+                    "custom_button_border": "#1A5CE0"
+                  },
+                  "blocks": {}
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                }
+              },
+              "block_order": []
+            },
+            "notify": {
+              "type": "grip-product-notify",
+              "settings": {}
+            },
+            "facts": {
+              "type": "grip-fact-list",
+              "settings": {
+                "fact_1": "25 STICK PACKS PER BOX",
+                "fact_2": "SUGAR-FREE · KETO-FRIENDLY · VEGAN",
+                "fact_3": "SHIPS FROM EDINBURG, TEXAS",
+                "fact_4": ""
+              }
+            },
+            "details": {
+              "type": "accordion",
+              "settings": {
+                "icon": "plus",
+                "dividers": true,
+                "divider_color": "#1D2634",
+                "type_preset": "h6"
+              },
+              "blocks": {
+                "description": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "DETAILS",
+                    "open_by_default": true
+                  },
+                  "blocks": {
+                    "answer": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.description }}",
+                        "width": "100%",
+                        "type_preset": "rte"
+                      }
+                    }
+                  },
+                  "block_order": [
+                    "answer"
+                  ]
+                },
+                "how_to_use": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "HOW TO USE",
+                    "open_by_default": false
+                  },
+                  "blocks": {
+                    "answer": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Mix 1 stick pack with 16–20 oz of cold water. Shake or stir thoroughly before, during, or after training.</p>",
+                        "width": "100%",
+                        "type_preset": "rte"
+                      }
+                    }
+                  },
+                  "block_order": [
+                    "answer"
+                  ]
+                },
+                "supplement_facts": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "SUPPLEMENT FACTS",
+                    "open_by_default": false
+                  },
+                  "blocks": {
+                    "answer": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>See the Supplement Facts label in the product images.</p><p><em>Placeholder — pending manufacturer approval.</em></p>",
+                        "width": "100%",
+                        "type_preset": "rte"
+                      }
+                    }
+                  },
+                  "block_order": [
+                    "answer"
+                  ]
+                },
+                "shipping": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "SHIPPING & RETURNS",
+                    "open_by_default": false
+                  },
+                  "blocks": {
+                    "answer": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>We ship across the United States, with shipping calculated at checkout. Blue Belt ships in December \u2014 full shipping and returns details will be published before the first orders go out.</p>",
+                        "width": "100%",
+                        "type_preset": "rte"
+                      }
+                    }
+                  },
+                  "block_order": [
+                    "answer"
+                  ]
+                }
+              },
+              "block_order": [
+                "description",
+                "how_to_use",
+                "supplement_facts",
+                "shipping"
+              ]
+            },
+            "skin": {
+              "type": "grip-product-skin",
+              "settings": {
+                "split": 56,
+                "extra_padding": 40,
+                "muted_color": "#8B95A6"
+              }
+            }
+          },
+          "block_order": [
+            "header",
+            "price",
+            "divider",
+            "variant_picker_R3rGDr",
+            "grip_subscription",
+            "buy_buttons_eYQEYi",
+            "notify",
+            "facts",
+            "details",
+            "skin"
+          ]
+        }
+      },
+      "settings": {
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": false,
+        "limit_details_width": false,
+        "gap": 48,
+        "enable_sticky_add_to_cart": true,
+        "background_color": "#05070A",
+        "padding-block-start": 24,
+        "padding-block-end": 64
+      }
+    },
+    "grip_claims": {
+      "type": "grip-spec-bar",
+      "blocks": {
+        "hydration": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "drop",
+            "value": "SUPPORTS",
+            "unit": "HYDRATION"
+          }
+        },
+        "sugar": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "sugar-free",
+            "value": "SUGAR",
+            "unit": "FREE"
+          }
+        },
+        "keto": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "flame-off",
+            "value": "KETO",
+            "unit": "FRIENDLY"
+          }
+        },
+        "vegan": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "leaf",
+            "value": "VEGAN",
+            "unit": "NON-GMO"
+          }
+        },
+        "sweeteners": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "molecule",
+            "value": "NO ARTIFICIAL",
+            "unit": "SWEETENERS"
+          }
+        }
+      },
+      "block_order": [
+        "hydration",
+        "sugar",
+        "keto",
+        "vegan",
+        "sweeteners"
+      ],
+      "settings": {}
+    },
+    "grip_formula": {
+      "type": "grip-formula",
+      "blocks": {
+        "sodium": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Sodium",
+            "amount": "1,000mg",
+            "dv": "43%"
+          }
+        },
+        "potassium": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Potassium",
+            "amount": "200mg",
+            "dv": "4%"
+          }
+        },
+        "magnesium": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Magnesium",
+            "amount": "100mg",
+            "dv": "24%"
+          }
+        },
+        "carbs": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Total Carbohydrate",
+            "amount": "0g",
+            "dv": "0%"
+          }
+        },
+        "sugars": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Total Sugars",
+            "amount": "0g",
+            "dv": "0%"
+          }
+        },
+        "calories": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Calories",
+            "amount": "0",
+            "dv": "0%"
+          }
+        },
+        "claim_sugar_free": {
+          "type": "claim",
+          "settings": {
+            "text": "SUGAR-FREE"
+          }
+        },
+        "claim_keto": {
+          "type": "claim",
+          "settings": {
+            "text": "KETO-FRIENDLY"
+          }
+        },
+        "claim_non_gmo": {
+          "type": "claim",
+          "settings": {
+            "text": "NON-GMO"
+          }
+        },
+        "claim_vegan": {
+          "type": "claim",
+          "settings": {
+            "text": "VEGAN"
+          }
+        }
+      },
+      "block_order": [
+        "sodium",
+        "potassium",
+        "magnesium",
+        "carbs",
+        "sugars",
+        "calories",
+        "claim_sugar_free",
+        "claim_keto",
+        "claim_non_gmo",
+        "claim_vegan"
+      ],
+      "settings": {
+        "product_tag": "blue-belt",
+        "button_label": ""
+      }
+    },
+    "grip_related_products": {
+      "type": "grip-related-products",
+      "settings": {
+        "button_link": "/collections/all"
+      }
+    },
+    "grip_discipline": {
+      "type": "grip-discipline",
+      "settings": {
+        "button_link": "/pages/about"
+      }
+    },
+    "grip_reviews": {
+      "type": "grip-reviews",
+      "settings": {}
+    },
+    "grip_faq": {
+      "type": "grip-faq",
+      "blocks": {
+        "faq": {
+          "type": "accordion",
+          "settings": {
+            "icon": "plus",
+            "dividers": true,
+            "divider_color": "#3B4452",
+            "type_preset": "paragraph"
+          },
+          "blocks": {
+            "use": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "How do I use the stick pack?"
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Mix 1 stick pack with 16–20 oz of cold water. Shake or stir thoroughly before, during, or after training.</p>",
+                    "width": "100%",
+                    "type_preset": "rte"
+                  }
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            },
+            "shelf_life": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "What is the shelf life?"
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Our stick packs have a shelf life of 2 years from the manufacturing date.</p>",
+                    "width": "100%",
+                    "type_preset": "rte"
+                  }
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            },
+            "international": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Do you ship internationally?"
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We currently ship across the United States. International shipping options will roll out soon.</p>",
+                    "width": "100%",
+                    "type_preset": "rte"
+                  }
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            },
+            "payment": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "What payment methods do you accept?"
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We accept all major credit cards, Apple Pay, Google Pay, and Shop Pay.</p>",
+                    "width": "100%",
+                    "type_preset": "rte"
+                  }
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            },
+            "returns": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Can I return my order?"
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Nothing has shipped yet \u2014 Blue Belt arrives in December. Full returns and refund details will be published before the first orders go out. If you have a question in the meantime, <a href=\"/pages/contact\">get in touch</a>.</p>",
+                    "width": "100%",
+                    "type_preset": "rte"
+                  }
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            }
+          },
+          "block_order": [
+            "use",
+            "shelf_life",
+            "international",
+            "payment",
+            "returns"
+          ]
+        }
+      },
+      "block_order": [
+        "faq"
+      ],
+      "settings": {
+        "button_link": "/pages/faq"
+      }
+    },
+    "grip_join": {
+      "type": "grip-join",
+      "blocks": {
+        "signup": {
+          "type": "email-signup",
+          "settings": {
+            "border_style": "all",
+            "input_style": "custom",
+            "border_width": 1,
+            "border_radius": 100,
+            "input_background_color": "#0A0E15",
+            "input_text_color": "#F2F4F7",
+            "input_border_color": "#8B95A6",
+            "style_class": "button",
+            "display_type": "text",
+            "label": "SIGN UP",
+            "integrated_button": true
+          }
+        }
+      },
+      "block_order": [
+        "signup"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "grip_claims",
+    "grip_formula",
+    "grip_related_products",
+    "grip_discipline",
+    "grip_reviews",
+    "grip_faq",
+    "grip_join"
+  ]
+}

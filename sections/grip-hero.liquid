@@ -1,0 +1,320 @@
+{%- liquid
+  case section.settings.section_height
+    when 'small'
+      assign hero_height = '60svh'
+    when 'medium'
+      assign hero_height = '72svh'
+    when 'full'
+      assign hero_height = '100svh'
+    when 'custom'
+      assign hero_height = section.settings.height_custom | append: 'svh'
+    else
+      assign hero_height = '88svh'
+  endcase
+
+  assign img_loading = 'lazy'
+  assign img_priority = 'auto'
+  if section.index == 1
+    assign img_loading = 'eager'
+    assign img_priority = 'high'
+  endif
+
+  assign scrim = section.settings.scrim_color
+  assign scrim_alpha = section.settings.scrim_opacity | divided_by: 100.0
+  assign has_image = false
+  if section.settings.image_desktop != blank or section.settings.image_mobile != blank
+    assign has_image = true
+  endif
+
+  capture hero_style
+    echo '--grip-hero-h: ' | append: hero_height | append: ';'
+    echo '--grip-hero-max: ' | append: section.settings.content_max_width | append: 'px;'
+    echo '--grip-hero-bottom: ' | append: section.settings.content_offset_bottom | append: 'px;'
+    echo '--grip-scrim-rgb: ' | append: scrim.red | append: ' ' | append: scrim.green | append: ' ' | append: scrim.blue | append: ';'
+    echo '--grip-scrim-a: ' | append: scrim_alpha | append: ';'
+    echo '--grip-scrim-e: ' | append: section.settings.scrim_extent | append: '%;'
+  endcapture
+-%}
+
+{% render 'measure-header-heights', only_when_first_section: true %}
+
+{% capture children %}
+  <div
+    class="grip-hero grip-hero--{{ section.settings.content_position }} grip-hero--mobile-{{ section.settings.mobile_height }}"
+    style="{{ hero_style | strip_newlines }}"
+  >
+    <div class="grip-hero__media">
+      {%- if has_image -%}
+        {% render 'grip-image',
+          desktop: section.settings.image_desktop,
+          mobile: section.settings.image_mobile,
+          loading: img_loading,
+          fetchpriority: img_priority,
+          decorative: section.settings.image_decorative
+        %}
+      {%- elsif request.design_mode -%}
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'grip-placeholder' }}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.scrim_style != 'none' -%}
+      <div class="grip-hero__scrim grip-hero__scrim--{{ section.settings.scrim_style }}" aria-hidden="true"></div>
+    {%- endif -%}
+
+    <div class="grip-page-grid grip-hero__content">
+      <div class="grip-hero__stack">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+
+    {%- if request.design_mode and section.settings.scrim_style != 'none' and section.settings.scrim_opacity < 55 -%}
+      <p class="grip-editor-note grip-hero__note">Scrim below 55%: check headline contrast against the photo.</p>
+    {%- endif -%}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section',
+  section: section,
+  children: children,
+  width: 'full',
+  class: 'disable-section-top-offset grip-hero-section'
+%}
+
+{% stylesheet %}
+  .grip-hero-wrapper {
+    --grip-hero-offset: 0px;
+  }
+
+  /* With a solid header the hero sits below it, so subtract the header height.
+     With a transparent header the hero already slides under it. */
+  body:has(#header-group > .header-section > #header-component:not([transparent])) .grip-hero-wrapper:first-child {
+    --grip-hero-offset: var(--header-group-height, 0px);
+  }
+
+  .grip-hero {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: calc(var(--grip-hero-h, 88svh) - var(--grip-hero-offset, 0px));
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .grip-hero--center,
+  .grip-hero--center_left {
+    align-items: center;
+  }
+
+  .grip-hero__media,
+  .grip-hero__scrim {
+    position: absolute;
+    inset: 0;
+  }
+
+  .grip-hero__media {
+    z-index: -2;
+  }
+
+  .grip-hero__scrim {
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .grip-hero__scrim--radial_lower_left {
+    background:
+      radial-gradient(
+        130% 110% at 0% 100%,
+        rgb(var(--grip-scrim-rgb) / var(--grip-scrim-a)) 0%,
+        rgb(var(--grip-scrim-rgb) / calc(var(--grip-scrim-a) * 0.85)) 35%,
+        rgb(var(--grip-scrim-rgb) / 0) var(--grip-scrim-e)
+      ),
+      linear-gradient(to top, rgb(var(--grip-scrim-rgb) / calc(var(--grip-scrim-a) * 0.9)) 0%, rgb(var(--grip-scrim-rgb) / 0) 55%),
+      linear-gradient(to right, rgb(var(--grip-scrim-rgb) / calc(var(--grip-scrim-a) * 0.5)) 0%, rgb(var(--grip-scrim-rgb) / 0) 60%);
+
+    @media screen and (max-width: 749px) {
+      background: linear-gradient(
+        to top,
+        rgb(var(--grip-scrim-rgb) / var(--grip-scrim-a)) 0%,
+        rgb(var(--grip-scrim-rgb) / calc(var(--grip-scrim-a) * 0.8)) 40%,
+        rgb(var(--grip-scrim-rgb) / 0) 75%
+      );
+    }
+  }
+
+  .grip-hero__scrim--linear_bottom {
+    background: linear-gradient(to top, rgb(var(--grip-scrim-rgb) / var(--grip-scrim-a)) 0%, rgb(var(--grip-scrim-rgb) / 0) var(--grip-scrim-e));
+  }
+
+  .grip-hero__scrim--linear_left {
+    background: linear-gradient(to right, rgb(var(--grip-scrim-rgb) / var(--grip-scrim-a)) 0%, rgb(var(--grip-scrim-rgb) / 0) var(--grip-scrim-e));
+
+    @media screen and (max-width: 749px) {
+      background: linear-gradient(to top, rgb(var(--grip-scrim-rgb) / var(--grip-scrim-a)) 0%, rgb(var(--grip-scrim-rgb) / 0) 75%);
+    }
+  }
+
+  .grip-hero__content {
+    padding-block: calc(var(--header-group-height, 0px) + var(--grip-gap-xl)) var(--grip-hero-bottom, 96px);
+
+    @media screen and (max-width: 989px) {
+      padding-block-end: calc(var(--grip-hero-bottom, 96px) * 0.7);
+    }
+  }
+
+  .grip-hero__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    max-width: var(--grip-hero-max, 45rem);
+  }
+
+  .grip-hero--bottom_center .grip-hero__stack,
+  .grip-hero--center .grip-hero__stack {
+    align-items: center;
+    justify-self: center;
+    text-align: center;
+  }
+
+  /* Keep the H1 preset's desktop scale but let long words fit narrow phones. */
+  .grip-hero__stack .grip-heading.grip-heading {
+    @media screen and (max-width: 749px) {
+      font-size: clamp(2.75rem, 14vw, 5rem);
+    }
+  }
+
+  .grip-hero--mobile-image {
+    @media screen and (max-width: 749px) {
+      min-height: 0;
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  .grip-hero__note {
+    position: absolute;
+    inset-block-start: calc(var(--header-group-height, 0px) + 1rem);
+    inset-inline-end: 1rem;
+    z-index: 1;
+    background: var(--grip-ink);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP hero",
+  "tag": "section",
+  "class": "grip-hero-wrapper section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [
+    { "type": "grip-eyebrow" },
+    { "type": "grip-heading" },
+    { "type": "grip-subhead" },
+    { "type": "button" }
+  ],
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image", "info": "21:9 recommended. Used on all screens when no mobile image is set." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "4:5 recommended. Shown below 750px." },
+    { "type": "checkbox", "id": "image_decorative", "label": "Decorative image (empty alt text)", "default": false },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Height",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "full", "label": "Full screen" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "range",
+      "id": "height_custom",
+      "label": "Custom height",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 88,
+      "visible_if": "{{ section.settings.section_height == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "options": [
+        { "value": "match", "label": "Same as desktop" },
+        { "value": "image", "label": "Fit 4:5 image" }
+      ],
+      "default": "match"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        { "value": "bottom_left", "label": "Bottom left" },
+        { "value": "bottom_center", "label": "Bottom center" },
+        { "value": "center_left", "label": "Center left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "bottom_left"
+    },
+    { "type": "range", "id": "content_max_width", "label": "Content max width", "min": 320, "max": 960, "step": 20, "unit": "px", "default": 720 },
+    { "type": "range", "id": "content_offset_bottom", "label": "Content bottom offset", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 96 },
+    { "type": "header", "content": "Scrim" },
+    {
+      "type": "select",
+      "id": "scrim_style",
+      "label": "Style",
+      "options": [
+        { "value": "radial_lower_left", "label": "Lower left" },
+        { "value": "linear_bottom", "label": "Bottom" },
+        { "value": "linear_left", "label": "Left" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "radial_lower_left"
+    },
+    { "type": "color", "id": "scrim_color", "label": "Color", "default": "#05070A", "visible_if": "{{ section.settings.scrim_style != 'none' }}" },
+    { "type": "range", "id": "scrim_opacity", "label": "Opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 60, "visible_if": "{{ section.settings.scrim_style != 'none' }}" },
+    { "type": "range", "id": "scrim_extent", "label": "Extent", "min": 30, "max": 100, "step": 5, "unit": "%", "default": 65, "visible_if": "{{ section.settings.scrim_style != 'none' }}" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP hero",
+      "category": "GRIP",
+      "blocks": {
+        "eyebrow": {
+          "type": "grip-eyebrow",
+          "settings": { "text": "BUILT FOR THE MATS. MADE FOR EVERY ROUND.", "tone": "bone" }
+        },
+        "heading": {
+          "type": "grip-heading",
+          "settings": { "text": "NEVER LOSE YOUR GRIP.", "accent_word": "GRIP.", "tag": "h1", "size": "h1", "font": "accent" }
+        },
+        "subhead": {
+          "type": "grip-subhead",
+          "settings": { "text": "Hydration built for the mats." }
+        },
+        "cta": {
+          "type": "button",
+          "settings": { "label": "SHOP BLUE BELT", "link": "shopify://collections/all", "style_class": "button" }
+        }
+      },
+      "block_order": ["eyebrow", "heading", "subhead", "cta"]
+    }
+  ]
+}
+{% endschema %}

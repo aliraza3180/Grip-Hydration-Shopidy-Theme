@@ -1,0 +1,32 @@
+{%- doc -%}
+  One jump link in the GRIP FAQ links section. Points at a GRIP contact
+  questions section whose Section ID matches the target. Renders nothing on
+  the storefront until both the label and target are set.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- assign link_target = block.settings.target | handleize -%}
+
+{%- if block.settings.label != blank and link_target != blank -%}
+  <li {{ block.shopify_attributes }}>
+    <a class="button-secondary grip-button grip-faq-nav__link" href="#{{ link_target }}">
+      {{- block.settings.label | escape -}}
+    </a>
+  </li>
+{%- elsif request.design_mode -%}
+  <li {{ block.shopify_attributes }}>
+    <p class="grip-editor-note">Link: add a label and a section ID</p>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP FAQ link",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "label", "label": "Label", "default": "TOPIC" },
+    { "type": "text", "id": "target", "label": "Section ID", "info": "Must match the Section ID of a GRIP contact questions section on this page, for example: orders" }
+  ]
+}
+{% endschema %}

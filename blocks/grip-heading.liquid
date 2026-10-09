@@ -1,0 +1,181 @@
+{%- doc -%}
+  GRIP display heading. Size, line-height and tracking come from the theme's
+  h1–h6 type presets. An optional accent word is wrapped in a colored span.
+  Use the H1 tag only once per page.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign heading_tag = block.settings.tag | default: 'h2'
+  assign accent_word = block.settings.accent_word
+  assign heading_before = block.settings.text
+  assign heading_after = ''
+  assign has_accent = false
+  if accent_word != blank and block.settings.text contains accent_word
+    assign has_accent = true
+    assign heading_parts = block.settings.text | replace_last: accent_word, '%%grip-accent%%' | split: '%%grip-accent%%'
+    assign heading_before = heading_parts.first
+    if heading_parts.size > 1
+      assign heading_after = heading_parts.last
+    endif
+  endif
+
+  assign size_class = block.settings.size
+  assign size_style = ''
+  assign size_desktop = 0
+  assign size_mobile = 0
+  case block.settings.size
+    when 'xl'
+      assign size_desktop = 96
+      assign size_mobile = 52
+    when 'lg'
+      assign size_desktop = 80
+      assign size_mobile = 44
+    when 'md'
+      assign size_desktop = 64
+      assign size_mobile = 38
+    when 'custom'
+      assign size_desktop = block.settings.size_desktop
+      assign size_mobile = block.settings.size_mobile
+  endcase
+
+  if size_desktop > 0
+    if size_mobile > size_desktop
+      assign size_mobile = size_desktop
+    endif
+    # Scale linearly from the mobile size at 375px to the desktop size at 1440px
+    assign size_slope = size_desktop | minus: size_mobile | times: 100.0 | divided_by: 1065
+    assign size_intercept = size_slope | times: 3.75 | minus: size_mobile | times: -1 | round: 2
+    assign size_slope = size_slope | round: 3
+    assign size_class = 'grip-heading--fluid'
+    assign size_style = '--grip-heading-min: ' | append: size_mobile | append: 'px; --grip-heading-fluid: ' | append: size_intercept | append: 'px + ' | append: size_slope | append: 'vw; --grip-heading-max: ' | append: size_desktop | append: 'px;'
+  endif
+
+  assign font_style = ''
+  if block.settings.font == 'accent'
+    assign font_style = 'font-family: var(--font-accent--family); font-style: var(--font-accent--style); font-weight: var(--font-accent--weight);'
+  endif
+-%}
+
+{%- if block.settings.text != blank -%}
+  <{{ heading_tag }}
+    class="grip-display grip-heading {{ size_class }}"
+    style="--grip-heading-accent: {{ block.settings.accent_color }}; {{ size_style }} {{ font_style }}"
+    {{ block.shopify_attributes }}
+  >
+    {{- heading_before | escape -}}
+    {%- if has_accent -%}
+      <span class="grip-heading__accent">{{ accent_word | escape }}</span>
+      {{- heading_after | escape -}}
+    {%- endif -%}
+  </{{ heading_tag }}>
+{%- elsif request.design_mode -%}
+  <p class="grip-editor-note" {{ block.shopify_attributes }}>Heading: add text</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-heading__accent {
+    color: var(--grip-heading-accent, var(--grip-accent));
+  }
+
+  /* Fluid sizes beat the type presets and section-level heading overrides */
+  .grip-heading.grip-heading--fluid.grip-heading--fluid.grip-heading--fluid {
+    font-size: clamp(var(--grip-heading-min), calc(var(--grip-heading-fluid)), var(--grip-heading-max));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "HEADING"
+    },
+    {
+      "type": "text",
+      "id": "accent_word",
+      "label": "Accent word",
+      "info": "Must match text in the heading exactly. The last match is colored."
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#1F6FFF"
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "HTML tag",
+      "info": "Use H1 only once per page.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Size",
+      "options": [
+        { "value": "h1", "label": "Display (H1 preset)" },
+        { "value": "xl", "label": "Extra large (96px, 52px mobile)" },
+        { "value": "lg", "label": "Large (80px, 44px mobile)" },
+        { "value": "md", "label": "Medium (64px, 38px mobile)" },
+        { "value": "h2", "label": "Section (H2 preset)" },
+        { "value": "h3", "label": "Card (H3 preset)" },
+        { "value": "h4", "label": "Small (H4 preset)" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "size_desktop",
+      "label": "Desktop size",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72,
+      "visible_if": "{{ block.settings.size == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "size_mobile",
+      "label": "Mobile size",
+      "min": 20,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 40,
+      "info": "The heading scales smoothly between the mobile and desktop sizes.",
+      "visible_if": "{{ block.settings.size == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "font",
+      "label": "Font",
+      "options": [
+        { "value": "heading", "label": "Heading" },
+        { "value": "accent", "label": "Accent (oblique)" }
+      ],
+      "default": "heading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "GRIP heading",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

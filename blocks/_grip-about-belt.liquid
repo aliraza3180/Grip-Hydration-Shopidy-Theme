@@ -1,0 +1,104 @@
+{%- doc -%}
+  One belt in the GRIP About page belt system. Explains the belt rather than
+  selling it: no price and no add to cart. A live belt can link to its product.
+  Shows the belt photo when set, otherwise a drawn belt in the belt color.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign is_live = false
+  if block.settings.status == 'live'
+    assign is_live = true
+  endif
+
+  assign status_label = section.settings.soon_label
+  if is_live
+    assign status_label = section.settings.live_label
+  endif
+-%}
+
+<li
+  class="grip-about-belt grip-about-belt--{% if is_live %}live{% else %}soon{% endif %}"
+  style="--grip-belt: {{ block.settings.belt_color }}; --grip-belt-bar: {{ block.settings.bar_color }};"
+  {% if is_live %}
+    aria-current="step"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  <p class="grip-about-belt__status grip-label{% unless is_live %} grip-label--muted{% endunless %}">
+    <span class="grip-about-belt__step" aria-hidden="true"></span>
+    {%- if is_live -%}
+      <span class="grip-about-belt__dot" aria-hidden="true"></span>
+    {%- else -%}
+      {%- render 'grip-icon', icon: 'lock', size: 14 -%}
+    {%- endif -%}
+    {%- if status_label != blank -%}
+      <span>{{ status_label | escape }}</span>
+    {%- endif -%}
+  </p>
+
+  <div class="grip-about-belt__media">
+    {%- if block.settings.image != blank -%}
+      {{
+        block.settings.image
+        | image_url: width: 960
+        | image_tag:
+          widths: '180, 240, 360, 480, 720, 960',
+          sizes: '(min-width: 990px) 18vw, (min-width: 750px) 30vw, 88px',
+          loading: 'lazy',
+          alt: '',
+          class: 'grip-about-belt__image'
+      }}
+    {%- else -%}
+      <span class="grip-about-belt__swatch" aria-hidden="true"></span>
+    {%- endif -%}
+  </div>
+
+  <div class="grip-about-belt__body">
+    {%- if block.settings.name != blank -%}
+      <h3 class="grip-display grip-about-belt__name h4">{{ block.settings.name | escape }}</h3>
+    {%- endif -%}
+    {%- if block.settings.flavor != blank -%}
+      <p class="grip-about-belt__flavor">{{ block.settings.flavor | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.tagline != blank -%}
+      <p class="grip-about-belt__tagline grip-muted">{{ block.settings.tagline | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+      <a class="grip-about-belt__link" href="{{ block.settings.link }}">
+        <span>{{ block.settings.link_label | escape }}</span>
+        {%- render 'grip-icon', icon: 'arrow-right', size: 16 -%}
+      </a>
+    {%- endif -%}
+  </div>
+</li>
+
+{% schema %}
+{
+  "name": "GRIP belt",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "status",
+      "label": "Status",
+      "options": [
+        { "value": "live", "label": "Available" },
+        { "value": "coming_soon", "label": "Coming soon" }
+      ],
+      "default": "coming_soon"
+    },
+    { "type": "text", "id": "name", "label": "Belt name", "default": "BELT" },
+    { "type": "text", "id": "flavor", "label": "Flavor" },
+    { "type": "text", "id": "tagline", "label": "Tagline" },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Belt photo", "info": "Square. When empty, a belt is drawn in the colors below." },
+    { "type": "color", "id": "belt_color", "label": "Belt color", "default": "#F2F4F7" },
+    { "type": "color", "id": "bar_color", "label": "Rank bar color", "default": "#05070A" },
+    { "type": "header", "content": "Link" },
+    { "type": "text", "id": "link_label", "label": "Link label", "info": "For example: SHOP BLUE BELT" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,335 @@
+{%- liquid
+  assign footer_logo = section.settings.logo | default: settings.logo
+  assign logo_sizes = section.settings.logo_width | append: 'px'
+  assign current_year = 'now' | date: '%Y'
+  assign copyright = section.settings.copyright_text | escape | replace: '[year]', current_year
+  assign social_platforms = 'instagram,facebook,tiktok,youtube,x' | split: ','
+
+  assign social_count = 0
+  for platform in social_platforms
+    assign url_key = platform | append: '_url'
+    if section.settings[url_key] != blank
+      assign social_count = social_count | plus: 1
+    endif
+  endfor
+
+  assign show_policies = false
+  if section.settings.show_policies and shop.policies.size > 0
+    assign show_policies = true
+  endif
+
+  assign show_payments = false
+  if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0
+    assign show_payments = true
+  endif
+
+  assign show_localization = false
+  if section.settings.show_country_selector or section.settings.show_language_selector
+    assign show_localization = true
+  endif
+-%}
+
+{% capture children %}
+  <div class="grip-footer" style="--grip-footer-gap: {{ section.settings.column_gap }}px; --grip-footer-logo-w: {{ section.settings.logo_width }}px;">
+    <div class="grip-footer__top">
+      <div class="grip-footer__brand">
+        <a class="grip-footer__logo-link" href="{{ routes.root_url }}">
+          {%- if footer_logo != blank -%}
+            {{
+              footer_logo
+              | image_url: width: 480
+              | image_tag:
+                widths: '120, 240, 360, 480',
+                sizes: logo_sizes,
+                loading: 'lazy',
+                alt: shop.name,
+                class: 'grip-footer__logo'
+            }}
+          {%- else -%}
+            <span class="grip-footer__wordmark grip-display h3">{{ shop.name | escape }}</span>
+          {%- endif -%}
+        </a>
+
+        {%- if section.settings.tagline != blank -%}
+          <p class="grip-footer__tagline grip-label grip-label--muted">{{ section.settings.tagline | escape }}</p>
+        {%- endif -%}
+
+        {%- if social_count > 0 -%}
+          <ul class="grip-footer__social" role="list">
+            {%- for platform in social_platforms -%}
+              {%- liquid
+                assign url_key = platform | append: '_url'
+                assign social_url = section.settings[url_key]
+                assign has_profile = false
+                if social_url != blank
+                  assign url_parts = social_url | split: '//' | last | split: '/'
+                  if url_parts.size > 1 and url_parts[1] != ''
+                    assign has_profile = true
+                  endif
+                endif
+
+                case platform
+                  when 'instagram'
+                    assign platform_name = 'Instagram'
+                  when 'facebook'
+                    assign platform_name = 'Facebook'
+                  when 'tiktok'
+                    assign platform_name = 'TikTok'
+                  when 'youtube'
+                    assign platform_name = 'YouTube'
+                  else
+                    assign platform_name = 'X'
+                endcase
+              -%}
+              {%- if has_profile -%}
+                <li>
+                  <a
+                    class="grip-footer__social-link"
+                    href="{{ social_url }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="{{ shop.name | escape }} on {{ platform_name }} (opens in a new tab)"
+                  >
+                    {%- render 'grip-icon', icon: platform, size: 20 -%}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="grip-footer__blocks" style="--grip-footer-menus: {{ section.blocks.size }};">
+          {% content_for 'blocks' %}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="grip-footer__bottom">
+      {%- if copyright != blank -%}
+        <p class="grip-footer__copyright grip-muted">{{ copyright }}</p>
+      {%- endif -%}
+
+      {%- if show_policies -%}
+        <ul class="grip-footer__policies" role="list">
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank -%}
+              <li><a class="grip-footer__policy-link" href="{{ policy.url }}">{{ policy.title | escape }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if show_payments -%}
+        <ul class="grip-footer__payments" role="list" aria-label="{{ section.settings.payment_label | escape }}">
+          {%- for type in shop.enabled_payment_types -%}
+            <li>{{ type | payment_type_svg_tag: class: 'icon icon--full-color grip-footer__payment-icon' }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if show_localization -%}
+        <div class="grip-footer__localization">
+          {% render 'localization-form',
+            show_country: section.settings.show_country_selector,
+            show_language: section.settings.show_language_selector,
+            localization_style: 'dropdown',
+            form_id: section.id
+          %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-footer {
+    display: grid;
+    gap: var(--grip-gap-2xl);
+  }
+
+  .grip-footer__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--grip-footer-gap, 3rem);
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: 4fr 8fr;
+    }
+  }
+
+  .grip-footer__brand {
+    display: grid;
+    align-content: start;
+    gap: var(--grip-gap-md);
+  }
+
+  .grip-footer__logo-link {
+    display: inline-block;
+    justify-self: start;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .grip-footer__logo {
+    display: block;
+    width: var(--grip-footer-logo-w, 120px);
+    height: auto;
+  }
+
+  .grip-footer__wordmark,
+  .grip-footer__tagline {
+    margin: 0;
+  }
+
+  .grip-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grip-footer__social-link {
+    display: grid;
+    place-items: center;
+    min-width: var(--minimum-touch-target, 44px);
+    min-height: var(--minimum-touch-target, 44px);
+    color: inherit;
+    border-radius: var(--grip-radius);
+
+    &:hover {
+      color: var(--grip-accent);
+    }
+  }
+
+  /* Menu columns; any block containing a form (newsletter) spans the full row. */
+  .grip-footer__blocks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grip-footer-gap, 3rem);
+
+    @media screen and (min-width: 750px) {
+      grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    }
+
+    & > :has(form) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .grip-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-block-start: var(--grip-gap-md);
+    border-block-start: 1px solid var(--color-border);
+
+    @media screen and (max-width: 749px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .grip-footer__copyright {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .grip-footer__policies,
+  .grip-footer__payments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grip-footer__policy-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: 0.875rem;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+  }
+
+  .grip-footer__payments {
+    gap: 0.5rem;
+  }
+
+  .grip-footer__payment-icon {
+    width: 2.375rem;
+    height: 1.5rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP footer",
+  "tag": "div",
+  "class": "section-wrapper",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "blocks": [
+    { "type": "grip-footer-menu" },
+    { "type": "email-signup" }
+  ],
+  "max_blocks": 5,
+  "settings": [
+    { "type": "header", "content": "Brand" },
+    { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Falls back to the theme logo, then the store name." },
+    { "type": "range", "id": "logo_width", "label": "Logo width", "min": 60, "max": 240, "step": 4, "unit": "px", "default": 120 },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "BUILT FOR THE MATS. MADE FOR EVERY ROUND." },
+    { "type": "header", "content": "Social links" },
+    { "type": "paragraph", "content": "Icons show only for full profile URLs, not bare domains." },
+    { "type": "url", "id": "instagram_url", "label": "Instagram" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook" },
+    { "type": "url", "id": "tiktok_url", "label": "TikTok" },
+    { "type": "url", "id": "youtube_url", "label": "YouTube" },
+    { "type": "url", "id": "x_url", "label": "X" },
+    { "type": "header", "content": "Bottom bar" },
+    { "type": "text", "id": "copyright_text", "label": "Copyright", "info": "[year] is replaced with the current year.", "default": "© [year] GRIP Hydration. All rights reserved." },
+    { "type": "checkbox", "id": "show_policies", "label": "Show policy links", "default": true },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": false },
+    { "type": "text", "id": "payment_label", "label": "Payment icons label (screen readers)", "default": "Payment methods" },
+    { "type": "checkbox", "id": "show_country_selector", "label": "Show country selector", "info": "Enable in the header or the footer, not both.", "default": false },
+    { "type": "checkbox", "id": "show_language_selector", "label": "Show language selector", "info": "Enable in the header or the footer, not both.", "default": false },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "column_gap", "label": "Column gap", "min": 16, "max": 96, "step": 8, "unit": "px", "default": 48 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP footer",
+      "category": "GRIP",
+      "blocks": {
+        "shop": { "type": "grip-footer-menu", "settings": { "heading": "SHOP", "menu": "footer" } },
+        "company": { "type": "grip-footer-menu", "settings": { "heading": "COMPANY" } },
+        "support": { "type": "grip-footer-menu", "settings": { "heading": "SUPPORT" } }
+      },
+      "block_order": ["shop", "company", "support"]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,437 @@
+{%- liquid
+  assign show_formula = true
+  assign required_tag = section.settings.product_tag | strip
+  if required_tag != blank
+    assign show_formula = false
+    if product != blank and product.tags contains required_tag
+      assign show_formula = true
+    endif
+  endif
+
+  assign fact_rows = section.blocks | where: 'type', 'fact_row'
+  assign claims = section.blocks | where: 'type', 'claim'
+
+  assign has_image = false
+  if section.settings.image_desktop != blank or section.settings.image_mobile != blank
+    assign has_image = true
+  endif
+
+  assign show_media = has_image
+  if request.design_mode
+    assign show_media = true
+  endif
+-%}
+
+{%- if show_formula -%}
+{% capture children %}
+  <div
+    class="grip-formula{% unless show_media %} grip-formula--no-image{% endunless %}"
+    style="--grip-formula-h: {{ section.settings.min_height }}px;"
+  >
+    <div class="grip-formula__text">
+      {%- if section.settings.label != blank -%}
+        <p class="grip-label">{{ section.settings.label | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="grip-display h1 grip-formula__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+
+      {%- if fact_rows.size > 0 -%}
+        <div class="grip-facts">
+          <p class="grip-facts__title" id="GripFactsTitle-{{ section.id }}">{{ section.settings.facts_title | escape }}</p>
+          {%- if section.settings.serving_size != blank or section.settings.servings_per_container != blank -%}
+            <p class="grip-facts__meta">
+              {%- if section.settings.serving_size != blank -%}
+                <span>{{ section.settings.serving_size | escape }}</span>
+              {%- endif -%}
+              {%- if section.settings.servings_per_container != blank -%}
+                <span>{{ section.settings.servings_per_container | escape }}</span>
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+          <table class="grip-facts__table" aria-labelledby="GripFactsTitle-{{ section.id }}">
+            <thead>
+              <tr>
+                <th scope="col">{{ section.settings.amount_column_label | escape }}</th>
+                <th scope="col"><span class="visually-hidden">Amount</span></th>
+                <th scope="col">{{ section.settings.dv_column_label | escape }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for block in fact_rows -%}
+                <tr
+                  class="grip-fact-row grip-fact-row--{{ block.settings.rule }}{% if block.settings.indent %} grip-fact-row--indent{% endif %}"
+                  {{ block.shopify_attributes }}
+                >
+                  <th scope="row">{{ block.settings.name | escape }}</th>
+                  <td>{{ block.settings.amount | escape }}</td>
+                  <td>{{ block.settings.dv | escape }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+          {%- if section.settings.footnote != blank -%}
+            <div class="grip-facts__footnote">{{ section.settings.footnote }}</div>
+          {%- endif -%}
+        </div>
+      {%- elsif request.design_mode -%}
+        <p class="grip-editor-note">Supplement Facts: add fact rows.</p>
+      {%- endif -%}
+
+      {%- if section.settings.show_placeholder_note and section.settings.placeholder_note != blank -%}
+        <p class="grip-facts__note" role="note">{{ section.settings.placeholder_note | escape }}</p>
+      {%- endif -%}
+
+      {%- render 'grip-button',
+        label: section.settings.button_label,
+        link: section.settings.button_link,
+        style: section.settings.button_style,
+        arrow: section.settings.button_arrow
+      -%}
+    </div>
+
+    {%- if claims.size > 0 -%}
+      <div class="grip-formula__claims">
+        <h3 class="visually-hidden">{{ section.settings.claims_heading | default: 'Formula claims' | escape }}</h3>
+        <ul class="grip-claims" role="list">
+          {%- for block in claims -%}
+            {%- if block.settings.text != blank -%}
+              <li class="grip-claim grip-label" {{ block.shopify_attributes }}>
+                {%- render 'grip-icon', icon: block.settings.icon, size: 16 -%}
+                <span>{{ block.settings.text | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+
+    {%- if show_media -%}
+      <div class="grip-formula__media">
+        {%- if has_image -%}
+          {% render 'grip-image',
+            desktop: section.settings.image_desktop,
+            mobile: section.settings.image_mobile,
+            widths: '600, 800, 1200, 1600, 2000',
+            sizes: '(min-width: 990px) 50vw, 100vw'
+          %}
+        {%- else -%}
+          {{ 'product-apparel-1' | placeholder_svg_tag: 'grip-placeholder' }}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children, width: 'full' %}
+{%- elsif request.design_mode -%}
+  {% render 'grip-tokens' %}
+  <p class="grip-editor-note">GRIP formula is hidden: this product isn't tagged {{ required_tag | escape }}.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-formula {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 36fr) minmax(0, 14fr) minmax(0, 50fr);
+      align-items: stretch;
+      min-height: var(--grip-formula-h, 600px);
+    }
+  }
+
+  .grip-formula--no-image {
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 60fr) minmax(0, 40fr);
+    }
+  }
+
+  .grip-formula__text {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    justify-items: start;
+    gap: 1.25rem;
+    min-width: 0;
+    padding: var(--grip-gap-xl) var(--page-margin) var(--grip-gap-md);
+
+    & .grip-actions {
+      margin-block-start: 0.5rem;
+    }
+
+    @media screen and (min-width: 990px) {
+      padding-block: clamp(3rem, 5vw, 4.5rem);
+      padding-inline: max(var(--page-margin), calc((100vw - var(--page-content-width, 90rem)) / 2)) 1.5rem;
+    }
+  }
+
+  .grip-formula__heading.grip-formula__heading.grip-formula__heading {
+    max-width: 12ch;
+    font-size: clamp(2.5rem, 4.6vw, 4.25rem);
+    line-height: 0.92;
+  }
+
+  /* Supplement Facts label */
+  .grip-facts {
+    width: 100%;
+    max-width: 21rem;
+    padding: 0.75rem 0.875rem 0.625rem;
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    border: 1.5px solid var(--color-foreground);
+    border-radius: var(--grip-radius);
+  }
+
+  .grip-facts__title {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    font-size: 1.375rem;
+    line-height: 1.1;
+  }
+
+  .grip-facts__meta {
+    display: grid;
+    margin: 0.25rem 0 0;
+    padding-block-end: 0.5rem;
+    line-height: 1.45;
+    border-block-end: 4px solid var(--color-foreground);
+  }
+
+  .grip-facts__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    & :is(th, td) {
+      padding: 0.3125rem 0;
+      font-weight: 400;
+      text-align: start;
+      border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.45);
+    }
+
+    & :is(th, td):nth-child(2),
+    & :is(th, td):nth-child(3) {
+      padding-inline-start: 0.5rem;
+      text-align: end;
+      white-space: nowrap;
+    }
+
+    & thead th {
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-block-end: 1.5px solid var(--color-foreground);
+    }
+
+    & tbody tr:last-child :is(th, td) {
+      border-block-end: 0;
+    }
+  }
+
+  .grip-fact-row th {
+    font-weight: 500;
+  }
+
+  .grip-fact-row--medium :is(th, td) {
+    border-block-start: 3px solid var(--color-foreground);
+  }
+
+  .grip-fact-row--thick :is(th, td) {
+    border-block-start: 6px solid var(--color-foreground);
+  }
+
+  .grip-fact-row--indent th {
+    padding-inline-start: 1rem;
+    font-weight: 400;
+  }
+
+  .grip-facts__footnote {
+    margin-block-start: 0.375rem;
+    padding-block-start: 0.375rem;
+    font-size: 0.6875rem;
+    border-block-start: 1.5px solid var(--color-foreground);
+
+    & p {
+      margin: 0;
+    }
+  }
+
+  .grip-facts__note {
+    margin: 0;
+    font-size: 0.6875rem;
+    font-style: italic;
+    color: var(--grip-muted, var(--grip-muted-default));
+  }
+
+  .grip-formula__claims {
+    display: grid;
+    align-content: end;
+    min-width: 0;
+    padding: 0 var(--page-margin) var(--grip-gap-xl);
+
+    @media screen and (min-width: 990px) {
+      padding: 0 1rem clamp(3rem, 5vw, 4.5rem) 0.5rem;
+    }
+  }
+
+  .grip-claims {
+    display: grid;
+    gap: 0.625rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media screen and (max-width: 989px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .grip-claim {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.2em;
+  }
+
+  .grip-formula__media {
+    position: relative;
+    min-height: 22rem;
+    overflow: hidden;
+
+    & .grip-image,
+    & .grip-placeholder {
+      position: absolute;
+      inset: 0;
+    }
+
+    @media screen and (max-width: 989px) {
+      order: -1;
+      min-height: 0;
+      aspect-ratio: 4 / 3;
+    }
+
+    @media screen and (max-width: 749px) {
+      aspect-ratio: 1;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP formula",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [
+    {
+      "type": "fact_row",
+      "name": "Fact row",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Nutrient", "default": "Nutrient" },
+        { "type": "text", "id": "amount", "label": "Amount" },
+        { "type": "text", "id": "dv", "label": "% Daily Value" },
+        { "type": "checkbox", "id": "indent", "label": "Indent (sub-row)", "default": false },
+        {
+          "type": "select",
+          "id": "rule",
+          "label": "Rule above row",
+          "options": [
+            { "value": "thin", "label": "Thin" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "thick", "label": "Thick" }
+          ],
+          "default": "thin"
+        }
+      ]
+    },
+    {
+      "type": "claim",
+      "name": "Claim",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Claim", "default": "Claim" },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "check", "label": "Check" },
+            { "value": "drop", "label": "Droplet" },
+            { "value": "sugar-free", "label": "Sugar-free" },
+            { "value": "leaf", "label": "Leaf" }
+          ],
+          "default": "none"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 24,
+  "settings": [
+    { "type": "header", "content": "Visibility" },
+    { "type": "text", "id": "product_tag", "label": "Only show for products tagged", "info": "Product pages only. Leave blank on the homepage. Keeps one flavor's Supplement Facts off other flavors." },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "label", "label": "Label", "default": "THE FORMULA" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "WHAT'S ACTUALLY IN IT." },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Image", "info": "Product on a light surface. Fills the right half on desktop." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "Square recommended. Shown below 750px." },
+    { "type": "range", "id": "min_height", "label": "Desktop height", "min": 480, "max": 900, "step": 20, "unit": "px", "default": 600 },
+    { "type": "header", "content": "Supplement Facts label" },
+    { "type": "text", "id": "facts_title", "label": "Label title", "default": "Supplement Facts" },
+    { "type": "text", "id": "serving_size", "label": "Serving size line", "default": "Serving Size 1 Stick" },
+    { "type": "text", "id": "servings_per_container", "label": "Servings line", "default": "Servings Per Container 25" },
+    { "type": "text", "id": "amount_column_label", "label": "First column label", "default": "Amount Per Serving" },
+    { "type": "text", "id": "dv_column_label", "label": "Daily value column label", "default": "% Daily Value" },
+    { "type": "richtext", "id": "footnote", "label": "Footnote" },
+    { "type": "checkbox", "id": "show_placeholder_note", "label": "Show placeholder note", "default": true },
+    { "type": "text", "id": "placeholder_note", "label": "Placeholder note", "default": "Placeholder — pending manufacturer approval", "visible_if": "{{ section.settings.show_placeholder_note }}" },
+    { "type": "text", "id": "claims_heading", "label": "Claims list name (screen readers)", "default": "Formula claims" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "SHOP BLUE BELT" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "The button is hidden until a link is set." },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ],
+      "default": "primary"
+    },
+    { "type": "checkbox", "id": "button_arrow", "label": "Show arrow", "default": false },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#EEF0F3" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#0B0F16" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#4A5261" },
+    { "type": "color", "id": "hairline_color", "label": "Rules", "default": "#0B0F16" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP formula",
+      "category": "GRIP",
+      "blocks": {
+        "sodium": { "type": "fact_row", "settings": { "name": "Sodium", "amount": "1,000mg", "dv": "43%" } },
+        "potassium": { "type": "fact_row", "settings": { "name": "Potassium", "amount": "200mg", "dv": "4%" } },
+        "magnesium": { "type": "fact_row", "settings": { "name": "Magnesium", "amount": "100mg", "dv": "24%" } },
+        "carbs": { "type": "fact_row", "settings": { "name": "Total Carbohydrate", "amount": "0g", "dv": "0%" } },
+        "sugars": { "type": "fact_row", "settings": { "name": "Total Sugars", "amount": "0g", "dv": "0%" } },
+        "calories": { "type": "fact_row", "settings": { "name": "Calories", "amount": "0", "dv": "0%" } },
+        "claim_sugar_free": { "type": "claim", "settings": { "text": "SUGAR-FREE" } },
+        "claim_keto": { "type": "claim", "settings": { "text": "KETO-FRIENDLY" } },
+        "claim_non_gmo": { "type": "claim", "settings": { "text": "NON-GMO" } },
+        "claim_vegan": { "type": "claim", "settings": { "text": "VEGAN" } }
+      },
+      "block_order": [
+        "sodium", "potassium", "magnesium", "carbs", "sugars", "calories",
+        "claim_sugar_free", "claim_keto", "claim_non_gmo", "claim_vegan"
+      ]
+    }
+  ]
+}
+{% endschema %}

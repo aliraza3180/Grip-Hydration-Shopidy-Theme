@@ -1,0 +1,416 @@
+{%- doc -%}
+  GRIP product card, shared by the homepage belt cards and the GRIP related
+  products section. Stock decides the action: an in-stock product shows its
+  price and Add to cart (Horizon's product form, so the cart drawer and
+  fly-to-cart work, with one form per card). Products with several variants or
+  a required subscription link to the product page instead. Out of stock shows
+  a Notify-me form. Belt name and flavor fall back to the custom.belt and
+  custom.flavor metafields, then to a title written as "Blue Belt — Blue Raspberry".
+
+  @param {string} key - Unique id suffix, e.g. block.id or section.id plus product id
+  @param {string} section_id - The section id, used by Horizon's product form
+  @param {object} [product] - The product; blank renders a coming-soon card
+  @param {string} [status] - Out of stock: 'live' keeps the price, 'coming_soon' hides it, 'auto' uses coming_soon_tag
+  @param {string} [coming_soon_tag] - Tag marking coming-soon products when status is 'auto'
+  @param {string} [belt_name] - Belt label, e.g. BLUE BELT
+  @param {string} [flavor] - Flavor shown as the card title
+  @param {string} [title_color] - Flavor color
+  @param {string} [belt_colors] - Map like 'blue-belt:#3D82FF|purple-belt:#A07CF0', used when title_color is blank
+  @param {string} [pack_text] - Pack size line, e.g. 25 Stick Packs
+  @param {object} [image] - Card image; falls back to the product's featured image
+  @param {string} [badge_text] - Overrides the stock badge
+  @param {string} [live_label] - Badge when in stock
+  @param {string} [sold_out_label] - Badge when sold out
+  @param {string} [waitlist_tag] - Tag marking pre-launch products (default 'live'); shows the waitlist badge instead of Sold out
+  @param {string} [waitlist_label] - Badge when pre-launch/waitlist
+  @param {string} [waitlist_notify_label] - Notify/submit label on pre-launch cards
+  @param {string} [soon_label] - Badge when coming soon
+  @param {string} [add_label] - Add to cart button label
+  @param {string} [choose_label] - Button label for products that need the product page
+  @param {string} [heading_tag] - Title tag, default h3
+  @param {string} [image_sizes] - sizes attribute for the card image
+  @param {boolean} [show_notify] - Show Notify me when out of stock (default true)
+  @param {string} [notify_label] - Notify toggle button label
+  @param {string} [submit_label] - Notify submit label
+  @param {string} [email_label] - Visually hidden email label
+  @param {string} [email_placeholder] - Email placeholder
+  @param {string} [notify_tag] - Customer tag; default notify- plus the belt name
+  @param {string} [success_text] - Notify success message
+  @param {string} [consent_note] - Notify small print
+
+  @example
+  {% render 'grip-product-card', key: block.id, section_id: section.id, product: block.settings.product, status: 'auto' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign card_image = image
+  if card_image == blank and product != blank
+    assign card_image = product.featured_image
+  endif
+
+  assign belt = belt_name
+  assign flavor_text = flavor
+  if product != blank
+    assign title_parts = product.title | split: '—'
+    if belt == blank
+      assign belt = product.metafields.custom.belt.value
+    endif
+    if belt == blank and title_parts.size > 1
+      assign belt = title_parts.first | strip
+    endif
+    if flavor_text == blank
+      assign flavor_text = product.metafields.custom.flavor.value
+    endif
+    if flavor_text == blank and title_parts.size > 1
+      assign flavor_text = title_parts.last | strip
+    endif
+    if flavor_text == blank
+      assign flavor_text = product.title
+    endif
+  endif
+
+  assign flavor_color = title_color
+  if flavor_color == blank and belt_colors != blank
+    assign belt_key = belt | handleize
+    assign color_pairs = belt_colors | split: '|'
+    for pair in color_pairs
+      assign pair_parts = pair | split: ':'
+      if pair_parts.size > 1 and pair_parts.first == belt_key
+        assign flavor_color = pair_parts.last
+        break
+      endif
+    endfor
+  endif
+
+  assign card_state = 'soon'
+  if product != blank
+    if product.available
+      assign card_state = 'live'
+    elsif status == 'live'
+      assign card_state = 'sold-out'
+    elsif status == 'auto'
+      assign card_state = 'sold-out'
+      assign cs_tag = coming_soon_tag | default: settings.grip_coming_soon_tag | default: 'coming-soon'
+      if cs_tag != blank and product.tags contains cs_tag
+        assign card_state = 'soon'
+      endif
+    endif
+    assign wl_tag = waitlist_tag | default: settings.grip_waitlist_tag | default: 'live'
+    if card_state == 'sold-out' and wl_tag != blank and product.tags contains wl_tag
+      assign card_state = 'waitlist'
+    endif
+  endif
+
+  assign badge = badge_text
+  if badge == blank
+    case card_state
+      when 'live'
+        assign badge = live_label
+      when 'sold-out'
+        assign badge = sold_out_label
+      when 'waitlist'
+        assign badge = waitlist_label | default: settings.grip_waitlist_badge | default: 'COMING DECEMBER'
+      else
+        assign badge = soon_label
+    endcase
+  endif
+
+  assign needs_product_page = false
+  if product.variants_count > 1 or product.requires_selling_plan
+    assign needs_product_page = true
+  endif
+  assign variant = product.selected_or_first_available_variant
+  assign form_id = 'GripCardForm-' | append: key
+
+  assign derived_tag = belt | handleize | prepend: 'notify-'
+  assign card_notify_tag = notify_tag | default: derived_tag
+  assign card_notify_label = notify_label
+  assign card_submit_label = submit_label
+  if card_state == 'waitlist'
+    assign wl_cta = waitlist_notify_label | default: settings.grip_waitlist_cta | default: 'JOIN THE WAITLIST'
+    assign card_notify_label = wl_cta
+    assign card_submit_label = wl_cta
+  endif
+  assign title_tag = heading_tag | default: 'h3'
+  assign sizes = image_sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 42vw, 78vw'
+  assign alt_flavor = flavor_text | default: belt
+  assign alt_prefix = settings.grip_alt_prefix
+  assign alt_suffix = settings.grip_alt_suffix
+  if alt_flavor != blank and alt_prefix != blank
+    assign image_alt = alt_prefix | append: ' - ' | append: alt_flavor
+    if alt_suffix != blank
+      assign image_alt = image_alt | append: ' ' | append: alt_suffix
+    endif
+  elsif alt_flavor != blank
+    assign image_alt = alt_flavor
+  else
+    assign image_alt = product.title
+  endif
+-%}
+
+{% render 'add-to-cart-button-styles' %}
+{% render 'fly-to-cart-styles' %}
+
+<article class="grip-card grip-card--{{ card_state }}" aria-labelledby="GripCardTitle-{{ key }}">
+  <div class="grip-card__top">
+    {%- if belt != blank -%}
+      <p class="grip-label grip-card__belt">{{ belt | escape }}</p>
+    {%- endif -%}
+    {%- if badge != blank -%}
+      <span class="grip-card__badge grip-card__badge--{{ card_state }}">{{ badge | escape }}</span>
+    {%- endif -%}
+  </div>
+
+  <div class="grip-card__media">
+    {%- if card_image != blank -%}
+      {%- if product != blank -%}
+        <a class="grip-card__media-link" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {%- endif -%}
+      {{
+        card_image
+        | image_url: width: 960
+        | image_tag:
+          widths: '240, 360, 480, 720, 960',
+          sizes: sizes,
+          loading: 'lazy',
+          alt: image_alt,
+          class: 'grip-card__image'
+      }}
+      {%- if product != blank -%}
+        </a>
+      {%- endif -%}
+    {%- elsif request.design_mode -%}
+      {{ 'product-apparel-1' | placeholder_svg_tag: 'grip-placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="grip-card__body">
+    <{{ title_tag }}
+      class="grip-display h4 grip-card__title"
+      id="GripCardTitle-{{ key }}"
+      {% if flavor_color != blank %}
+        style="color: {{ flavor_color }};"
+      {% endif %}
+    >
+      {%- if product != blank -%}
+        <a class="grip-card__link" href="{{ product.url }}">{{ flavor_text | escape }}</a>
+      {%- else -%}
+        {{ flavor_text | escape }}
+      {%- endif -%}
+    </{{ title_tag }}>
+
+    {%- if pack_text != blank -%}
+      <p class="grip-card__pack grip-muted">{{ pack_text | escape }}</p>
+    {%- endif -%}
+
+    {%- if card_state != 'soon' -%}
+      <p class="grip-card__price">{{ product.price | money }}</p>
+    {%- endif -%}
+
+    <grip-card-actions class="grip-card__actions">
+      {%- if card_state == 'live' -%}
+        {%- if needs_product_page -%}
+          <a class="button grip-button grip-card__cta" href="{{ product.url }}">{{ choose_label | default: 'VIEW PRODUCT' | escape }}</a>
+        {%- else -%}
+          <product-form-component
+            class="grip-card__form"
+            data-section-id="{{ section_id }}"
+            data-product-id="{{ product.id }}"
+            on:submit="/handleSubmit"
+          >
+            <div
+              class="visually-hidden"
+              aria-live="assertive"
+              role="status"
+              aria-atomic="true"
+              ref="liveRegion"
+            ></div>
+            {%- form 'product', product, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+              <input type="hidden" name="id" ref="variantId" value="{{ variant.id }}">
+              <input type="hidden" name="quantity" value="{{ variant.quantity_rule.min | default: 1 }}">
+              {% render 'add-to-cart-button',
+                add_to_cart_text: add_label,
+                class: 'grip-button grip-card__cta',
+                can_add_to_cart: true,
+                show_icon: false,
+                product: product
+              %}
+            {%- endform -%}
+          </product-form-component>
+        {%- endif -%}
+      {%- elsif show_notify != false -%}
+        {% render 'grip-notify-form',
+          key: key,
+          tag: card_notify_tag,
+          button_label: card_notify_label,
+          submit_label: card_submit_label,
+          email_label: email_label,
+          context_label: belt,
+          email_placeholder: email_placeholder,
+          success_text: success_text,
+          consent_note: consent_note,
+          toggle_class: 'grip-card__cta'
+        %}
+      {%- endif -%}
+    </grip-card-actions>
+  </div>
+</article>
+
+{% stylesheet %}
+  .grip-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    background: var(--grip-card-bg, var(--grip-s1));
+    border: 1px solid var(--grip-card-border, var(--color-border));
+    border-radius: var(--grip-radius);
+  }
+
+  .grip-card__top {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.375rem 0.5rem;
+    padding: 0.875rem 0.875rem 0;
+    pointer-events: none;
+  }
+
+  .grip-card__belt {
+    font-size: 0.6875rem;
+  }
+
+  .grip-card__badge {
+    padding: 0.3125rem 0.5rem;
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-foreground);
+    background: rgb(var(--color-foreground-rgb) / 0.14);
+    border-radius: var(--grip-radius);
+  }
+
+  .grip-card__badge--waitlist {
+    color: var(--color-primary-button-text, #f2f4f7);
+    background: var(--color-primary-button-background, #1a5ce0);
+  }
+
+  .grip-card__badge--live {
+    color: var(--color-primary-button-text, #f2f4f7);
+    background: var(--color-primary-button-background, #1a5ce0);
+  }
+
+  .grip-card__media {
+    position: relative;
+    aspect-ratio: 1 / 1.05;
+    overflow: hidden;
+    background: var(--grip-s2);
+  }
+
+  .grip-card__media-link {
+    display: block;
+    height: 100%;
+  }
+
+  .grip-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--animation-timing-fade-in);
+  }
+
+  .grip-card:hover .grip-card__image {
+    transform: scale(1.03);
+  }
+
+  .grip-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 0.875rem 0.875rem;
+  }
+
+  .grip-card__title {
+    margin: 0;
+  }
+
+  .grip-card__link {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+  }
+
+  .grip-card__pack {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .grip-card__price {
+    margin: 0.5rem 0 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Buttons sit on one baseline across every card */
+  .grip-card__actions {
+    display: block;
+    margin-block-start: auto;
+    padding-block-start: 1rem;
+  }
+
+  .grip-card__actions add-to-cart-component {
+    display: block;
+    width: 100%;
+  }
+
+  .grip-card__cta.grip-card__cta {
+    width: 100%;
+    min-height: 2.75rem;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('grip-card-actions')) {
+    class GripCardActions extends HTMLElement {
+      #controller = null;
+
+      connectedCallback() {
+        this.#controller = new AbortController();
+        this.addEventListener('click', this.#keepClickInCard, { signal: this.#controller.signal });
+      }
+
+      disconnectedCallback() {
+        this.#controller?.abort();
+      }
+
+      /**
+       * Horizon product cards navigate on any click that isn't on a button,
+       * input, label or select. Keep clicks on the notify toggle and form
+       * inside the card so they open the form instead of the product page.
+       * @param {MouseEvent} event
+       */
+      #keepClickInCard = (event) => {
+        if (!(event.target instanceof Element)) return;
+        if (event.target.closest('summary, .grip-notify')) event.stopPropagation();
+      };
+    }
+
+    customElements.define('grip-card-actions', GripCardActions);
+  }
+{% endjavascript %}

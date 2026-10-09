@@ -1,0 +1,63 @@
+{%- doc -%}
+  Short hairline-separated list of product facts for the Blue Belt buy module.
+  Blank facts are skipped; nothing renders when all are blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign fact_count = 0
+  for i in (1..4)
+    assign fact_key = 'fact_' | append: i
+    if block.settings[fact_key] != blank
+      assign fact_count = fact_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if fact_count > 0 -%}
+  <ul class="grip-fact-list" role="list" {{ block.shopify_attributes }}>
+    {%- for i in (1..4) -%}
+      {%- assign fact_key = 'fact_' | append: i -%}
+      {%- if block.settings[fact_key] != blank -%}
+        <li class="grip-fact-list__item grip-label grip-label--muted">{{ block.settings[fact_key] | escape }}</li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- elsif request.design_mode -%}
+  <p class="grip-editor-note" {{ block.shopify_attributes }}>Fact list: add at least one fact</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-fact-list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .grip-fact-list__item {
+    padding-block: 0.875rem;
+    border-block-end: 1px solid var(--color-border);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP fact list",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "fact_1", "label": "Fact 1", "default": "25 STICKS PER BOX" },
+    { "type": "text", "id": "fact_2", "label": "Fact 2", "default": "SHIPS FROM EDINBURG, TEXAS" },
+    { "type": "text", "id": "fact_3", "label": "Fact 3", "default": "SUGAR-FREE · SUPPORTS HYDRATION" },
+    { "type": "text", "id": "fact_4", "label": "Fact 4" }
+  ],
+  "presets": [
+    {
+      "name": "GRIP fact list",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

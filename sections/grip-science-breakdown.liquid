@@ -1,0 +1,184 @@
+{% capture children %}
+  <div class="grip-breakdown" style="--grip-bd-cols: {{ section.settings.columns }};">
+    {%- if section.settings.label != blank or section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="grip-breakdown__header">
+        <header class="grip-breakdown__lead">
+          {%- if section.settings.label != blank -%}
+            <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="grip-display h2">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+        </header>
+        {%- if section.settings.text != blank -%}
+          <p class="grip-breakdown__text grip-muted">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="grip-breakdown__list" role="list">
+        {% content_for 'blocks' %}
+      </ul>
+    {%- elsif request.design_mode -%}
+      <p class="grip-editor-note">Breakdown: add electrolyte blocks.</p>
+    {%- endif -%}
+
+    {% render 'grip-about-actions',
+      primary_label: section.settings.button_label,
+      primary_link: section.settings.button_link,
+      secondary_label: section.settings.button_2_label,
+      secondary_link: section.settings.button_2_link,
+      arrow: true
+    %}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-breakdown {
+    display: grid;
+    gap: var(--grip-gap-2xl);
+
+    & > .grip-actions {
+      margin-block-start: 0;
+    }
+  }
+
+  .grip-breakdown__header {
+    display: grid;
+    gap: var(--grip-gap-md);
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--grip-gap-2xl);
+      align-items: end;
+    }
+  }
+
+  .grip-breakdown__lead {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .grip-breakdown__text {
+    max-width: 32rem;
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .grip-breakdown__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--grip-gap-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--color-border);
+
+    @media screen and (max-width: 479px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: repeat(var(--grip-bd-cols, 3), minmax(0, 1fr));
+    }
+  }
+
+  .grip-electrolyte {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    min-width: 0;
+    padding-block: 2rem;
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .grip-electrolyte__name,
+  .grip-electrolyte__dv,
+  .grip-electrolyte__text {
+    margin: 0;
+  }
+
+  .grip-electrolyte__amount {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.375rem;
+    margin: 0;
+    color: var(--grip-el-color, currentColor);
+  }
+
+  .grip-electrolyte__number {
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .grip-electrolyte__dv {
+    font-size: 0.9375rem;
+  }
+
+  .grip-electrolyte__text {
+    max-width: 28rem;
+    line-height: 1.6;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP science breakdown",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "_grip-electrolyte" }],
+  "max_blocks": 9,
+  "settings": [
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "PER STICK" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "FOUR ELECTROLYTES. ZERO SUGAR." },
+    { "type": "text", "id": "text", "label": "Text", "default": "Measured per stick, straight from the Supplement Facts panel." },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP science breakdown",
+      "category": "GRIP",
+      "blocks": {
+        "sodium": { "type": "_grip-electrolyte", "settings": { "name": "SODIUM", "amount": "1,000", "unit": "MG", "dv": "43% Daily Value" } },
+        "potassium": { "type": "_grip-electrolyte", "settings": { "name": "POTASSIUM", "amount": "200", "unit": "MG", "dv": "4% Daily Value" } },
+        "magnesium": { "type": "_grip-electrolyte", "settings": { "name": "MAGNESIUM", "amount": "100", "unit": "MG", "dv": "24% Daily Value" } }
+      },
+      "block_order": ["sodium", "potassium", "magnesium"]
+    }
+  ]
+}
+{% endschema %}

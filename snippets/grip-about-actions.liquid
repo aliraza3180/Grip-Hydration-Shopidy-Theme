@@ -1,0 +1,43 @@
+{%- doc -%}
+  Up to two link buttons in one row, used by the GRIP About page sections.
+  Uses Horizon's button classes, so shape and colors follow the theme's
+  button settings. A button renders only when it has both a label and a link.
+
+  @param {string} [primary_label] - Primary button text
+  @param {string} [primary_link] - Primary button URL
+  @param {string} [secondary_label] - Secondary button text
+  @param {string} [secondary_link] - Secondary button URL
+  @param {boolean} [arrow] - Show a trailing arrow on the secondary button
+  @param {string} [class] - Extra classes on the wrapper, e.g. 'grip-actions--center'
+
+  @example
+  {% render 'grip-about-actions', primary_label: section.settings.button_label, primary_link: section.settings.button_link %}
+{%- enddoc -%}
+
+{%- liquid
+  assign show_primary = false
+  if primary_label != blank and primary_link != blank
+    assign show_primary = true
+  endif
+
+  assign show_secondary = false
+  if secondary_label != blank and secondary_link != blank
+    assign show_secondary = true
+  endif
+-%}
+
+{%- if show_primary or show_secondary -%}
+  <div class="grip-actions {{ class }}">
+    {%- if show_primary -%}
+      <a class="button grip-button" href="{{ primary_link }}">{{ primary_label | escape }}</a>
+    {%- endif -%}
+    {%- if show_secondary -%}
+      <a class="button-secondary grip-button" href="{{ secondary_link }}">
+        <span>{{ secondary_label | escape }}</span>
+        {%- if arrow -%}
+          {%- render 'grip-icon', icon: 'arrow-right', size: 16 -%}
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

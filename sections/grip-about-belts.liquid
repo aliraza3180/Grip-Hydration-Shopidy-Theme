@@ -1,0 +1,282 @@
+{% capture children %}
+  <div class="grip-about-belts" style="--grip-belt-count: {{ section.blocks.size | at_least: 1 | at_most: 6 }};">
+    {%- if section.settings.label != blank or section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="grip-about-belts__header">
+        <header class="grip-about-belts__lead">
+          {%- if section.settings.label != blank -%}
+            <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="grip-display h2">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+        </header>
+
+        <div class="grip-about-belts__aside">
+          {%- if section.settings.text != blank -%}
+            <p class="grip-about-belts__text grip-muted">{{ section.settings.text | escape }}</p>
+          {%- endif -%}
+          {% render 'grip-about-actions',
+            primary_label: section.settings.button_label,
+            primary_link: section.settings.button_link,
+            secondary_label: section.settings.button_2_label,
+            secondary_link: section.settings.button_2_link,
+            arrow: true
+          %}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ol
+        class="grip-about-belts__list"
+        role="list"
+        aria-label="{{ section.settings.heading | default: section.settings.label | escape }}"
+      >
+        {% content_for 'blocks' %}
+      </ol>
+    {%- elsif request.design_mode -%}
+      <p class="grip-editor-note">Belts: add belt blocks.</p>
+    {%- endif -%}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-about-belts {
+    display: grid;
+    gap: var(--grip-gap-2xl);
+  }
+
+  .grip-about-belts__header {
+    display: grid;
+    gap: var(--grip-gap-lg);
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--grip-gap-2xl);
+      align-items: end;
+    }
+  }
+
+  .grip-about-belts__lead,
+  .grip-about-belts__aside {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    min-width: 0;
+
+    & .grip-actions {
+      margin-block-start: 0.25rem;
+    }
+  }
+
+  .grip-about-belts__text {
+    max-width: 32rem;
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .grip-about-belts__list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: grip-about-belt;
+
+    @media screen and (min-width: 750px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--grip-gap-xl) var(--grip-gap-lg);
+    }
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: repeat(var(--grip-belt-count, 5), minmax(0, 1fr));
+      gap: var(--grip-gap-md);
+    }
+  }
+
+  .grip-about-belt {
+    counter-increment: grip-about-belt;
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    grid-template-areas:
+      'media status'
+      'media body';
+    align-content: start;
+    column-gap: 1.25rem;
+    row-gap: 0.5rem;
+    min-width: 0;
+    padding-block: 1.5rem;
+    border-block-end: 1px solid var(--color-border);
+
+    @media screen and (min-width: 750px) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        'status'
+        'media'
+        'body';
+      row-gap: 1rem;
+      padding-block: 1rem 0;
+      border-block-end: 0;
+      border-block-start: 1px solid var(--color-border);
+    }
+  }
+
+  .grip-about-belt--live {
+    @media screen and (min-width: 750px) {
+      border-block-start: 2px solid var(--grip-accent);
+    }
+  }
+
+  .grip-about-belt__status {
+    grid-area: status;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .grip-about-belt__step::before {
+    content: counter(grip-about-belt, decimal-leading-zero);
+    color: var(--color-foreground);
+  }
+
+  .grip-about-belt__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--grip-accent);
+    border-radius: 50%;
+  }
+
+  .grip-about-belt--live .grip-about-belt__status {
+    color: var(--grip-accent);
+  }
+
+  .grip-about-belt__media {
+    grid-area: media;
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--grip-s2);
+    border-radius: var(--grip-radius);
+  }
+
+  .grip-about-belt--soon .grip-about-belt__media > * {
+    opacity: 0.55;
+  }
+
+  .grip-about-belt__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* A drawn belt when no photo is set: the band in the belt color with a rank bar. */
+  .grip-about-belt__swatch {
+    position: absolute;
+    inset: 0;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block-start: 39%;
+      height: 22%;
+    }
+
+    &::before {
+      inset-inline: 0;
+      background: var(--grip-belt, var(--grip-bone));
+      box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+    }
+
+    &::after {
+      inset-inline-end: 14%;
+      width: 22%;
+      background: var(--grip-belt-bar, var(--grip-ink));
+    }
+  }
+
+  .grip-about-belt__body {
+    grid-area: body;
+    display: grid;
+    gap: 0.375rem;
+    min-width: 0;
+  }
+
+  .grip-about-belt__name,
+  .grip-about-belt__flavor,
+  .grip-about-belt__tagline {
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+
+  .grip-about-belt__flavor {
+    font-weight: 500;
+  }
+
+  .grip-about-belt__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    transition: color var(--animation-speed-medium, 0.15s) var(--animation-timing-hover, ease);
+
+    &:hover {
+      color: var(--grip-accent);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP about belts",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "_grip-about-belt" }],
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "THE BELT SYSTEM" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "EVERY BELT IS A STAGE." },
+    { "type": "text", "id": "text", "label": "Text", "default": "The GRIP belt system follows the path every grappler walks. Blue Belt is out now. The rest are on the way." },
+    { "type": "text", "id": "live_label", "label": "Available status label", "default": "AVAILABLE NOW" },
+    { "type": "text", "id": "soon_label", "label": "Coming soon status label", "default": "COMING SOON" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label", "default": "SHOP BLUE BELT" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0A0E15" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP about belts",
+      "category": "GRIP",
+      "blocks": {
+        "white": { "type": "_grip-about-belt", "settings": { "name": "WHITE BELT", "flavor": "Lemon Lime", "tagline": "Begin your journey", "belt_color": "#F2F4F7" } },
+        "blue": { "type": "_grip-about-belt", "settings": { "name": "BLUE BELT", "flavor": "Blue Raspberry", "tagline": "Stay consistent", "belt_color": "#1F6FFF", "status": "live" } },
+        "purple": { "type": "_grip-about-belt", "settings": { "name": "PURPLE BELT", "flavor": "Grape", "tagline": "Push your limits", "belt_color": "#7B3FE4" } },
+        "brown": { "type": "_grip-about-belt", "settings": { "name": "BROWN BELT", "flavor": "Tropical Punch", "tagline": "Trust the process", "belt_color": "#8A5A2E" } },
+        "black": { "type": "_grip-about-belt", "settings": { "name": "BLACK BELT", "flavor": "Black Cherry", "tagline": "Live the lifestyle", "belt_color": "#26262A", "bar_color": "#B3261E" } }
+      },
+      "block_order": ["white", "blue", "purple", "brown", "black"]
+    }
+  ]
+}
+{% endschema %}

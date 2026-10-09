@@ -1,0 +1,234 @@
+{%- doc -%}
+  Product page heading for GRIP belt products: belt label with a stock badge,
+  the flavor as the page's H1 in the belt color, the belt journey line and the
+  pack size. Belt, flavor and tagline come from the custom.belt, custom.flavor
+  and custom.belt_tagline metafields, falling back to a title written as
+  "Blue Belt — Blue Raspberry" and to the per-belt defaults below.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign product = closest.product
+  assign title_parts = product.title | split: '—'
+
+  assign belt = product.metafields.custom.belt.value
+  assign flavor = product.metafields.custom.flavor.value
+  assign tagline = product.metafields.custom.belt_tagline.value
+
+  if title_parts.size > 1
+    if belt == blank
+      assign belt = title_parts.first | strip
+    endif
+    if flavor == blank
+      assign flavor = title_parts.last | strip
+    endif
+  endif
+  if flavor == blank
+    assign flavor = product.title
+  endif
+
+  assign belt_key = belt | handleize
+  assign flavor_color = blank
+  assign fallback_tagline = blank
+  case belt_key
+    when 'white-belt'
+      assign flavor_color = block.settings.color_white
+      assign fallback_tagline = block.settings.tagline_white
+    when 'blue-belt'
+      assign flavor_color = block.settings.color_blue
+      assign fallback_tagline = block.settings.tagline_blue
+    when 'purple-belt'
+      assign flavor_color = block.settings.color_purple
+      assign fallback_tagline = block.settings.tagline_purple
+    when 'brown-belt'
+      assign flavor_color = block.settings.color_brown
+      assign fallback_tagline = block.settings.tagline_brown
+    when 'black-belt'
+      assign flavor_color = block.settings.color_black
+      assign fallback_tagline = block.settings.tagline_black
+  endcase
+
+  if tagline == blank
+    assign tagline = fallback_tagline
+  endif
+  unless block.settings.show_tagline
+    assign tagline = blank
+  endunless
+
+  assign cs_tag = block.settings.coming_soon_tag | default: settings.grip_coming_soon_tag
+  assign badge_state = 'sold-out'
+  assign badge = block.settings.badge_sold_out
+  if product.available
+    assign badge_state = 'live'
+    assign badge = block.settings.badge_available
+  elsif cs_tag != blank and product.tags contains cs_tag
+    assign badge_state = 'soon'
+    assign badge = block.settings.badge_coming_soon | default: settings.grip_coming_soon_label
+  else
+    assign wl_tag = block.settings.waitlist_tag | default: settings.grip_waitlist_tag
+    if wl_tag != blank and product.tags contains wl_tag
+      assign badge_state = 'waitlist'
+      assign badge = block.settings.badge_waitlist | default: settings.grip_waitlist_badge
+    endif
+  endif
+-%}
+
+{%- if product != blank -%}
+  <div class="grip-product-header" {{ block.shopify_attributes }}>
+    {%- if belt != blank or badge != blank -%}
+      <div class="grip-product-header__top">
+        {%- if belt != blank -%}
+          <p class="grip-label grip-label--muted grip-product-header__belt" aria-hidden="true">{{ belt | escape }}</p>
+        {%- endif -%}
+        {%- if badge != blank -%}
+          <span class="grip-product-header__badge grip-product-header__badge--{{ badge_state }}">{{ badge | escape }}</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <h1
+      class="grip-product-header__title"
+      {% if flavor_color != blank %}
+        style="--grip-flavor-color: {{ flavor_color }};"
+      {% endif %}
+    >
+      {%- if belt != blank -%}
+        <span class="visually-hidden">{{ belt | escape }} — </span>
+      {%- endif -%}
+      {{- flavor | escape -}}
+    </h1>
+
+    {%- if tagline != blank or block.settings.pack_text != blank -%}
+      <p class="grip-product-header__meta">
+        {%- if tagline != blank -%}
+          <span class="grip-product-header__tagline">{{ tagline | escape }}</span>
+        {%- endif -%}
+        {%- if block.settings.pack_text != blank -%}
+          <span class="grip-product-header__pack">{{ block.settings.pack_text | escape }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+{%- elsif request.design_mode -%}
+  <p class="grip-editor-note" {{ block.shopify_attributes }}>Product header: preview a product to see it.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-product-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .grip-product-header__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  .grip-product-header__belt {
+    margin: 0;
+  }
+
+  .grip-product-header__badge {
+    padding: 0.3125rem 0.5rem;
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-foreground);
+    background: rgb(var(--color-foreground-rgb) / 0.14);
+    border-radius: var(--grip-radius);
+  }
+
+  .grip-product-header__badge--waitlist {
+    color: var(--color-primary-button-text, #f2f4f7);
+    background: var(--color-primary-button-background, #1a5ce0);
+  }
+
+  .grip-product-header__badge--live {
+    color: var(--color-primary-button-text, #f2f4f7);
+    background: var(--color-primary-button-background, #1a5ce0);
+  }
+
+  .grip-product-header__title.grip-product-header__title {
+    margin: 0;
+    font-family: var(--font-accent--family);
+    font-style: var(--font-accent--style);
+    font-weight: var(--font-accent--weight);
+    font-size: clamp(2.5rem, 1.75rem + 3vw, 4.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    color: var(--grip-flavor-color, currentColor);
+  }
+
+  .grip-product-header__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .grip-product-header__pack {
+    color: var(--grip-muted);
+  }
+
+  .grip-product-header__tagline + .grip-product-header__pack::before {
+    content: '·';
+    margin-inline-end: 0.75rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP product header",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Belt and flavor come from the product's custom.belt and custom.flavor metafields, or from a title written as \"Blue Belt — Blue Raspberry\"."
+    },
+    { "type": "text", "id": "pack_text", "label": "Pack size text", "default": "25 Stick Packs" },
+    { "type": "checkbox", "id": "show_tagline", "label": "Show belt tagline", "default": true },
+    { "type": "header", "content": "Stock badge" },
+    { "type": "text", "id": "badge_available", "label": "In stock", "default": "AVAILABLE NOW" },
+    { "type": "text", "id": "badge_sold_out", "label": "Sold out", "default": "SOLD OUT" },
+    { "type": "text", "id": "badge_coming_soon", "label": "Coming soon", "default": "COMING SOON" },
+    { "type": "text", "id": "badge_waitlist", "label": "Pre-launch / waitlist", "default": "COMING DECEMBER" },
+    { "type": "text", "id": "waitlist_tag", "label": "Pre-launch product tag", "default": "live", "info": "Out-of-stock products with this tag show the pre-launch badge instead of Sold out." },
+    { "type": "text", "id": "coming_soon_tag", "label": "Coming soon product tag", "default": "coming-soon", "info": "Out-of-stock products with this tag show the coming soon badge." },
+    { "type": "header", "content": "White Belt" },
+    { "type": "color", "id": "color_white", "label": "Flavor color", "info": "Leave blank to use the text color." },
+    { "type": "text", "id": "tagline_white", "label": "Tagline", "default": "Begin your journey", "info": "Used when the custom.belt_tagline metafield is empty." },
+    { "type": "header", "content": "Blue Belt" },
+    { "type": "color", "id": "color_blue", "label": "Flavor color", "default": "#3D82FF" },
+    { "type": "text", "id": "tagline_blue", "label": "Tagline", "default": "Stay consistent" },
+    { "type": "header", "content": "Purple Belt" },
+    { "type": "color", "id": "color_purple", "label": "Flavor color", "default": "#A07CF0" },
+    { "type": "text", "id": "tagline_purple", "label": "Tagline", "default": "Push your limits" },
+    { "type": "header", "content": "Brown Belt" },
+    { "type": "color", "id": "color_brown", "label": "Flavor color", "default": "#C99A6B" },
+    { "type": "text", "id": "tagline_brown", "label": "Tagline", "default": "Trust the process" },
+    { "type": "header", "content": "Black Belt" },
+    { "type": "color", "id": "color_black", "label": "Flavor color" },
+    { "type": "text", "id": "tagline_black", "label": "Tagline", "default": "Live the lifestyle" }
+  ],
+  "presets": [
+    {
+      "name": "GRIP product header",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

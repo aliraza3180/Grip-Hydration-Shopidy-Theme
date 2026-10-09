@@ -1,0 +1,268 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "contact_hero": {
+      "type": "grip-contact-hero",
+      "settings": {
+        "label": "CONTACT",
+        "heading": "GET IN TOUCH.",
+        "accent_word": "TOUCH.",
+        "accent_color": "#1f6fff",
+        "heading_tag": "h1",
+        "text": "Questions about Blue Belt, an order or the belt system? Send us a message. We read every one.",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "",
+        "button_2_link": "",
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_10_38_31_PM.png",
+        "overlay_color": "#05070a",
+        "overlay_opacity": 5,
+        "alignment": "left",
+        "content_padding_top": 120,
+        "content_padding_bottom": 80,
+        "show_rule": true,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "contact_main": {
+      "type": "grip-contact-main",
+      "blocks": {
+        "email": {
+          "type": "_grip-contact-channel",
+          "settings": {
+            "kind": "email",
+            "label": "EMAIL",
+            "value": "",
+            "link": "",
+            "note": "Orders and general questions",
+            "icon": "auto"
+          },
+          "blocks": {}
+        },
+        "phone": {
+          "type": "_grip-contact-channel",
+          "settings": {
+            "kind": "phone",
+            "label": "PHONE",
+            "value": "(956) 402-0602",
+            "link": "",
+            "note": "",
+            "icon": "auto"
+          },
+          "blocks": {}
+        },
+        "location": {
+          "type": "_grip-contact-channel",
+          "settings": {
+            "kind": "location",
+            "label": "BASED IN",
+            "value": "Edinburg, Texas",
+            "link": "",
+            "note": "",
+            "icon": "auto"
+          },
+          "blocks": {}
+        },
+        "contact-form": {
+          "type": "contact-form",
+          "static": true,
+          "settings": {
+            "width": "custom",
+            "custom_width": 100,
+            "width_mobile": "custom",
+            "custom_width_mobile": 100,
+            "background_color": "",
+            "input_style": "custom",
+            "input_background_color": "#0a0e15",
+            "input_text_color": "#f2f4f7",
+            "input_border_color": "#3b4452",
+            "border_width": 1,
+            "border_radius": 4,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "submit-button": {
+              "type": "contact-form-submit-button",
+              "static": true,
+              "settings": {
+                "label": "SEND MESSAGE",
+                "style_class": "button",
+                "custom_button_background": "{{ settings.color_palette.foreground }}",
+                "custom_button_text": "{{ settings.color_palette.background }}",
+                "custom_button_border": "{{ settings.color_palette.background }}",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "custom",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": [
+        "email",
+        "phone",
+        "location"
+      ],
+      "settings": {
+        "label": "REACH US",
+        "heading": "STRAIGHT TO THE TEAM.",
+        "text": "For order questions, include your order number so we can help faster.",
+        "form_label": "SEND A MESSAGE",
+        "form_heading": "WRITE TO US.",
+        "form_text": "Tell us what you need and how to reach you.",
+        "form_position": "right",
+        "panel_color": "#111823",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "",
+        "button_2_link": "",
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 120,
+        "padding-block-end": 160
+      }
+    },
+    "contact_faq": {
+      "type": "grip-contact-faq",
+      "blocks": {
+        "order": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "Where is my order?",
+            "answer": "<p>Your shipping confirmation email has a tracking link. If your order hasn't arrived or tracking hasn't updated, send us a message with your order number.</p>",
+            "open": true
+          },
+          "blocks": {}
+        },
+        "belts": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "When do the other belts launch?",
+            "answer": "<p>Blue Belt is available now. White, Purple, Brown and Black are coming soon, and our email list hears about new belts first.</p>",
+            "open": false
+          },
+          "blocks": {}
+        },
+        "gym": {
+          "type": "_grip-contact-question",
+          "settings": {
+            "question": "Can my gym stock GRIP?",
+            "answer": "<p>Send us a message with your gym's name and location using the contact form.</p>",
+            "open": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "order",
+        "belts",
+        "gym"
+      ],
+      "settings": {
+        "anchor": "",
+        "label": "BEFORE YOU WRITE",
+        "heading": "QUICK ANSWERS.",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "SEE ALL FAQS",
+        "button_2_link": "shopify://pages/faq",
+        "background_color": "#0a0e15",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "contact_join": {
+      "type": "grip-about-cta",
+      "blocks": {
+        "signup": {
+          "type": "email-signup",
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "heading": "",
+            "heading_text_color": "",
+            "heading_preset": "h3",
+            "border_style": "all",
+            "input_style": "custom",
+            "border_width": 1,
+            "border_radius": 4,
+            "input_background_color": "#111823",
+            "input_text_color": "#f2f4f7",
+            "input_border_color": "#8b95a6",
+            "input_type_preset": "paragraph",
+            "style_class": "button",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
+            "display_type": "text",
+            "label": "SIGN UP",
+            "integrated_button": false,
+            "button_type_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "signup"
+      ],
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_58_35_AM.png",
+        "grayscale": false,
+        "show_gradient": false,
+        "gradient_color": "#0a2350",
+        "gradient_opacity": 90,
+        "label": "",
+        "heading": "JOIN THE GRIP.",
+        "text": "Early access to new belts, and nothing else.",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "SHOP BLUE BELT",
+        "button_2_link": "shopify://collections/all",
+        "alignment": "center",
+        "content_spacing": 160,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "error_color": "#ff8a80",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "contact_hero",
+    "contact_main",
+    "contact_faq",
+    "contact_join"
+  ]
+}

@@ -1,0 +1,17 @@
+# Shopify CLI local state
+.shopify/
+
+# Client-supplied source artwork (not part of the theme)
+Images from client/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.idea/
+.vscode/
+
+# Local tooling
+node_modules/
+.playwright-mcp/

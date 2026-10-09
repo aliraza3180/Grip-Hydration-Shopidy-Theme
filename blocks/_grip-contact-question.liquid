@@ -1,0 +1,43 @@
+{%- doc -%}
+  One question and answer row in the GRIP contact questions section, built on
+  a native details element. Renders nothing on the storefront when the
+  question is blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.question != blank -%}
+  <details
+    class="grip-contact-q"
+    {% if block.settings.open %}
+      open
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    <summary class="grip-contact-q__summary">
+      <span>{{ block.settings.question | escape }}</span>
+      <span class="grip-contact-q__icon" aria-hidden="true">
+        {%- render 'grip-icon', icon: 'plus', size: 20 -%}
+      </span>
+    </summary>
+    {%- if block.settings.answer != blank -%}
+      <div class="grip-contact-q__answer grip-muted">{{ block.settings.answer }}</div>
+    {%- endif -%}
+  </details>
+{%- elsif request.design_mode -%}
+  <div class="grip-contact-q" {{ block.shopify_attributes }}>
+    <p class="grip-editor-note">Question: add text</p>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP question",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "question", "label": "Question", "default": "Question" },
+    { "type": "richtext", "id": "answer", "label": "Answer" },
+    { "type": "checkbox", "id": "open", "label": "Open by default", "default": false }
+  ]
+}
+{% endschema %}

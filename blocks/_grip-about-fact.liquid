@@ -1,0 +1,52 @@
+{%- doc -%}
+  One label and value pair in the GRIP About origin section's fact row.
+  Renders nothing on the storefront when both fields are blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.label != blank or block.settings.value != blank -%}
+  <li class="grip-about-fact" {{ block.shopify_attributes }}>
+    {%- if block.settings.icon != 'none' -%}
+      {%- render 'grip-icon', icon: block.settings.icon, size: 24, class: 'grip-about-fact__icon' -%}
+    {%- endif -%}
+    {%- if block.settings.label != blank -%}
+      <p class="grip-label grip-label--muted">{{ block.settings.label | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.value != blank -%}
+      <p class="grip-display grip-about-fact__value h4">{{ block.settings.value | escape }}</p>
+    {%- endif -%}
+  </li>
+{%- elsif request.design_mode -%}
+  <li class="grip-about-fact" {{ block.shopify_attributes }}>
+    <p class="grip-editor-note">Fact: add a label or value</p>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP fact",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "label", "label": "Label", "default": "LABEL" },
+    { "type": "text", "id": "value", "label": "Value", "default": "VALUE" },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "drop", "label": "Drop" },
+        { "value": "bolt", "label": "Bolt" },
+        { "value": "molecule", "label": "Molecule" },
+        { "value": "leaf", "label": "Leaf" },
+        { "value": "sugar-free", "label": "Sugar-free" },
+        { "value": "plus-circle", "label": "Plus" },
+        { "value": "lock", "label": "Lock" },
+        { "value": "check", "label": "Check" }
+      ],
+      "default": "none"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,48 @@
+{%- doc -%}
+  Small uppercase tracked label used above headings and in the Blue Belt
+  product details. Renders nothing when the text is blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.text != blank -%}
+  <p
+    class="grip-label grip-eyebrow{% if block.settings.tone == 'muted' %} grip-label--muted{% endif %}"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.text | escape -}}
+  </p>
+{%- elsif request.design_mode -%}
+  <p class="grip-editor-note" {{ block.shopify_attributes }}>Eyebrow: add text</p>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP eyebrow",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "LABEL"
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Tone",
+      "options": [
+        { "value": "bone", "label": "Bright" },
+        { "value": "muted", "label": "Muted" }
+      ],
+      "default": "bone"
+    }
+  ],
+  "presets": [
+    {
+      "name": "GRIP eyebrow",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,103 @@
+{%- doc -%}
+  The GRIP product card inside Horizon's product card, so collection grids and
+  other Horizon product lists show the same card as the homepage belt cards and
+  GRIP related products. Place it as the only block in the product card.
+  In stock shows the price and Add to cart; out of stock shows Notify me, and
+  products with the coming-soon tag hide their price.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign card_product = closest.product
+  assign card_key = block.id | append: '-' | append: card_product.id
+
+  capture belt_colors
+    echo 'white-belt:' | append: block.settings.color_white | append: '|'
+    echo 'blue-belt:' | append: block.settings.color_blue | append: '|'
+    echo 'purple-belt:' | append: block.settings.color_purple | append: '|'
+    echo 'brown-belt:' | append: block.settings.color_brown | append: '|'
+    echo 'black-belt:' | append: block.settings.color_black
+  endcapture
+-%}
+
+<div
+  class="grip-card-block"
+  style="--grip-card-bg: {{ block.settings.card_background }}; --grip-card-border: {{ block.settings.card_border }};"
+  {{ block.shopify_attributes }}
+>
+  {% render 'grip-product-card',
+    key: card_key,
+    section_id: section.id,
+    product: card_product,
+    status: 'auto',
+    coming_soon_tag: block.settings.coming_soon_tag,
+    belt_colors: belt_colors,
+    pack_text: block.settings.pack_text,
+    live_label: block.settings.status_live_label,
+    sold_out_label: block.settings.status_sold_out_label,
+    soon_label: block.settings.status_soon_label,
+    add_label: block.settings.add_label,
+    choose_label: block.settings.choose_label,
+    image_sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw',
+    show_notify: block.settings.show_notify,
+    notify_label: block.settings.notify_label,
+    submit_label: block.settings.submit_label,
+    email_label: block.settings.email_label,
+    email_placeholder: block.settings.email_placeholder,
+    success_text: block.settings.success_text,
+    consent_note: block.settings.consent_note
+  %}
+</div>
+
+{% stylesheet %}
+  .grip-card-block {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the GRIP product card. Use it as the only block in the product card."
+    },
+    { "type": "text", "id": "pack_text", "label": "Pack size text", "default": "25 Stick Packs" },
+    { "type": "text", "id": "add_label", "label": "Add to cart label", "default": "ADD TO CART" },
+    { "type": "text", "id": "choose_label", "label": "Product page button label", "default": "VIEW PRODUCT", "info": "Used for products with several variants or a required subscription." },
+    { "type": "text", "id": "status_live_label", "label": "In stock badge", "default": "AVAILABLE NOW" },
+    { "type": "text", "id": "status_sold_out_label", "label": "Sold out badge", "default": "SOLD OUT" },
+    { "type": "text", "id": "status_soon_label", "label": "Coming soon badge", "default": "COMING SOON" },
+    { "type": "text", "id": "coming_soon_tag", "label": "Coming soon product tag", "default": "coming-soon", "info": "Out-of-stock products with this tag hide their price and show the coming soon badge." },
+    { "type": "color", "id": "card_background", "label": "Card background", "default": "#0A0E15" },
+    { "type": "color", "id": "card_border", "label": "Card border", "default": "#1D2634" },
+    { "type": "header", "content": "Flavor colors" },
+    { "type": "color", "id": "color_white", "label": "White Belt", "info": "Leave blank to use the text color." },
+    { "type": "color", "id": "color_blue", "label": "Blue Belt", "default": "#3D82FF" },
+    { "type": "color", "id": "color_purple", "label": "Purple Belt", "default": "#A07CF0" },
+    { "type": "color", "id": "color_brown", "label": "Brown Belt" },
+    { "type": "color", "id": "color_black", "label": "Black Belt" },
+    { "type": "header", "content": "Notify me (out of stock)" },
+    { "type": "checkbox", "id": "show_notify", "label": "Show notify button", "default": true },
+    { "type": "text", "id": "notify_label", "label": "Button label", "default": "NOTIFY ME" },
+    { "type": "text", "id": "submit_label", "label": "Submit label", "default": "NOTIFY ME" },
+    { "type": "text", "id": "email_label", "label": "Email field label (screen readers)", "default": "Email for stock updates" },
+    { "type": "text", "id": "email_placeholder", "label": "Email placeholder", "default": "Email address" },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "You're on the list. We'll let you know when this Belt drops." },
+    { "type": "text", "id": "consent_note", "label": "Consent note", "default": "We'll email you when it's available. Unsubscribe anytime." }
+  ],
+  "presets": [
+    {
+      "name": "GRIP card",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

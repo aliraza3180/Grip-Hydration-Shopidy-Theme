@@ -1,0 +1,1312 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "grip_hero": {
+      "type": "grip-hero",
+      "blocks": {
+        "eyebrow": {
+          "type": "grip-eyebrow",
+          "settings": {
+            "text": "BUILT FOR THE MATS. MADE FOR EVERY ROUND.",
+            "tone": "bone"
+          },
+          "blocks": {}
+        },
+        "heading": {
+          "type": "grip-heading",
+          "settings": {
+            "text": "NEVER LOSE YOUR GRIP.",
+            "accent_word": "GRIP.",
+            "accent_color": "#1f6fff",
+            "tag": "h1",
+            "size": "h1",
+            "size_desktop": 72,
+            "size_mobile": 40,
+            "font": "accent"
+          },
+          "blocks": {}
+        },
+        "subhead": {
+          "type": "grip-subhead",
+          "settings": {
+            "text": "Hydration built for the mats.",
+            "max_width": 480
+          },
+          "blocks": {}
+        },
+        "cta": {
+          "type": "button",
+          "settings": {
+            "label": "SHOP BLUE BELT",
+            "link": "shopify://collections/all",
+            "open_in_new_tab": false,
+            "style_class": "button",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "eyebrow",
+        "heading",
+        "subhead",
+        "cta"
+      ],
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_32_32_AM.png",
+        "image_decorative": false,
+        "section_height": "large",
+        "height_custom": 88,
+        "mobile_height": "match",
+        "content_position": "bottom_left",
+        "content_max_width": 720,
+        "content_offset_bottom": 96,
+        "scrim_style": "none",
+        "scrim_color": "#05070a",
+        "scrim_opacity": 60,
+        "scrim_extent": 65,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "grip_spec_bar": {
+      "type": "grip-spec-bar",
+      "blocks": {
+        "sodium": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "drop",
+            "value": "1,000MG",
+            "unit": "SODIUM"
+          },
+          "blocks": {}
+        },
+        "potassium": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "bolt",
+            "value": "200MG",
+            "unit": "POTASSIUM"
+          },
+          "blocks": {}
+        },
+        "magnesium": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "molecule",
+            "value": "100MG",
+            "unit": "MAGNESIUM"
+          },
+          "blocks": {}
+        },
+        "sugar": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "sugar-free",
+            "value": "SUGAR-FREE",
+            "unit": "SUPPORTS HYDRATION"
+          },
+          "blocks": {}
+        },
+        "calcium": {
+          "type": "grip-spec",
+          "settings": {
+            "icon": "calcium",
+            "value": "30MG",
+            "unit": "CALCIUM"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "sodium",
+        "potassium",
+        "magnesium",
+        "calcium",
+        "sugar"
+      ],
+      "settings": {
+        "show_top_rule": true,
+        "show_bottom_rule": true,
+        "background_color": "#0a0e15",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 32,
+        "padding-block-end": 32
+      }
+    },
+    "blue_belt": {
+      "type": "featured-product-information",
+      "blocks": {
+        "media-gallery": {
+          "type": "_featured-product-information-carousel",
+          "static": true,
+          "settings": {
+            "aspect_ratio": "1",
+            "constrain_to_viewport": false,
+            "media_fit": "cover",
+            "media_radius": 4,
+            "extend_media": false,
+            "zoom": true,
+            "video_loop": false,
+            "hide_variants": true,
+            "icons_style": "arrow",
+            "slideshow_controls_style": "counter",
+            "slideshow_mobile_controls_style": "dots",
+            "thumbnail_position": "bottom",
+            "thumbnail_width": 44,
+            "thumbnail_radius": 4,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "details_position": "flex-start",
+            "gap": 20,
+            "sticky_details_desktop": true,
+            "background_media": "none",
+            "background_color": "",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_color": "",
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "label": {
+              "type": "grip-eyebrow",
+              "settings": {
+                "text": "BLUE BELT",
+                "tone": "muted"
+              },
+              "blocks": {}
+            },
+            "title": {
+              "type": "product-title",
+              "settings": {
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h2",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "price": {
+              "type": "price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "type_preset": "h4",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "text_color": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "count": {
+              "type": "grip-eyebrow",
+              "settings": {
+                "text": "25 STICKS",
+                "tone": "muted"
+              },
+              "blocks": {}
+            },
+            "variant_picker": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": true,
+                "option_label_text_color": "",
+                "variant_style_class": "default",
+                "custom_variant_background": "{{ settings.color_palette.background }}",
+                "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                "selected_variant_style_class": "default",
+                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 8,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "subscription": {
+              "type": "grip-subscription",
+              "settings": {
+                "legend": "PURCHASE OPTIONS",
+                "one_time_label": "ONE-TIME PURCHASE",
+                "savings_label": "SAVE [percent]%",
+                "default_selection": "one_time",
+                "show_plan_description": true,
+                "show_policy_link": true,
+                "policy_label": "Subscription policy",
+                "sync_main_price": true,
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              },
+              "blocks": {}
+            },
+            "buy_buttons": {
+              "type": "buy-buttons",
+              "settings": {
+                "stacking": true,
+                "text_color": "",
+                "show_pickup_availability": false,
+                "gift_card_form": true,
+                "recipient_button_style": "default",
+                "recipient_button_background": "{{ settings.color_palette.background }}",
+                "recipient_button_text": "{{ settings.color_palette.foreground }}",
+                "recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_style": "default",
+                "selected_recipient_button_background": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_text": "{{ settings.color_palette.background }}",
+                "selected_recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "input_style": "default",
+                "input_background_color": "{{ settings.color_palette.background }}",
+                "input_text_color": "{{ settings.color_palette.foreground }}",
+                "input_border_color": "{{ settings.color_palette.foreground }}",
+                "border_width": 1,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true,
+                  "settings": {
+                    "input_style": "default",
+                    "input_background_color": "{{ settings.color_palette.background }}",
+                    "input_text_color": "{{ settings.color_palette.foreground }}",
+                    "input_border_color": "{{ settings.color_palette.foreground }}",
+                    "border_width": 1,
+                    "border_radius": 0
+                  },
+                  "blocks": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button-secondary",
+                    "custom_button_background": "{{ settings.color_palette.foreground }}",
+                    "custom_button_text": "{{ settings.color_palette.background }}",
+                    "custom_button_border": "{{ settings.color_palette.background }}"
+                  },
+                  "blocks": {}
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                }
+              },
+              "block_order": []
+            },
+            "notify": {
+              "type": "grip-product-notify",
+              "settings": {},
+              "blocks": {}
+            },
+            "facts": {
+              "type": "grip-fact-list",
+              "settings": {
+                "fact_1": "25 STICKS PER BOX",
+                "fact_2": "SHIPS FROM EDINBURG, TEXAS",
+                "fact_3": "SUGAR-FREE · SUPPORTS HYDRATION",
+                "fact_4": ""
+              },
+              "blocks": {}
+            },
+            "skin": {
+              "type": "grip-product-skin",
+              "settings": {
+                "split": 62,
+                "extra_padding": 60,
+                "muted_color": "#8b95a6"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "label",
+            "title",
+            "price",
+            "count",
+            "variant_picker",
+            "subscription",
+            "buy_buttons",
+                "notify",
+            "facts",
+            "skin"
+          ]
+        }
+      },
+      "settings": {
+        "product": "blue-belt-blue-raspberry",
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": false,
+        "limit_details_width": false,
+        "gap": 48,
+        "background_color": "#0a0e15",
+        "padding-block-start": 20,
+        "padding-block-end": 47
+      }
+    },
+    "grip_belt_system": {
+      "type": "grip-belt-system",
+      "blocks": {
+        "white": {
+          "type": "grip-belt",
+          "settings": {
+            "product": "white-belt-lemon-lime",
+            "status": "coming_soon",
+            "belt_name": "WHITE BELT",
+            "flavor": "LEMON LIME",
+            "title_color": "",
+            "pack_text": "25 Stick Packs",
+            "badge_text": "",
+            "add_label": "ADD TO CART",
+            "choose_label": "VIEW PRODUCT",
+            "show_notify": true,
+            "notify_label": "NOTIFY ME",
+            "submit_label": "NOTIFY ME",
+            "email_label": "Email for launch updates",
+            "email_placeholder": "Email address",
+            "notify_tag": "",
+            "success_text": "You're on the list. We'll let you know when this Belt drops.",
+            "consent_note": "We'll email you when it launches. Unsubscribe anytime."
+          },
+          "blocks": {}
+        },
+        "blue": {
+          "type": "grip-belt",
+          "settings": {
+            "product": "blue-belt-blue-raspberry",
+            "status": "live",
+            "belt_name": "BLUE BELT",
+            "flavor": "BLUE RASPBERRY",
+            "title_color": "#3d82ff",
+            "pack_text": "25 Stick Packs",
+            "badge_text": "",
+            "add_label": "ADD TO CART",
+            "choose_label": "VIEW PRODUCT",
+            "show_notify": true,
+            "notify_label": "NOTIFY ME",
+            "submit_label": "NOTIFY ME",
+            "email_label": "Email for launch updates",
+            "email_placeholder": "Email address",
+            "notify_tag": "",
+            "success_text": "You're on the list. We'll let you know when this Belt drops.",
+            "consent_note": "We'll email you when it launches. Unsubscribe anytime."
+          },
+          "blocks": {}
+        },
+        "purple": {
+          "type": "grip-belt",
+          "settings": {
+            "product": "purple-belt-grape",
+            "status": "coming_soon",
+            "belt_name": "PURPLE BELT",
+            "flavor": "GRAPE",
+            "title_color": "#a07cf0",
+            "pack_text": "25 Stick Packs",
+            "badge_text": "",
+            "add_label": "ADD TO CART",
+            "choose_label": "VIEW PRODUCT",
+            "show_notify": true,
+            "notify_label": "NOTIFY ME",
+            "submit_label": "NOTIFY ME",
+            "email_label": "Email for launch updates",
+            "email_placeholder": "Email address",
+            "notify_tag": "",
+            "success_text": "You're on the list. We'll let you know when this Belt drops.",
+            "consent_note": "We'll email you when it launches. Unsubscribe anytime."
+          },
+          "blocks": {}
+        },
+        "brown": {
+          "type": "grip-belt",
+          "settings": {
+            "product": "brown-belt-tropical-punch",
+            "status": "coming_soon",
+            "belt_name": "BROWN BELT",
+            "flavor": "TROPICAL PUNCH",
+            "title_color": "",
+            "pack_text": "25 Stick Packs",
+            "badge_text": "",
+            "add_label": "ADD TO CART",
+            "choose_label": "VIEW PRODUCT",
+            "show_notify": true,
+            "notify_label": "NOTIFY ME",
+            "submit_label": "NOTIFY ME",
+            "email_label": "Email for launch updates",
+            "email_placeholder": "Email address",
+            "notify_tag": "",
+            "success_text": "You're on the list. We'll let you know when this Belt drops.",
+            "consent_note": "We'll email you when it launches. Unsubscribe anytime."
+          },
+          "blocks": {}
+        },
+        "black": {
+          "type": "grip-belt",
+          "settings": {
+            "product": "black-belt-black-cherry",
+            "status": "coming_soon",
+            "belt_name": "BLACK BELT",
+            "flavor": "BLACK CHERRY",
+            "title_color": "",
+            "pack_text": "25 Stick Packs",
+            "badge_text": "",
+            "add_label": "ADD TO CART",
+            "choose_label": "VIEW PRODUCT",
+            "show_notify": true,
+            "notify_label": "NOTIFY ME",
+            "submit_label": "NOTIFY ME",
+            "email_label": "Email for launch updates",
+            "email_placeholder": "Email address",
+            "notify_tag": "",
+            "success_text": "You're on the list. We'll let you know when this Belt drops.",
+            "consent_note": "We'll email you when it launches. Unsubscribe anytime."
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "white",
+        "blue",
+        "purple",
+        "brown",
+        "black"
+      ],
+      "settings": {
+        "overlay_color": "#05070a",
+        "overlay_opacity": 85,
+        "label": "FEATURED COLLECTION",
+        "heading": "5 BELTS. 5 FLAVORS. ONE MISSION.",
+        "heading_accent": "ONE MISSION.",
+        "subheading": "Different belts. Same commitment. Stay hydrated, keep showing up.",
+        "show_arrows": true,
+        "prev_label": "Previous belt",
+        "next_label": "Next belt",
+        "status_live_label": "AVAILABLE NOW",
+        "status_sold_out_label": "SOLD OUT",
+        "status_soon_label": "COMING SOON",
+        "card_background": "#0a0e15",
+        "card_border": "#1d2634",
+        "show_features": true,
+        "feature_1_icon": "drop",
+        "feature_1_title": "ELECTROLYTES",
+        "feature_1_text": "1,000MG SODIUM",
+        "feature_2_icon": "bolt",
+        "feature_2_title": "HYDRATION",
+        "feature_2_text": "ZERO SUGAR",
+        "feature_3_icon": "plus-circle",
+        "feature_3_title": "DISCIPLINE",
+        "feature_3_text": "SHOWS UP",
+        "button_label": "VIEW ALL PRODUCTS",
+        "button_link": "/collections/all",
+        "button_style": "secondary",
+        "button_arrow": true,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "grip_discipline": {
+      "type": "grip-discipline",
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_33_43_AM.png",
+        "grayscale": false,
+        "overlay_color": "#05070a",
+        "overlay_opacity": 70,
+        "text": "DISCIPLINE FUELS FREEDOM.",
+        "text_tag": "p",
+        "alignment": "left",
+        "button_label": "OUR STORY",
+        "button_link": "/pages/about",
+        "button_style": "secondary",
+        "button_arrow": true,
+        "min_height_desktop": 560,
+        "min_height_mobile": 70,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "grip_formula": {
+      "type": "grip-formula",
+      "blocks": {
+        "sodium": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Sodium",
+            "amount": "1,000mg",
+            "dv": "43%",
+            "indent": false,
+            "rule": "thin"
+          }
+        },
+        "potassium": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Potassium",
+            "amount": "200mg",
+            "dv": "4%",
+            "indent": false,
+            "rule": "thin"
+          }
+        },
+        "magnesium": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Magnesium",
+            "amount": "100mg",
+            "dv": "24%",
+            "indent": false,
+            "rule": "thin"
+          }
+        },
+        "carbs": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Total Carbohydrate",
+            "amount": "0g",
+            "dv": "0%",
+            "indent": false,
+            "rule": "thin"
+          }
+        },
+        "sugars": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Total Sugars",
+            "amount": "0g",
+            "dv": "0%",
+            "indent": false,
+            "rule": "thin"
+          }
+        },
+        "calories": {
+          "type": "fact_row",
+          "settings": {
+            "name": "Calories",
+            "amount": "0",
+            "dv": "0%",
+            "indent": false,
+            "rule": "thin"
+          }
+        },
+        "claim_sugar_free": {
+          "type": "claim",
+          "settings": {
+            "text": "SUGAR-FREE",
+            "icon": "none"
+          }
+        },
+        "claim_keto": {
+          "type": "claim",
+          "settings": {
+            "text": "KETO-FRIENDLY",
+            "icon": "none"
+          }
+        },
+        "claim_non_gmo": {
+          "type": "claim",
+          "settings": {
+            "text": "NON-GMO",
+            "icon": "none"
+          }
+        },
+        "claim_vegan": {
+          "type": "claim",
+          "settings": {
+            "text": "VEGAN",
+            "icon": "none"
+          }
+        }
+      },
+      "block_order": [
+        "sodium",
+        "potassium",
+        "magnesium",
+        "carbs",
+        "sugars",
+        "calories",
+        "claim_sugar_free",
+        "claim_keto",
+        "claim_non_gmo",
+        "claim_vegan"
+      ],
+      "settings": {
+        "product_tag": "",
+        "label": "THE FORMULA",
+        "heading": "WHAT'S ACTUALLY IN IT.",
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_16_50_AM.png",
+        "min_height": 600,
+        "facts_title": "Supplement Facts",
+        "serving_size": "Serving Size 1 Stick",
+        "servings_per_container": "Servings Per Container 25",
+        "amount_column_label": "Amount Per Serving",
+        "dv_column_label": "% Daily Value",
+        "footnote": "",
+        "show_placeholder_note": true,
+        "placeholder_note": "Placeholder — pending manufacturer approval",
+        "claims_heading": "Formula claims",
+        "button_label": "SHOP BLUE BELT",
+        "button_link": "/collections/all",
+        "button_style": "primary",
+        "button_arrow": false,
+        "background_color": "#eef0f3",
+        "text_color": "#0b0f16",
+        "muted_color": "#4a5261",
+        "hairline_color": "#0b0f16",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "grip_sports": {
+      "type": "grip-sports",
+      "blocks": {
+        "bjj": {
+          "type": "grip-sport-panel",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_34_09_AM.png",
+            "label": "JIU-JITSU",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "grappling": {
+          "type": "grip-sport-panel",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_34_21_AM.png",
+            "label": "GRAPPLING",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "wrestling": {
+          "type": "grip-sport-panel",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_43_59_AM.png",
+            "label": "WRESTLING",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "mma": {
+          "type": "grip-sport-panel",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_34_35_AM.png",
+            "label": "MMA",
+            "link": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "bjj",
+        "grappling",
+        "wrestling",
+        "mma"
+      ],
+      "settings": {
+        "label": "",
+        "heading": "BUILT FOR THE MATS",
+        "panel_height": 340,
+        "panel_gap": 8,
+        "button_label": "SHOP NOW",
+        "button_link": "/collections/all",
+        "button_style": "secondary",
+        "button_arrow": true,
+        "tint": true,
+        "tint_shadow": "#05070a",
+        "tint_highlight": "#afc3e6",
+        "tint_strength": 10,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 60,
+        "padding-block-end": 60
+      }
+    },
+    "grip_story": {
+      "type": "grip-story",
+      "blocks": {
+        "p1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>GRIP started in a gym in Edinburg, Texas — built by people who train, for people who train.</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "p2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Not a hydration brand trying to market to grapplers. GRIP was built from inside the grappling community.</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "p3": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Every belt in the system is a stage someone is standing in right now. This is for all of them.</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_15_21_AM.png",
+        "grayscale": false,
+        "image_position": "left",
+        "label": "OUR STORY",
+        "heading": "BUILT BY A GRAPPLER, FOR GRAPPLERS.",
+        "attribution": "— Arturo Salinas, Founder",
+        "show_rule": true,
+        "button_label": "READ OUR STORY",
+        "button_link": "/pages/about",
+        "button_style": "secondary",
+        "button_arrow": true,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "grip_roadmap": {
+      "type": "grip-roadmap",
+      "blocks": {
+        "blue": {
+          "type": "grip-stage",
+          "settings": {
+            "name": "BLUE BELT",
+            "status": "live",
+            "line_1": "Launching",
+            "line_2": "December 2026"
+          },
+          "blocks": {}
+        },
+        "purple": {
+          "type": "grip-stage",
+          "settings": {
+            "name": "PURPLE BELT",
+            "status": "in_development",
+            "line_1": "Coming Soon",
+            "line_2": "Next"
+          },
+          "blocks": {}
+        },
+        "brown": {
+          "type": "grip-stage",
+          "settings": {
+            "name": "BROWN BELT",
+            "status": "in_development",
+            "line_1": "Coming Soon",
+            "line_2": "Later"
+          },
+          "blocks": {}
+        },
+        "black": {
+          "type": "grip-stage",
+          "settings": {
+            "name": "BLACK BELT",
+            "status": "in_development",
+            "line_1": "Coming Soon",
+            "line_2": "Beyond"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "blue",
+        "purple",
+        "brown",
+        "black"
+      ],
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_35_50_AM.png",
+        "grayscale": false,
+        "overlay_color": "#05070a",
+        "overlay_opacity": 55,
+        "min_height": 780,
+        "label": "THE ROADMAP",
+        "heading": "A HIGHER STANDARD AHEAD.",
+        "subheading": "A focused roadmap. Made for the mats. Built for what's next.",
+        "button_label": "SEE THE BELT SYSTEM",
+        "button_link": "/collections/all",
+        "button_style": "secondary",
+        "button_arrow": true,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#c9d0da",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "grip_reviews": {
+      "type": "grip-reviews",
+      "settings": {
+        "product": "",
+        "heading": "REVIEWS",
+        "show_native_summary": true,
+        "hide_apps_without_rating": true,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "grip_faq": {
+      "type": "grip-faq",
+      "blocks": {
+        "faq": {
+          "type": "accordion",
+          "settings": {
+            "icon": "plus",
+            "dividers": true,
+            "divider_color": "#3b4452",
+            "type_preset": "paragraph",
+            "background_color": "",
+            "text_color": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_color": "",
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "use": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "How do I use the stick pack?",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Mix 1 stick pack with 16–20 oz of cold water. Shake or stir thoroughly before, during, or after training.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            },
+            "shelf_life": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "What is the shelf life?",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Our stick packs have a shelf life of 2 years from the manufacturing date.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            },
+            "international": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Do you ship internationally?",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We currently ship across the United States. International shipping options will roll out soon.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            },
+            "payment": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "What payment methods do you accept?",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We accept all major credit cards, Apple Pay, Google Pay, and Shop Pay.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            },
+            "returns": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Can I return my order?",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "answer": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Nothing has shipped yet \u2014 Blue Belt arrives in December. Full returns and refund details will be published before the first orders go out. If you have a question in the meantime, <a href=\"/pages/contact\">get in touch</a>.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "answer"
+              ]
+            }
+          },
+          "block_order": [
+            "use",
+            "shelf_life",
+            "international",
+            "payment",
+            "returns"
+          ]
+        }
+      },
+      "block_order": [
+        "faq"
+      ],
+      "settings": {
+        "label": "FREQUENTLY ASKED QUESTIONS",
+        "heading": "REAL QUESTIONS. STRAIGHT ANSWERS.",
+        "sticky_offset": 32,
+        "button_label": "SEE ALL FAQS",
+        "button_link": "/pages/faq",
+        "button_style": "secondary",
+        "button_arrow": true,
+        "background_color": "#070a10",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#3b4452",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
+    "grip_join": {
+      "type": "grip-join",
+      "blocks": {
+        "signup": {
+          "type": "email-signup",
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "heading": "",
+            "heading_text_color": "",
+            "heading_preset": "h3",
+            "border_style": "all",
+            "input_style": "custom",
+            "border_width": 1,
+            "border_radius": 100,
+            "input_background_color": "#0a0e15",
+            "input_text_color": "#f2f4f7",
+            "input_border_color": "#8b95a6",
+            "input_type_preset": "paragraph",
+            "style_class": "button",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
+            "display_type": "text",
+            "label": "SIGN UP",
+            "integrated_button": true,
+            "button_type_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "signup"
+      ],
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_35_02_AM.png",
+        "grayscale": false,
+        "overlay_color": "#05070a",
+        "overlay_opacity": 45,
+        "min_height_desktop": 620,
+        "min_height_mobile": 80,
+        "alignment": "left",
+        "label": "JOIN THE GRIP",
+        "heading": "STAY IN THE LOOP.",
+        "text": "Be the first to know about new flavors, drops and other updates.",
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "error_color": "#ff8a80",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "grip_hero",
+    "grip_spec_bar",
+    "blue_belt",
+    "grip_belt_system",
+    "grip_discipline",
+    "grip_formula",
+    "grip_sports",
+    "grip_story",
+    "grip_roadmap",
+    "grip_reviews",
+    "grip_faq",
+    "grip_join"
+  ]
+}

@@ -1,0 +1,231 @@
+{%- liquid
+  assign tint_strength = section.settings.tint_strength | divided_by: 100.0
+-%}
+
+{% capture children %}
+  <div
+    class="grip-sports{% if section.settings.tint %} grip-sports--tint{% endif %}"
+    style="--grip-tint-shadow: {{ section.settings.tint_shadow }}; --grip-tint-highlight: {{ section.settings.tint_highlight }}; --grip-tint-strength: {{ tint_strength }}; --grip-panel-h: {{ section.settings.panel_height }}px; --grip-panel-gap: {{ section.settings.panel_gap }}px; --grip-sport-count: {{ section.blocks.size }};"
+  >
+    {%- if section.settings.label != blank or section.settings.heading != blank or section.settings.button_label != blank -%}
+      <div class="grip-page-grid">
+        <header class="grip-sports__header">
+          <div class="grip-sports__titles">
+            {%- if section.settings.label != blank -%}
+              <p class="grip-label">{{ section.settings.label | escape }}</p>
+            {%- endif -%}
+            {%- if section.settings.heading != blank -%}
+              <h2 class="grip-display h2">{{ section.settings.heading | escape }}</h2>
+            {%- endif -%}
+          </div>
+          {%- render 'grip-button',
+            label: section.settings.button_label,
+            link: section.settings.button_link,
+            style: section.settings.button_style,
+            arrow: section.settings.button_arrow
+          -%}
+        </header>
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="grip-sports__grid" role="list">
+        {% content_for 'blocks' %}
+      </ul>
+    {%- elsif request.design_mode -%}
+      <div class="grip-page-grid">
+        <p class="grip-editor-note">Built for the mats: add sport panels.</p>
+      </div>
+    {%- endif -%}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children, width: 'full' %}
+
+{% stylesheet %}
+  .grip-sports {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .grip-sports__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+
+    & .grip-actions {
+      margin: 0;
+    }
+  }
+
+  .grip-sports__titles {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .grip-sports__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grip-sport-count, 4), minmax(0, 1fr));
+    gap: var(--grip-panel-gap, 8px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media screen and (max-width: 989px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .grip-sport-panel {
+    position: relative;
+    min-width: 0;
+    height: clamp(240px, 24vw, var(--grip-panel-h, 340px));
+    overflow: hidden;
+
+    @media screen and (max-width: 989px) {
+      height: auto;
+      aspect-ratio: 4 / 5;
+    }
+
+    @media screen and (max-width: 749px) {
+      aspect-ratio: 3 / 4;
+    }
+  }
+
+  .grip-sport-panel__link {
+    position: absolute;
+    inset: 0;
+    display: block;
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(0deg, rgb(5 7 10 / 0.72) 0%, rgb(5 7 10 / 0) 48%);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--grip-accent);
+      outline-offset: -4px;
+    }
+  }
+
+  .grip-sport-panel__media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--grip-s2);
+  }
+
+  .grip-sport-panel__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--animation-timing-fade-in);
+  }
+
+  .grip-sport-panel:hover .grip-sport-panel__image {
+    transform: scale(1.04);
+  }
+
+  /* Cool steel tint: grayscale image, highlight multiplied over the lights, shadow lifted into the darks. */
+  .grip-sports--tint .grip-sport-panel__image {
+    filter: grayscale(1) contrast(1.08);
+  }
+
+  .grip-sports--tint .grip-sport-panel__media::before,
+  .grip-sports--tint .grip-sport-panel__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: var(--grip-tint-strength, 1);
+  }
+
+  .grip-sports--tint .grip-sport-panel__media::before {
+    background: var(--grip-tint-highlight, #afc3e6);
+    mix-blend-mode: multiply;
+  }
+
+  .grip-sports--tint .grip-sport-panel__media::after {
+    background: var(--grip-tint-shadow, #05070a);
+    mix-blend-mode: lighten;
+  }
+
+  .grip-sport-panel__label.grip-sport-panel__label.grip-sport-panel__label {
+    position: absolute;
+    inset-inline-start: clamp(0.875rem, 2.2vw, 1.75rem);
+    inset-block-end: clamp(0.875rem, 2vw, 1.5rem);
+    z-index: 2;
+    margin: 0;
+    font-size: clamp(1.25rem, 2.5vw, 2.375rem);
+    line-height: 1;
+    color: var(--grip-bone);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP built for the mats",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "grip-sport-panel" }],
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "label", "label": "Label", "default": "BUILT FOR THE MATS" },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "Optional large heading under the label." },
+    { "type": "range", "id": "panel_height", "label": "Desktop panel height", "min": 240, "max": 600, "step": 20, "unit": "px", "default": 340 },
+    { "type": "range", "id": "panel_gap", "label": "Gap between panels", "min": 0, "max": 24, "step": 2, "unit": "px", "default": 8 },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "SHOP NOW" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "The button is hidden until a link is set." },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ],
+      "default": "secondary"
+    },
+    { "type": "checkbox", "id": "button_arrow", "label": "Show arrow", "default": true },
+    { "type": "header", "content": "Image tint" },
+    { "type": "checkbox", "id": "tint", "label": "Apply cool tint to images", "default": true },
+    { "type": "color", "id": "tint_shadow", "label": "Shadow color", "default": "#05070A", "visible_if": "{{ section.settings.tint }}" },
+    { "type": "color", "id": "tint_highlight", "label": "Highlight color", "default": "#AFC3E6", "visible_if": "{{ section.settings.tint }}" },
+    { "type": "range", "id": "tint_strength", "label": "Strength", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 100, "visible_if": "{{ section.settings.tint }}" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 8 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP built for the mats",
+      "category": "GRIP",
+      "blocks": {
+        "bjj": { "type": "grip-sport-panel", "settings": { "label": "JIU-JITSU" } },
+        "grappling": { "type": "grip-sport-panel", "settings": { "label": "GRAPPLING" } },
+        "wrestling": { "type": "grip-sport-panel", "settings": { "label": "WRESTLING" } },
+        "mma": { "type": "grip-sport-panel", "settings": { "label": "MMA" } }
+      },
+      "block_order": ["bjj", "grappling", "wrestling", "mma"]
+    }
+  ]
+}
+{% endschema %}

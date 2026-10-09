@@ -1,0 +1,92 @@
+{% capture children %}
+  <nav
+    class="grip-faq-nav grip-faq-nav--{{ section.settings.alignment }}{% if section.settings.show_rule %} grip-faq-nav--rule{% endif %}"
+    aria-label="{{ section.settings.nav_label | default: 'FAQ topics' | escape }}"
+  >
+    {%- if section.settings.label != blank -%}
+      <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+    {%- endif -%}
+    {%- if section.blocks.size > 0 -%}
+      <ul class="grip-faq-nav__list" role="list">
+        {% content_for 'blocks' %}
+      </ul>
+    {%- elsif request.design_mode -%}
+      <p class="grip-editor-note">FAQ links: add link blocks.</p>
+    {%- endif -%}
+  </nav>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-faq-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .grip-faq-nav--rule {
+    padding-block-end: var(--grip-gap-lg);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .grip-faq-nav--center {
+    justify-content: center;
+  }
+
+  .grip-faq-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grip-faq-nav__link {
+    min-height: 44px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP FAQ links",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "_grip-faq-link" }],
+  "max_blocks": 10,
+  "settings": [
+    { "type": "text", "id": "label", "label": "Label", "default": "JUMP TO" },
+    { "type": "text", "id": "nav_label", "label": "Menu name (screen readers)", "default": "FAQ topics" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    { "type": "checkbox", "id": "show_rule", "label": "Show bottom hairline", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP FAQ links",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

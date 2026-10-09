@@ -1,0 +1,56 @@
+{%- doc -%}
+  One value in the GRIP About values grid: optional icon, title and text.
+  Renders nothing on the storefront when the title and text are blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.title != blank or block.settings.text != blank -%}
+  <li class="grip-about-value" {{ block.shopify_attributes }}>
+    {%- if block.settings.icon != 'none' -%}
+      <span class="grip-about-value__icon">
+        {%- render 'grip-icon', icon: block.settings.icon, size: block.settings.icon_size -%}
+      </span>
+    {%- endif -%}
+    {%- if block.settings.title != blank -%}
+      <h3 class="grip-display grip-about-value__title h4">{{ block.settings.title | escape }}</h3>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <p class="grip-about-value__text grip-muted">{{ block.settings.text | escape }}</p>
+    {%- endif -%}
+  </li>
+{%- elsif request.design_mode -%}
+  <li class="grip-about-value" {{ block.shopify_attributes }}>
+    <p class="grip-editor-note">Value: add a title or text</p>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP value",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "drop", "label": "Drop" },
+        { "value": "bolt", "label": "Bolt" },
+        { "value": "molecule", "label": "Molecule" },
+        { "value": "leaf", "label": "Leaf" },
+        { "value": "sugar-free", "label": "Sugar-free" },
+        { "value": "flame-off", "label": "No flame" },
+        { "value": "plus-circle", "label": "Plus" },
+        { "value": "lock", "label": "Lock" },
+        { "value": "check", "label": "Check" }
+      ],
+      "default": "check"
+    },
+    { "type": "range", "id": "icon_size", "label": "Icon size", "min": 16, "max": 48, "step": 2, "unit": "px", "default": 28 },
+    { "type": "text", "id": "title", "label": "Title", "default": "VALUE" },
+    { "type": "textarea", "id": "text", "label": "Text" }
+  ]
+}
+{% endschema %}

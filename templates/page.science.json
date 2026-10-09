@@ -1,0 +1,486 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "science_hero": {
+      "type": "grip-contact-hero",
+      "settings": {
+        "label": "THE SCIENCE",
+        "heading": "READ THE LABEL.",
+        "accent_word": "LABEL.",
+        "accent_color": "#1f6fff",
+        "heading_tag": "h1",
+        "text": "Everything in a stick of Blue Belt, laid out plainly: four electrolytes, sugar-free, formulated to support hydration.",
+        "button_label": "SHOP BLUE BELT",
+        "button_link": "shopify://collections/all",
+        "button_2_label": "",
+        "button_2_link": "",
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_58_35_AM.png",
+        "overlay_color": "#05070a",
+        "overlay_opacity": 0,
+        "alignment": "left",
+        "content_padding_top": 120,
+        "content_padding_bottom": 80,
+        "show_rule": true,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "science_breakdown": {
+      "type": "grip-science-breakdown",
+      "blocks": {
+        "sodium": {
+          "type": "_grip-electrolyte",
+          "settings": {
+            "name": "SODIUM",
+            "amount": "1,000",
+            "unit": "MG",
+            "dv": "43% Daily Value",
+            "text": "",
+            "number_color": "#1f6fff"
+          },
+          "blocks": {}
+        },
+        "potassium": {
+          "type": "_grip-electrolyte",
+          "settings": {
+            "name": "POTASSIUM",
+            "amount": "200",
+            "unit": "MG",
+            "dv": "4% Daily Value",
+            "text": "",
+            "number_color": ""
+          },
+          "blocks": {}
+        },
+        "magnesium": {
+          "type": "_grip-electrolyte",
+          "settings": {
+            "name": "MAGNESIUM",
+            "amount": "100",
+            "unit": "MG",
+            "dv": "24% Daily Value",
+            "text": "",
+            "number_color": ""
+          },
+          "blocks": {}
+        },
+        "calcium": {
+          "type": "_grip-electrolyte",
+          "settings": {
+            "name": "CALCIUM",
+            "amount": "30",
+            "unit": "MG",
+            "dv": "2% Daily Value",
+            "text": "",
+            "number_color": ""
+          },
+          "blocks": {}
+        },
+        "sugar": {
+          "type": "_grip-electrolyte",
+          "settings": {
+            "name": "SUGAR",
+            "amount": "0",
+            "unit": "G",
+            "dv": "Per stick",
+            "text": "",
+            "number_color": ""
+          },
+          "blocks": {}
+        },
+        "calories": {
+          "type": "_grip-electrolyte",
+          "settings": {
+            "name": "CALORIES",
+            "amount": "0",
+            "unit": "",
+            "dv": "Per stick",
+            "text": "",
+            "number_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "sodium",
+        "potassium",
+        "magnesium",
+        "calcium",
+        "sugar",
+        "calories"
+      ],
+      "settings": {
+        "label": "PER STICK",
+        "heading": "FOUR ELECTROLYTES. ZERO SUGAR.",
+        "text": "Measured per stick, straight from the Supplement Facts panel.",
+        "columns": "3",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "",
+        "button_2_link": "",
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "science_label": {
+      "type": "grip-science-label",
+      "blocks": {
+        "calories": {
+          "type": "_grip-fact-row",
+          "settings": {
+            "nutrient": "Calories",
+            "amount": "0",
+            "dv": "",
+            "style": "bold",
+            "rule": "medium"
+          },
+          "blocks": {}
+        },
+        "carbs": {
+          "type": "_grip-fact-row",
+          "settings": {
+            "nutrient": "Total Carbohydrate",
+            "amount": "0g",
+            "dv": "0%",
+            "style": "bold",
+            "rule": "thin"
+          },
+          "blocks": {}
+        },
+        "sugars": {
+          "type": "_grip-fact-row",
+          "settings": {
+            "nutrient": "Total Sugars",
+            "amount": "0g",
+            "dv": "†",
+            "style": "indent",
+            "rule": "thin"
+          },
+          "blocks": {}
+        },
+        "sodium": {
+          "type": "_grip-fact-row",
+          "settings": {
+            "nutrient": "Sodium",
+            "amount": "1,000mg",
+            "dv": "43%",
+            "style": "bold",
+            "rule": "thin"
+          },
+          "blocks": {}
+        },
+        "potassium": {
+          "type": "_grip-fact-row",
+          "settings": {
+            "nutrient": "Potassium",
+            "amount": "200mg",
+            "dv": "4%",
+            "style": "bold",
+            "rule": "thin"
+          },
+          "blocks": {}
+        },
+        "magnesium": {
+          "type": "_grip-fact-row",
+          "settings": {
+            "nutrient": "Magnesium",
+            "amount": "100mg",
+            "dv": "24%",
+            "style": "bold",
+            "rule": "thin"
+          },
+          "blocks": {}
+        },
+        "calcium": {
+          "type": "_grip-fact-row",
+          "settings": {
+            "nutrient": "Calcium",
+            "amount": "30mg",
+            "dv": "2%",
+            "style": "bold",
+            "rule": "thick"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "calories",
+        "carbs",
+        "sugars",
+        "sodium",
+        "potassium",
+        "magnesium",
+        "calcium"
+      ],
+      "settings": {
+        "label": "THE LABEL",
+        "heading": "WHAT'S ACTUALLY IN IT.",
+        "text": "The Supplement Facts panel for Blue Belt, Blue Raspberry.",
+        "panel_title": "Supplement Facts",
+        "serving_size": "Serving Size 1 Stick",
+        "servings": "Servings Per Container 25",
+        "amount_header": "Amount Per Serving",
+        "dv_header": "% Daily Value",
+        "footnote": "† Daily Value not established.",
+        "ingredients": "<p><strong>Other ingredients:</strong> Citric Acid, Natural Flavor, Stevia.</p>",
+        "label_position": "right",
+        "panel_background": "#ffffff",
+        "panel_text": "#0b0f16",
+        "show_note": true,
+        "note": "Placeholder — pending manufacturer approval",
+        "show_disclaimer": false,
+        "disclaimer": "*These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease.",
+        "image": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_01_35_11_AM.png",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "",
+        "button_2_link": "",
+        "background_color": "#f1f3f6",
+        "text_color": "#0b0f16",
+        "muted_color": "#4a5361",
+        "hairline_color": "#d3d8e0",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "science_claims": {
+      "type": "grip-about-values",
+      "blocks": {
+        "sugar_free": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "sugar-free",
+            "icon_size": 28,
+            "title": "SUGAR-FREE.",
+            "text": ""
+          },
+          "blocks": {}
+        },
+        "hydration": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "drop",
+            "icon_size": 28,
+            "title": "SUPPORTS HYDRATION.",
+            "text": ""
+          },
+          "blocks": {}
+        },
+        "keto": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "check",
+            "icon_size": 28,
+            "title": "KETO-FRIENDLY.",
+            "text": ""
+          },
+          "blocks": {}
+        },
+        "non_gmo": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "molecule",
+            "icon_size": 28,
+            "title": "NON-GMO.",
+            "text": ""
+          },
+          "blocks": {}
+        },
+        "vegan": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "leaf",
+            "icon_size": 28,
+            "title": "VEGAN.",
+            "text": ""
+          },
+          "blocks": {}
+        },
+        "sweeteners": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "sugar-free",
+            "icon_size": 28,
+            "title": "NO ARTIFICIAL SWEETENERS.",
+            "text": ""
+          },
+          "blocks": {}
+        },
+        "preservatives": {
+          "type": "_grip-about-value",
+          "settings": {
+            "icon": "check",
+            "icon_size": 28,
+            "title": "NO ARTIFICIAL PRESERVATIVES.",
+            "text": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "sugar_free",
+        "hydration",
+        "keto",
+        "non_gmo",
+        "vegan",
+        "sweeteners",
+        "preservatives"
+      ],
+      "settings": {
+        "label": "ON THE LABEL",
+        "heading": "WHAT IT IS.",
+        "text": "The claims approved by our manufacturer, and nothing we made up.",
+        "icon_color": "#1f6fff",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "",
+        "button_2_link": "",
+        "background_color": "#0a0e15",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "science_steps": {
+      "type": "grip-steps",
+      "blocks": {
+        "tear": {
+          "type": "_grip-step",
+          "settings": {
+            "title": "TEAR.",
+            "text": "Open one stick.",
+            "icon": "none"
+          },
+          "blocks": {}
+        },
+        "pour": {
+          "type": "_grip-step",
+          "settings": {
+            "title": "POUR.",
+            "text": "Empty it into your water bottle.",
+            "icon": "none"
+          },
+          "blocks": {}
+        },
+        "shake": {
+          "type": "_grip-step",
+          "settings": {
+            "title": "SHAKE.",
+            "text": "Shake or stir until it dissolves.",
+            "icon": "none"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "tear",
+        "pour",
+        "shake"
+      ],
+      "settings": {
+        "label": "HOW TO USE",
+        "heading": "TEAR. POUR. SHAKE.",
+        "text": "",
+        "note": "Check the box for how much water to use.",
+        "button_label": "SHOP BLUE BELT",
+        "button_link": "shopify://collections/all",
+        "button_2_label": "",
+        "button_2_link": "",
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "hairline_color": "#1d2634",
+        "padding-block-start": 160,
+        "padding-block-end": 160
+      }
+    },
+    "science_cta": {
+      "type": "grip-about-cta",
+      "blocks": {
+        "signup": {
+          "type": "email-signup",
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "heading": "",
+            "heading_text_color": "",
+            "heading_preset": "h3",
+            "border_style": "all",
+            "input_style": "custom",
+            "border_width": 1,
+            "border_radius": 4,
+            "input_background_color": "#111823",
+            "input_text_color": "#f2f4f7",
+            "input_border_color": "#8b95a6",
+            "input_type_preset": "paragraph",
+            "style_class": "button",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
+            "display_type": "text",
+            "label": "SIGN UP",
+            "integrated_button": false,
+            "button_type_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "signup"
+      ],
+      "settings": {
+        "image_desktop": "shopify://shop_images/ChatGPT_Image_Sep_15_2026_02_35_02_AM.png",
+        "grayscale": false,
+        "show_gradient": false,
+        "gradient_color": "#0a2350",
+        "gradient_opacity": 90,
+        "label": "",
+        "heading": "JOIN THE GRIP.",
+        "text": "Early access to new belts, and nothing else.",
+        "button_label": "",
+        "button_link": "",
+        "button_2_label": "READ THE FAQ",
+        "button_2_link": "shopify://pages/faq",
+        "alignment": "center",
+        "content_spacing": 160,
+        "background_color": "#05070a",
+        "text_color": "#f2f4f7",
+        "muted_color": "#8b95a6",
+        "error_color": "#ff8a80",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "science_hero",
+    "science_breakdown",
+    "science_label",
+    "science_claims",
+    "science_steps",
+    "science_cta"
+  ]
+}

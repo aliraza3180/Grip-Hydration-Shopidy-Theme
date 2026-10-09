@@ -1,0 +1,56 @@
+{%- doc -%}
+  One numbered step in the GRIP steps section. The number comes from a CSS
+  counter on the parent list. Renders nothing on the storefront when the
+  title and text are blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.title != blank or block.settings.text != blank -%}
+  <li class="grip-step" {{ block.shopify_attributes }}>
+    <div class="grip-step__top">
+      <span class="grip-display grip-step__num" aria-hidden="true"></span>
+      {%- if block.settings.icon != 'none' -%}
+        <span class="grip-step__icon">
+          {%- render 'grip-contact-icon', icon: block.settings.icon, size: 28 -%}
+        </span>
+      {%- endif -%}
+    </div>
+    {%- if block.settings.title != blank -%}
+      <h3 class="grip-display grip-step__title h3">{{ block.settings.title | escape }}</h3>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <p class="grip-step__text grip-muted">{{ block.settings.text | escape }}</p>
+    {%- endif -%}
+  </li>
+{%- elsif request.design_mode -%}
+  <li class="grip-step" {{ block.shopify_attributes }}>
+    <p class="grip-editor-note">Step: add a title or text</p>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP step",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "STEP." },
+    { "type": "textarea", "id": "text", "label": "Text" },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "drop", "label": "Drop" },
+        { "value": "check", "label": "Check" },
+        { "value": "plus-circle", "label": "Plus" },
+        { "value": "molecule", "label": "Molecule" },
+        { "value": "clock", "label": "Clock" },
+        { "value": "message", "label": "Message" }
+      ],
+      "default": "none"
+    }
+  ]
+}
+{% endschema %}

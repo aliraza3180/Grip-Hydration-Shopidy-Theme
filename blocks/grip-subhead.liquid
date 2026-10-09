@@ -1,0 +1,58 @@
+{%- doc -%}
+  One-line supporting text under a GRIP heading. Renders nothing when blank.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- if block.settings.text != blank -%}
+  <p
+    class="grip-subhead"
+    style="--grip-subhead-max: {{ block.settings.max_width }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.text | escape -}}
+  </p>
+{%- elsif request.design_mode -%}
+  <p class="grip-editor-note" {{ block.shopify_attributes }}>Subhead: add text</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-subhead {
+    max-width: var(--grip-subhead-max, 30rem);
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP subhead",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Supporting line"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 240,
+      "max": 640,
+      "step": 20,
+      "unit": "px",
+      "default": 480
+    }
+  ],
+  "presets": [
+    {
+      "name": "GRIP subhead",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

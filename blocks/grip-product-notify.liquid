@@ -1,0 +1,144 @@
+{%- doc -%}
+  Notify-me panel for the product page. Renders only when every variant is out
+  of stock; it then hides this section's sold-out buy buttons, subscription
+  options and sticky add-to-cart bar. Products with the coming-soon tag get the
+  coming-soon copy and, optionally, no price. The customer tag matches the
+  homepage belt cards (notify- plus the belt name).
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign product = closest.product
+
+  assign belt = product.metafields.custom.belt.value
+  if belt == blank
+    assign belt = product.title | split: '—' | first | strip
+  endif
+  assign derived_tag = belt | handleize | prepend: 'notify-'
+  assign notify_tag = block.settings.notify_tag | default: derived_tag
+
+  assign cs_tag = block.settings.coming_soon_tag | default: settings.grip_coming_soon_tag
+  assign is_coming_soon = false
+  if cs_tag != blank and product.tags contains cs_tag
+    assign is_coming_soon = true
+  endif
+
+  assign wl_tag = block.settings.waitlist_tag | default: settings.grip_waitlist_tag
+  assign is_waitlist = false
+  if is_coming_soon == false and wl_tag != blank and product.tags contains wl_tag
+    assign is_waitlist = true
+  endif
+
+  assign notify_submit_label = block.settings.submit_label
+  if is_coming_soon
+    assign heading = block.settings.heading_coming_soon | default: settings.grip_coming_soon_label
+    assign message = block.settings.text_coming_soon | replace: '[belt]', belt
+  elsif is_waitlist
+    assign heading = block.settings.heading_waitlist | default: settings.grip_waitlist_badge
+    assign message = block.settings.text_waitlist | replace: '[belt]', belt
+    assign notify_submit_label = block.settings.waitlist_submit_label | default: settings.grip_waitlist_cta | default: block.settings.submit_label
+  else
+    assign heading = block.settings.heading_sold_out
+    assign message = block.settings.text_sold_out | replace: '[belt]', belt
+  endif
+
+  assign scope = '[id="shopify-section-' | append: section.id | append: '"]'
+-%}
+
+{%- if product != blank and product.available == false -%}
+  {% style %}
+    {{ scope }} .buy-buttons-block,
+    {{ scope }} grip-subscription,
+    {{ scope }} sticky-add-to-cart {
+      display: none;
+    }
+    {%- if is_coming_soon and block.settings.hide_price_coming_soon %}
+      {{ scope }} product-price {
+        display: none;
+      }
+    {%- endif %}
+  {% endstyle %}
+
+  <div class="grip-product-notify" {{ block.shopify_attributes }}>
+    {%- if heading != blank -%}
+      <p class="grip-label grip-product-notify__heading">{{ heading | escape }}</p>
+    {%- endif -%}
+    {%- if message != blank -%}
+      <p class="grip-product-notify__text">{{ message | escape }}</p>
+    {%- endif -%}
+    {% render 'grip-notify-form',
+      key: block.id,
+      tag: notify_tag,
+      submit_label: notify_submit_label,
+      email_label: block.settings.email_label,
+      context_label: belt,
+      email_placeholder: block.settings.email_placeholder,
+      success_text: block.settings.success_text,
+      consent_note: block.settings.consent_note,
+      collapsible: false
+    %}
+  </div>
+{%- elsif request.design_mode -%}
+  <p class="grip-editor-note" {{ block.shopify_attributes }}>Notify me: hidden while this product is in stock.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-product-notify {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: var(--grip-s1);
+    border: 1px solid var(--color-border);
+    border-radius: var(--grip-radius);
+  }
+
+  .grip-product-notify__heading,
+  .grip-product-notify__text {
+    margin: 0;
+  }
+
+  .grip-product-notify__text {
+    color: var(--grip-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP notify me",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows only when the product is out of stock, and then hides the sold-out buy buttons and the sticky add-to-cart bar. [belt] in the text is replaced with the belt name."
+    },
+    { "type": "header", "content": "Coming soon" },
+    { "type": "text", "id": "coming_soon_tag", "label": "Coming soon product tag", "default": "coming-soon" },
+    { "type": "text", "id": "heading_coming_soon", "label": "Heading", "default": "COMING SOON" },
+    { "type": "text", "id": "text_coming_soon", "label": "Text", "default": "Be the first to know when [belt] launches." },
+    { "type": "checkbox", "id": "hide_price_coming_soon", "label": "Hide price", "default": true, "info": "Coming-soon belts don't show a price." },
+    { "type": "header", "content": "Sold out" },
+    { "type": "header", "content": "Pre-launch / waitlist" },
+    { "type": "text", "id": "waitlist_tag", "label": "Pre-launch product tag", "default": "live", "info": "Out-of-stock products with this tag show the waitlist copy instead of Sold out." },
+    { "type": "text", "id": "heading_waitlist", "label": "Heading", "default": "COMING DECEMBER" },
+    { "type": "text", "id": "text_waitlist", "label": "Text", "default": "[belt] ships this December. Join the waitlist and we'll email you the moment it drops." },
+    { "type": "text", "id": "waitlist_submit_label", "label": "Button label", "default": "JOIN THE WAITLIST" },
+    { "type": "text", "id": "heading_sold_out", "label": "Heading", "default": "SOLD OUT" },
+    { "type": "text", "id": "text_sold_out", "label": "Text", "default": "Leave your email and we'll let you know when [belt] is back." },
+    { "type": "header", "content": "Form" },
+    { "type": "text", "id": "submit_label", "label": "Button label", "default": "NOTIFY ME" },
+    { "type": "text", "id": "email_label", "label": "Email field label (screen readers)", "default": "Email for stock updates" },
+    { "type": "text", "id": "email_placeholder", "label": "Email placeholder", "default": "Email address" },
+    { "type": "text", "id": "notify_tag", "label": "Customer tag", "info": "Leave blank to use notify- plus the belt name, matching the homepage cards." },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "You're on the list. We'll let you know when this Belt drops." },
+    { "type": "text", "id": "consent_note", "label": "Consent note", "default": "We'll email you when it's available. Unsubscribe anytime." }
+  ],
+  "presets": [
+    {
+      "name": "GRIP notify me",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

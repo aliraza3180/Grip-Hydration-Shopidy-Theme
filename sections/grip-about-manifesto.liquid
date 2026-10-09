@@ -1,0 +1,177 @@
+{%- liquid
+  assign overlay = section.settings.overlay_color
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+  assign text_tag = section.settings.text_tag | default: 'p'
+
+  assign has_image = false
+  if section.settings.image_desktop != blank or section.settings.image_mobile != blank
+    assign has_image = true
+  endif
+
+  capture band_style
+    echo '--grip-am-h: ' | append: section.settings.height_desktop | append: 'svh;'
+    echo '--grip-am-h-m: ' | append: section.settings.height_mobile | append: 'svh;'
+    echo '--grip-am-overlay: rgb(' | append: overlay.red | append: ' ' | append: overlay.green | append: ' ' | append: overlay.blue | append: ' / ' | append: overlay_alpha | append: ');'
+  endcapture
+-%}
+
+{% capture children %}
+  <div
+    class="grip-about-manifesto grip-about-manifesto--{{ section.settings.alignment }}{% if section.settings.grayscale %} grip-about-manifesto--grayscale{% endif %}"
+    style="{{ band_style | strip_newlines }}"
+  >
+    <div class="grip-about-manifesto__media">
+      {%- if has_image -%}
+        {% render 'grip-image',
+          desktop: section.settings.image_desktop,
+          mobile: section.settings.image_mobile,
+          widths: '832, 1200, 1600, 1920, 2560',
+          decorative: true
+        %}
+      {%- elsif request.design_mode -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'grip-placeholder' }}
+      {%- endif -%}
+    </div>
+    <div class="grip-about-manifesto__overlay" aria-hidden="true"></div>
+
+    <div class="grip-page-grid grip-about-manifesto__content">
+      <div class="grip-about-manifesto__stack">
+        {%- if section.settings.text != blank -%}
+          <{{ text_tag }} class="grip-display grip-about-manifesto__line {{ section.settings.text_size }}">
+            {{- section.settings.text | escape -}}
+          </{{ text_tag }}>
+        {%- elsif request.design_mode -%}
+          <p class="grip-editor-note">Manifesto: add a line</p>
+        {%- endif -%}
+        {%- if section.settings.subtext != blank -%}
+          <p class="grip-label">{{ section.settings.subtext | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children, width: 'full' %}
+
+{% stylesheet %}
+  .grip-about-manifesto {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: var(--grip-am-h, 60svh);
+    isolation: isolate;
+    overflow: hidden;
+
+    @media screen and (max-width: 749px) {
+      min-height: var(--grip-am-h-m, 70svh);
+    }
+  }
+
+  .grip-about-manifesto__media,
+  .grip-about-manifesto__overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .grip-about-manifesto__media {
+    z-index: -2;
+  }
+
+  .grip-about-manifesto__overlay {
+    z-index: -1;
+    background: var(--grip-am-overlay);
+  }
+
+  .grip-about-manifesto--grayscale .grip-about-manifesto__media img {
+    filter: grayscale(1);
+  }
+
+  .grip-about-manifesto__content {
+    padding-block: var(--grip-gap-2xl);
+  }
+
+  .grip-about-manifesto__stack {
+    display: grid;
+    justify-items: center;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .grip-about-manifesto--left .grip-about-manifesto__stack {
+    justify-items: start;
+    text-align: start;
+  }
+
+  .grip-about-manifesto__line {
+    max-width: 18ch;
+    letter-spacing: 0.02em;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP about manifesto",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image", "info": "21:9 recommended." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "4:5 recommended. Shown below 750px." },
+    { "type": "checkbox", "id": "grayscale", "label": "Black and white", "default": true },
+    { "type": "color", "id": "overlay_color", "label": "Overlay color", "default": "#05070A" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 50 },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "text", "label": "Line", "default": "DISCIPLINE FUELS FREEDOM." },
+    { "type": "text", "id": "subtext", "label": "Small text", "info": "Optional line under the statement." },
+    {
+      "type": "select",
+      "id": "text_tag",
+      "label": "HTML tag",
+      "options": [
+        { "value": "p", "label": "Paragraph" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "p"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Size",
+      "options": [
+        { "value": "h1", "label": "Display (H1 preset)" },
+        { "value": "h2", "label": "Section (H2 preset)" },
+        { "value": "h3", "label": "Card (H3 preset)" }
+      ],
+      "default": "h1"
+    },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    },
+    { "type": "range", "id": "height_desktop", "label": "Desktop height", "min": 30, "max": 100, "step": 2, "unit": "%", "default": 60 },
+    { "type": "range", "id": "height_mobile", "label": "Mobile height", "min": 30, "max": 100, "step": 2, "unit": "%", "default": 70 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP about manifesto",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

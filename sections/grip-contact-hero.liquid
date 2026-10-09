@@ -1,0 +1,233 @@
+{%- liquid
+  assign img_loading = 'lazy'
+  assign img_priority = 'auto'
+  if section.index == 1
+    assign img_loading = 'eager'
+    assign img_priority = 'high'
+  endif
+
+  assign has_image = false
+  if section.settings.image_desktop != blank or section.settings.image_mobile != blank
+    assign has_image = true
+  endif
+
+  assign heading_tag = section.settings.heading_tag | default: 'h1'
+  assign accent_word = section.settings.accent_word
+  assign heading_before = section.settings.heading
+  assign heading_after = ''
+  assign has_accent = false
+  if accent_word != blank and section.settings.heading contains accent_word
+    assign has_accent = true
+    assign heading_parts = section.settings.heading | replace_last: accent_word, '%%grip-accent%%' | split: '%%grip-accent%%'
+    assign heading_before = heading_parts.first
+    if heading_parts.size > 1
+      assign heading_after = heading_parts.last
+    endif
+  endif
+
+  assign overlay = section.settings.overlay_color
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+
+  capture hero_style
+    echo '--grip-ch-pt: ' | append: section.settings.content_padding_top | append: 'px;'
+    echo '--grip-ch-pb: ' | append: section.settings.content_padding_bottom | append: 'px;'
+    echo '--grip-ch-accent: ' | append: section.settings.accent_color | append: ';'
+    echo '--grip-ch-overlay: rgb(' | append: overlay.red | append: ' ' | append: overlay.green | append: ' ' | append: overlay.blue | append: ' / ' | append: overlay_alpha | append: ');'
+  endcapture
+-%}
+
+{% capture children %}
+  <div
+    class="grip-contact-hero grip-contact-hero--{{ section.settings.alignment }}{% if section.settings.show_rule %} grip-contact-hero--rule{% endif %}"
+    style="{{ hero_style | strip_newlines }}"
+  >
+    {%- if has_image -%}
+      <div class="grip-contact-hero__media">
+        {% render 'grip-image',
+          desktop: section.settings.image_desktop,
+          mobile: section.settings.image_mobile,
+          loading: img_loading,
+          fetchpriority: img_priority,
+          decorative: true
+        %}
+      </div>
+      <div class="grip-contact-hero__overlay" aria-hidden="true"></div>
+    {%- endif -%}
+
+    <div class="grip-page-grid grip-contact-hero__content">
+      <div class="grip-contact-hero__stack">
+        {%- if section.settings.label != blank -%}
+          <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <{{ heading_tag }} class="grip-display grip-contact-hero__heading h1">
+            {{- heading_before | escape -}}
+            {%- if has_accent -%}
+              <span class="grip-contact-hero__accent">{{ accent_word | escape }}</span>
+              {{- heading_after | escape -}}
+            {%- endif -%}
+          </{{ heading_tag }}>
+        {%- elsif request.design_mode -%}
+          <p class="grip-editor-note">Heading: add text</p>
+        {%- endif -%}
+
+        {%- if section.settings.text != blank -%}
+          <p class="grip-contact-hero__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+
+        {% render 'grip-about-actions',
+          primary_label: section.settings.button_label,
+          primary_link: section.settings.button_link,
+          secondary_label: section.settings.button_2_label,
+          secondary_link: section.settings.button_2_link,
+          arrow: true
+        %}
+      </div>
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children, width: 'full' %}
+
+{% stylesheet %}
+  .grip-contact-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .grip-contact-hero--rule {
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .grip-contact-hero__media,
+  .grip-contact-hero__overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .grip-contact-hero__media {
+    z-index: -2;
+  }
+
+  .grip-contact-hero__overlay {
+    z-index: -1;
+    background: var(--grip-ch-overlay);
+  }
+
+  .grip-contact-hero__content {
+    padding-block: var(--grip-ch-pt, 120px) var(--grip-ch-pb, 80px);
+
+    @media screen and (max-width: 749px) {
+      padding-block: calc(var(--grip-ch-pt, 120px) * 0.55) calc(var(--grip-ch-pb, 80px) * 0.6);
+    }
+  }
+
+  .grip-contact-hero__stack {
+    display: grid;
+    justify-items: start;
+    gap: 1.25rem;
+    max-width: 48rem;
+
+    & .grip-actions {
+      margin-block-start: 0.25rem;
+    }
+  }
+
+  .grip-contact-hero--center .grip-contact-hero__stack {
+    justify-items: center;
+    justify-self: center;
+    text-align: center;
+
+    & .grip-actions {
+      justify-content: center;
+    }
+  }
+
+  .grip-contact-hero__accent {
+    color: var(--grip-ch-accent, var(--grip-accent));
+  }
+
+  .grip-contact-hero__stack .grip-contact-hero__heading.grip-contact-hero__heading {
+    @media screen and (max-width: 749px) {
+      font-size: clamp(2.75rem, 13vw, 4.5rem);
+    }
+  }
+
+  .grip-contact-hero__text {
+    max-width: 36rem;
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP contact hero",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "CONTACT" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "GET IN TOUCH." },
+    { "type": "text", "id": "accent_word", "label": "Accent word", "info": "Must match text in the heading exactly. The last match is colored." },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#1F6FFF" },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML tag",
+      "info": "Keep H1 when this is the first section on the page.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1"
+    },
+    { "type": "text", "id": "text", "label": "Supporting text", "default": "Questions about Blue Belt, an order or the belt system? Send us a message. We read every one." },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Background image" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image", "info": "Optional. 21:9 recommended." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "Optional. 4:5 recommended. Shown below 750px." },
+    { "type": "color", "id": "overlay_color", "label": "Overlay color", "default": "#05070A" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 95, "step": 5, "unit": "%", "default": 70 },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    { "type": "range", "id": "content_padding_top", "label": "Space above content", "min": 0, "max": 240, "step": 8, "unit": "px", "default": 120 },
+    { "type": "range", "id": "content_padding_bottom", "label": "Space below content", "min": 0, "max": 240, "step": 8, "unit": "px", "default": 80 },
+    { "type": "checkbox", "id": "show_rule", "label": "Show bottom hairline", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP contact hero",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,43 @@
+{%- doc -%}
+  Shared GRIP section shell. Mirrors Horizon's snippets/section.liquid markup:
+  a painted .section-background sibling, the .section grid, per-section colors
+  through contrast-override, and padding through spacing-style.
+
+  @param {object} section - The section object
+  @param {string} children - Rendered inner markup
+  @param {string} [width] - 'page' (default) or 'full'
+  @param {string} [class] - Extra classes for the .section element
+  @param {string} [style] - Extra inline CSS custom properties
+
+  @example
+  {% render 'grip-section', section: section, children: children, width: 'full' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign section_width = width | default: 'page'
+  assign muted = section.settings.muted_color | default: '#8B95A6'
+-%}
+
+{% render 'contrast-override',
+  background_color: section.settings.background_color,
+  text_color: section.settings.text_color,
+  border_color: section.settings.hairline_color,
+  section_id: section.id
+%}
+{% render 'grip-tokens' %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div
+  class="section section--{{ section_width }}-width color-custom-{{ section.id }} grip-section {{ class }}"
+  style="--grip-muted: {{ muted }};{{ style }}"
+  {% if request.visual_preview_mode %}
+    data-shopify-visual-preview
+  {% endif %}
+>
+  <div
+    class="spacing-style grip-section__inner"
+    style="{% render 'spacing-style', settings: section.settings %}"
+  >
+    {{ children }}
+  </div>
+</div>

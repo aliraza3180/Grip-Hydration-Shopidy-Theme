@@ -1,0 +1,147 @@
+{% capture children %}
+  {%- if section.blocks.size > 0 -%}
+    <ul
+      class="grip-spec-bar{% if section.settings.show_top_rule %} grip-spec-bar--top{% endif %}{% if section.settings.show_bottom_rule %} grip-spec-bar--bottom{% endif %}"
+      role="list"
+      style="--grip-spec-count: {{ section.blocks.size }};"
+    >
+      {% content_for 'blocks' %}
+    </ul>
+  {%- elsif request.design_mode -%}
+    <p class="grip-editor-note">Spec bar: add spec blocks. Hidden on the storefront while empty.</p>
+  {%- endif -%}
+{% endcapture %}
+
+{%- if section.blocks.size > 0 or request.design_mode -%}
+  {% render 'grip-section', section: section, children: children %}
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-spec-bar {
+    display: grid;
+    grid-template-columns: repeat(var(--grip-spec-count, 5), minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grip-spec-bar--top {
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .grip-spec-bar--bottom {
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .grip-spec {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.875rem;
+    min-width: 0;
+    padding: var(--grip-gap-md);
+    text-align: start;
+
+    & + .grip-spec {
+      border-inline-start: 1px solid var(--color-border);
+    }
+
+    @media screen and (max-width: 989px) {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-inline: 0.75rem;
+      text-align: center;
+    }
+  }
+
+  .grip-spec__icon {
+    color: var(--grip-accent);
+  }
+
+  .grip-spec__text {
+    display: grid;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+
+  .grip-spec__value {
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  /* Mobile: three facts on the first row, two on the second, none hidden. */
+  .grip-spec-bar {
+    @media screen and (max-width: 749px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+
+      &:has(> .grip-spec:nth-child(5):last-child) {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+
+        & > .grip-spec {
+          grid-column: span 2;
+        }
+
+        & > .grip-spec:nth-child(n + 4) {
+          grid-column: span 3;
+        }
+      }
+
+      & > .grip-spec {
+        padding: 0.875rem 0.5rem;
+      }
+
+      & > .grip-spec:nth-child(3n + 1) {
+        border-inline-start: 0;
+      }
+
+      & > .grip-spec:nth-child(n + 4) {
+        border-block-start: 1px solid var(--color-border);
+      }
+    }
+  }
+
+  .grip-spec-bar .grip-spec__value {
+    @media screen and (max-width: 389px) {
+      font-size: 1.25rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP spec bar",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "grip-spec" }],
+  "max_blocks": 6,
+  "settings": [
+    { "type": "checkbox", "id": "show_top_rule", "label": "Show top rule", "default": true },
+    { "type": "checkbox", "id": "show_bottom_rule", "label": "Show bottom rule", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0A0E15" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 32 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP spec bar",
+      "category": "GRIP",
+      "blocks": {
+        "sodium": { "type": "grip-spec", "settings": { "icon": "drop", "value": "1,000MG", "unit": "SODIUM" } },
+        "potassium": { "type": "grip-spec", "settings": { "icon": "bolt", "value": "200MG", "unit": "POTASSIUM" } },
+        "magnesium": { "type": "grip-spec", "settings": { "icon": "molecule", "value": "100MG", "unit": "MAGNESIUM" } },
+        "sugar": { "type": "grip-spec", "settings": { "icon": "sugar-free", "value": "0G", "unit": "SUGAR" } },
+        "calories": { "type": "grip-spec", "settings": { "icon": "flame-off", "value": "0", "unit": "CALORIES" } }
+      },
+      "block_order": ["sodium", "potassium", "magnesium", "sugar", "calories"]
+    }
+  ]
+}
+{% endschema %}

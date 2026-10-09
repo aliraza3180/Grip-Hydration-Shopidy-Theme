@@ -1,0 +1,307 @@
+{%- liquid
+  assign img_loading = 'lazy'
+  assign img_priority = 'auto'
+  if section.index == 1
+    assign img_loading = 'eager'
+    assign img_priority = 'high'
+  endif
+
+  assign has_image = false
+  if section.settings.image_desktop != blank or section.settings.image_mobile != blank
+    assign has_image = true
+  endif
+
+  assign heading_tag = section.settings.heading_tag | default: 'h1'
+  assign accent_word = section.settings.accent_word
+  assign heading_before = section.settings.heading
+  assign heading_after = ''
+  assign has_accent = false
+  if accent_word != blank and section.settings.heading contains accent_word
+    assign has_accent = true
+    assign heading_parts = section.settings.heading | replace_last: accent_word, '%%grip-accent%%' | split: '%%grip-accent%%'
+    assign heading_before = heading_parts.first
+    if heading_parts.size > 1
+      assign heading_after = heading_parts.last
+    endif
+  endif
+
+  assign scrim = section.settings.scrim_color
+  assign scrim_alpha = section.settings.scrim_opacity | divided_by: 100.0
+
+  capture hero_style
+    echo '--grip-ah-h: ' | append: section.settings.height_desktop | append: 'svh;'
+    echo '--grip-ah-h-m: ' | append: section.settings.height_mobile | append: 'svh;'
+    echo '--grip-ah-max: ' | append: section.settings.content_max_width | append: 'px;'
+    echo '--grip-ah-bottom: ' | append: section.settings.content_offset_bottom | append: 'px;'
+    echo '--grip-ah-scrim: ' | append: scrim.red | append: ' ' | append: scrim.green | append: ' ' | append: scrim.blue | append: ';'
+    echo '--grip-ah-scrim-a: ' | append: scrim_alpha | append: ';'
+    echo '--grip-ah-accent: ' | append: section.settings.accent_color | append: ';'
+  endcapture
+-%}
+
+{% render 'measure-header-heights', only_when_first_section: true %}
+
+{% capture children %}
+  <div
+    class="grip-about-hero grip-about-hero--{{ section.settings.content_position }}{% if section.settings.grayscale %} grip-about-hero--grayscale{% endif %}"
+    style="{{ hero_style | strip_newlines }}"
+  >
+    <div class="grip-about-hero__media">
+      {%- if has_image -%}
+        {% render 'grip-image',
+          desktop: section.settings.image_desktop,
+          mobile: section.settings.image_mobile,
+          loading: img_loading,
+          fetchpriority: img_priority,
+          decorative: section.settings.image_decorative
+        %}
+      {%- elsif request.design_mode -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'grip-placeholder' }}
+      {%- endif -%}
+    </div>
+
+    {%- if has_image or request.design_mode -%}
+      <div class="grip-about-hero__scrim" aria-hidden="true"></div>
+    {%- endif -%}
+
+    <div class="grip-page-grid grip-about-hero__content">
+      <div class="grip-about-hero__stack">
+        {%- if section.settings.label != blank -%}
+          <p class="grip-label">{{ section.settings.label | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <{{ heading_tag }} class="grip-display grip-about-hero__heading h1">
+            {{- heading_before | escape -}}
+            {%- if has_accent -%}
+              <span class="grip-about-hero__accent">{{ accent_word | escape }}</span>
+              {{- heading_after | escape -}}
+            {%- endif -%}
+          </{{ heading_tag }}>
+        {%- elsif request.design_mode -%}
+          <p class="grip-editor-note">Heading: add text</p>
+        {%- endif -%}
+
+        {%- if section.settings.text != blank -%}
+          <p class="grip-about-hero__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+
+        {% render 'grip-about-actions',
+          primary_label: section.settings.button_label,
+          primary_link: section.settings.button_link,
+          secondary_label: section.settings.button_2_label,
+          secondary_link: section.settings.button_2_link
+        %}
+      </div>
+    </div>
+
+    {%- if request.design_mode and has_image and section.settings.scrim_opacity < 50 -%}
+      <p class="grip-editor-note grip-about-hero__note">Scrim below 50%: check text contrast against the photo.</p>
+    {%- endif -%}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section',
+  section: section,
+  children: children,
+  width: 'full',
+  class: 'grip-about-hero-section'
+%}
+
+{% stylesheet %}
+  .grip-about-hero-wrapper {
+    --grip-ah-offset: 0px;
+  }
+
+  /* A solid header sits above the hero, so its height comes off the hero height. */
+  body:has(#header-group > .header-section > #header-component:not([transparent])) .grip-about-hero-wrapper:first-child {
+    --grip-ah-offset: var(--header-group-height, 0px);
+  }
+
+  .grip-about-hero {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: calc(var(--grip-ah-h, 72svh) - var(--grip-ah-offset, 0px));
+    isolation: isolate;
+    overflow: hidden;
+
+    @media screen and (max-width: 749px) {
+      min-height: calc(var(--grip-ah-h-m, 80svh) - var(--grip-ah-offset, 0px));
+    }
+  }
+
+  .grip-about-hero--center {
+    align-items: center;
+  }
+
+  .grip-about-hero__media,
+  .grip-about-hero__scrim {
+    position: absolute;
+    inset: 0;
+  }
+
+  .grip-about-hero__media {
+    z-index: -2;
+  }
+
+  .grip-about-hero--grayscale .grip-about-hero__media img {
+    filter: grayscale(1);
+  }
+
+  .grip-about-hero__scrim {
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        to top,
+        rgb(var(--grip-ah-scrim) / var(--grip-ah-scrim-a)) 0%,
+        rgb(var(--grip-ah-scrim) / calc(var(--grip-ah-scrim-a) * 0.55)) 45%,
+        rgb(var(--grip-ah-scrim) / 0) 80%
+      ),
+      linear-gradient(to right, rgb(var(--grip-ah-scrim) / calc(var(--grip-ah-scrim-a) * 0.6)) 0%, rgb(var(--grip-ah-scrim) / 0) 65%);
+
+    @media screen and (max-width: 749px) {
+      background: linear-gradient(
+        to top,
+        rgb(var(--grip-ah-scrim) / var(--grip-ah-scrim-a)) 0%,
+        rgb(var(--grip-ah-scrim) / calc(var(--grip-ah-scrim-a) * 0.75)) 45%,
+        rgb(var(--grip-ah-scrim) / 0) 85%
+      );
+    }
+  }
+
+  .grip-about-hero--bottom_center .grip-about-hero__scrim,
+  .grip-about-hero--center .grip-about-hero__scrim {
+    background: rgb(var(--grip-ah-scrim) / calc(var(--grip-ah-scrim-a) * 0.8));
+  }
+
+  .grip-about-hero__content {
+    padding-block: var(--grip-gap-2xl) var(--grip-ah-bottom, 96px);
+
+    @media screen and (max-width: 989px) {
+      padding-block-end: calc(var(--grip-ah-bottom, 96px) * 0.6);
+    }
+  }
+
+  .grip-about-hero__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    max-width: var(--grip-ah-max, 760px);
+
+    & .grip-actions {
+      margin-block-start: 0.5rem;
+    }
+  }
+
+  .grip-about-hero--bottom_center .grip-about-hero__stack,
+  .grip-about-hero--center .grip-about-hero__stack {
+    align-items: center;
+    justify-self: center;
+    text-align: center;
+
+    & .grip-actions {
+      justify-content: center;
+    }
+  }
+
+  .grip-about-hero__accent {
+    color: var(--grip-ah-accent, var(--grip-accent));
+  }
+
+  /* Keep the H1 preset's desktop scale but let long words fit narrow phones. */
+  .grip-about-hero__stack .grip-about-hero__heading.grip-about-hero__heading {
+    @media screen and (max-width: 749px) {
+      font-size: clamp(2.5rem, 12vw, 4.5rem);
+    }
+  }
+
+  .grip-about-hero__text {
+    max-width: 34rem;
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .grip-about-hero__note {
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-end: 1rem;
+    z-index: 1;
+    background: var(--grip-ink);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP about hero",
+  "tag": "section",
+  "class": "grip-about-hero-wrapper section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image", "info": "21:9 recommended. Used on all screens when no mobile image is set." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "4:5 recommended. Shown below 750px." },
+    { "type": "checkbox", "id": "grayscale", "label": "Black and white", "default": false },
+    { "type": "checkbox", "id": "image_decorative", "label": "Decorative image (empty alt text)", "default": true },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "OUR STORY" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "BUILT BY A GRAPPLER, FOR GRAPPLERS." },
+    { "type": "text", "id": "accent_word", "label": "Accent word", "info": "Must match text in the heading exactly. The last match is colored." },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#1F6FFF" },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML tag",
+      "info": "Keep H1 when this is the first section on the page.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1"
+    },
+    { "type": "text", "id": "text", "label": "Supporting text", "default": "A hydration brand from Edinburg, Texas. Started on the mats, built for everyone who trains." },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        { "value": "bottom_left", "label": "Bottom left" },
+        { "value": "bottom_center", "label": "Bottom center" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "bottom_left"
+    },
+    { "type": "range", "id": "height_desktop", "label": "Desktop height", "min": 40, "max": 100, "step": 2, "unit": "%", "default": 72 },
+    { "type": "range", "id": "height_mobile", "label": "Mobile height", "min": 40, "max": 100, "step": 2, "unit": "%", "default": 80 },
+    { "type": "range", "id": "content_max_width", "label": "Content max width", "min": 320, "max": 960, "step": 20, "unit": "px", "default": 760 },
+    { "type": "range", "id": "content_offset_bottom", "label": "Content bottom offset", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 96 },
+    { "type": "header", "content": "Scrim" },
+    { "type": "color", "id": "scrim_color", "label": "Color", "default": "#05070A" },
+    { "type": "range", "id": "scrim_opacity", "label": "Opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 65 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP about hero",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

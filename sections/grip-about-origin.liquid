@@ -1,0 +1,203 @@
+{%- liquid
+  assign show_page_content = false
+  if section.settings.show_page_content and page.content != blank
+    assign show_page_content = true
+  endif
+-%}
+
+{% capture children %}
+  <div class="grip-about-origin">
+    <div class="grip-about-origin__intro">
+      {%- if section.settings.label != blank or section.settings.heading != blank -%}
+        <header class="grip-about-origin__lead">
+          {%- if section.settings.label != blank -%}
+            <p class="grip-label grip-label--muted">{{ section.settings.label | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="grip-display {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+        </header>
+      {%- endif -%}
+
+      <div class="grip-about-origin__body">
+        {%- if section.settings.body != blank -%}
+          <div class="grip-about-origin__copy">{{ section.settings.body }}</div>
+        {%- endif -%}
+
+        {%- if show_page_content -%}
+          <div class="grip-about-origin__copy rte">{{ page.content }}</div>
+        {%- elsif request.design_mode and section.settings.show_page_content -%}
+          <p class="grip-editor-note">Page content is on, but this page has no content in Online Store → Pages.</p>
+        {%- endif -%}
+
+        {% render 'grip-about-actions',
+          primary_label: section.settings.button_label,
+          primary_link: section.settings.button_link,
+          secondary_label: section.settings.button_2_label,
+          secondary_link: section.settings.button_2_link,
+          arrow: true
+        %}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="grip-about-origin__facts" role="list">
+        {% content_for 'blocks' %}
+      </ul>
+    {%- endif -%}
+  </div>
+{% endcapture %}
+
+{% render 'grip-section', section: section, children: children %}
+
+{% stylesheet %}
+  .grip-about-origin {
+    display: grid;
+    gap: var(--grip-gap-2xl);
+  }
+
+  .grip-about-origin__intro {
+    display: grid;
+    gap: var(--grip-gap-xl);
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: clamp(3rem, 7vw, 8rem);
+      align-items: start;
+    }
+  }
+
+  .grip-about-origin__lead {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .grip-about-origin__body {
+    display: grid;
+    gap: var(--grip-gap-md);
+    min-width: 0;
+    max-width: 40rem;
+
+    & .grip-actions {
+      margin-block-start: var(--grip-gap-xs);
+    }
+  }
+
+  .grip-about-origin__copy {
+    display: grid;
+    gap: 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.65;
+    text-wrap: pretty;
+
+    & p {
+      margin: 0;
+    }
+  }
+
+  .grip-about-origin__facts {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--color-border);
+
+    @media screen and (min-width: 750px) {
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+      column-gap: var(--grip-gap-lg);
+    }
+  }
+
+  .grip-about-fact {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    min-width: 0;
+    padding-block: 1.5rem;
+
+    @media screen and (max-width: 749px) {
+      border-block-end: 1px solid var(--color-border);
+    }
+
+    @media screen and (min-width: 750px) {
+      padding-block: 1.75rem 0;
+    }
+  }
+
+  .grip-about-fact__icon {
+    color: var(--grip-accent);
+  }
+
+  .grip-about-fact__value {
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP about origin",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [{ "type": "_grip-about-fact" }],
+  "max_blocks": 4,
+  "settings": [
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "label", "label": "Label", "default": "WHERE IT STARTED" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "BUILT FROM INSIDE THE GRAPPLING COMMUNITY." },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "h1", "label": "Display (H1 preset)" },
+        { "value": "h2", "label": "Section (H2 preset)" },
+        { "value": "h3", "label": "Card (H3 preset)" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>From stepping onto the mats for the first time in May 2025 to earning a blue belt just nine months later, Brazilian Jiu-Jitsu quickly became far more than a sport\u2014it became a lifestyle.</p><p>The relentless grind, endless rounds, and constant test of discipline revealed a common struggle every grappler faces: staying properly hydrated to survive the toughest training sessions. Traditional sports drinks were packed with sugar, and generic hydration powders lacked the heavy-duty electrolyte balance needed for combat sports.</p><p>That gap on the mats birthed GRIP Hydration. Built from deep within the grappling community, GRIP wasn\u2019t created by an outside supplement company guessing what fighters need; it was engineered by grapplers, for grapplers. Inspired by the BJJ belt progression system, each stick pack represents the dedication, resilience, and drive required to level up both on and off the mats.</p><p>Whether you are stepping into your first class as a White Belt or sharpening your game as a Black Belt, GRIP is crafted to keep you performing at your absolute peak.</p><p>Never Lose Your Grip.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_page_content",
+      "label": "Also show page content",
+      "info": "Shows the text written for this page in Online Store > Pages.",
+      "default": false
+    },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button_2_label", "label": "Secondary button label" },
+    { "type": "url", "id": "button_2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#05070A" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F2F4F7" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8B95A6" },
+    { "type": "color", "id": "hairline_color", "label": "Hairlines", "default": "#1D2634" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 160 }
+  ],
+  "presets": [
+    {
+      "name": "GRIP about origin",
+      "category": "GRIP",
+      "blocks": {
+        "based": { "type": "_grip-about-fact", "settings": { "label": "BASED IN", "value": "EDINBURG, TEXAS" } },
+        "built": { "type": "_grip-about-fact", "settings": { "label": "BUILT FOR", "value": "JIU-JITSU, GRAPPLING, WRESTLING, MMA" } },
+        "first": { "type": "_grip-about-fact", "settings": { "label": "FIRST RELEASE", "value": "BLUE BELT, BLUE RASPBERRY" } }
+      },
+      "block_order": ["based", "built", "first"]
+    }
+  ]
+}
+{% endschema %}

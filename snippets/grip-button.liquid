@@ -1,0 +1,25 @@
+{%- doc -%}
+  Optional GRIP link button used by sections to link to other pages.
+  Uses Horizon's button classes, so its shape follows the theme's button
+  radius setting. Renders nothing when the label or link is blank.
+
+  @param {string} [label] - Button text
+  @param {string} [link] - Destination URL
+  @param {string} [style] - 'primary' or 'secondary' (default)
+  @param {boolean} [arrow] - Show a trailing arrow icon
+  @param {string} [class] - Extra classes on the wrapper, e.g. 'grip-actions--center'
+
+  @example
+  {% render 'grip-button', label: section.settings.button_label, link: section.settings.button_link, style: section.settings.button_style, arrow: section.settings.button_arrow %}
+{%- enddoc -%}
+
+{%- if label != blank and link != blank -%}
+  <div class="grip-actions {{ class }}">
+    <a class="{% if style == 'primary' %}button{% else %}button-secondary{% endif %} grip-button" href="{{ link }}">
+      <span>{{ label | escape }}</span>
+      {%- if arrow -%}
+        {%- render 'grip-icon', icon: 'arrow-right', size: 16 -%}
+      {%- endif -%}
+    </a>
+  </div>
+{%- endif -%}

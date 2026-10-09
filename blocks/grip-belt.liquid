@@ -1,0 +1,91 @@
+{%- doc -%}
+  One belt card in the GRIP featured collection, rendered with the shared GRIP
+  product card. In stock shows the price and Add to cart; at 0 stock, or with
+  no product picked, the card shows Notify me. Out of stock, the status setting
+  keeps the price with a sold-out badge or hides it with a coming-soon badge.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+<li
+  class="grip-belt"
+  data-block-id="{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  {% render 'grip-product-card',
+    key: block.id,
+    section_id: section.id,
+    product: block.settings.product,
+    status: block.settings.status,
+    belt_name: block.settings.belt_name,
+    flavor: block.settings.flavor,
+    title_color: block.settings.title_color,
+    pack_text: block.settings.pack_text,
+    image: block.settings.card_image,
+    badge_text: block.settings.badge_text,
+    live_label: section.settings.status_live_label,
+    sold_out_label: section.settings.status_sold_out_label,
+    soon_label: section.settings.status_soon_label,
+    add_label: block.settings.add_label,
+    choose_label: block.settings.choose_label,
+    image_sizes: '(min-width: 990px) 19vw, (min-width: 750px) 42vw, 78vw',
+    show_notify: block.settings.show_notify,
+    notify_label: block.settings.notify_label,
+    submit_label: block.settings.submit_label,
+    email_label: block.settings.email_label,
+    email_placeholder: block.settings.email_placeholder,
+    notify_tag: block.settings.notify_tag,
+    success_text: block.settings.success_text,
+    consent_note: block.settings.consent_note
+  %}
+</li>
+
+{% stylesheet %}
+  .grip-belt {
+    display: flex;
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GRIP belt card",
+  "tag": null,
+  "settings": [
+    { "type": "product", "id": "product", "label": "Product", "info": "In stock shows the price and Add to cart. At 0 stock, or with no product, the card shows Notify me." },
+    {
+      "type": "select",
+      "id": "status",
+      "label": "When out of stock",
+      "options": [
+        { "value": "live", "label": "Sold out (show price)" },
+        { "value": "coming_soon", "label": "Coming soon (hide price)" }
+      ],
+      "default": "coming_soon"
+    },
+    { "type": "text", "id": "belt_name", "label": "Belt name", "default": "BELT" },
+    { "type": "text", "id": "flavor", "label": "Flavor", "default": "FLAVOR" },
+    { "type": "color", "id": "title_color", "label": "Flavor color", "info": "Leave blank to use the text color." },
+    { "type": "text", "id": "pack_text", "label": "Pack size text", "default": "25 Stick Packs" },
+    { "type": "image_picker", "id": "card_image", "label": "Card image", "info": "Square. Falls back to the product image." },
+    { "type": "text", "id": "badge_text", "label": "Badge text", "info": "Leave blank to use the section's badge for the card's stock state." },
+    { "type": "text", "id": "add_label", "label": "Add to cart label", "default": "ADD TO CART" },
+    { "type": "text", "id": "choose_label", "label": "Product page button label", "default": "VIEW PRODUCT", "info": "Used instead of Add to cart for products with several variants or a required subscription." },
+    { "type": "header", "content": "Notify me (out of stock)" },
+    { "type": "checkbox", "id": "show_notify", "label": "Show notify button when out of stock", "default": true },
+    { "type": "text", "id": "notify_label", "label": "Button label", "default": "NOTIFY ME" },
+    { "type": "text", "id": "submit_label", "label": "Submit label", "default": "NOTIFY ME" },
+    { "type": "text", "id": "email_label", "label": "Email field label (screen readers)", "default": "Email for launch updates" },
+    { "type": "text", "id": "email_placeholder", "label": "Email placeholder", "default": "Email address" },
+    { "type": "text", "id": "notify_tag", "label": "Customer tag", "info": "Leave blank to use notify- plus the belt name." },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "You're on the list. We'll let you know when this Belt drops." },
+    { "type": "text", "id": "consent_note", "label": "Consent note", "default": "We'll email you when it launches. Unsubscribe anytime." }
+  ],
+  "presets": [
+    {
+      "name": "GRIP belt card",
+      "category": "GRIP"
+    }
+  ]
+}
+{% endschema %}

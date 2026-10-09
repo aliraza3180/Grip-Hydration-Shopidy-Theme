@@ -1,0 +1,133 @@
+{%- doc -%}
+  One contact channel in the GRIP contact section: email, phone, location,
+  social profile or any link. An email channel with no value uses the store's
+  contact email. Email and phone values become mailto: and tel: links unless
+  a custom link is set. Renders nothing on the storefront when empty.
+{%- enddoc -%}
+
+{% render 'grip-tokens' %}
+
+{%- liquid
+  assign channel_kind = block.settings.kind
+  assign channel_value = block.settings.value
+  if channel_kind == 'email' and channel_value == blank
+    assign channel_value = shop.email
+  endif
+
+  assign channel_href = block.settings.link
+  if channel_href == blank and channel_value != blank
+    case channel_kind
+      when 'email'
+        assign channel_href = 'mailto:' | append: channel_value
+      when 'phone'
+        assign phone_digits = channel_value | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '.'
+        assign channel_href = 'tel:' | append: phone_digits
+    endcase
+  endif
+
+  assign icon_name = block.settings.icon
+  if icon_name == 'auto'
+    case channel_kind
+      when 'email'
+        assign icon_name = 'mail'
+      when 'phone'
+        assign icon_name = 'phone'
+      when 'location'
+        assign icon_name = 'map-pin'
+      when 'social'
+        assign icon_name = 'instagram'
+      else
+        assign icon_name = 'message'
+    endcase
+  endif
+
+  assign is_external = false
+  if channel_kind == 'social' and block.settings.link != blank
+    assign is_external = true
+  endif
+-%}
+
+{%- if channel_value != blank or block.settings.label != blank -%}
+  <li class="grip-contact-channel{% if icon_name == 'none' %} grip-contact-channel--no-icon{% endif %}" {{ block.shopify_attributes }}>
+    {%- if icon_name != 'none' -%}
+      <span class="grip-contact-channel__icon">
+        {%- render 'grip-contact-icon', icon: icon_name, size: 22 -%}
+      </span>
+    {%- endif -%}
+    <div class="grip-contact-channel__text">
+      {%- if block.settings.label != blank -%}
+        <p class="grip-label grip-label--muted">{{ block.settings.label | escape }}</p>
+      {%- endif -%}
+      {%- if channel_value != blank -%}
+        {%- if channel_href != blank -%}
+          <a
+            class="grip-contact-channel__value"
+            href="{{ channel_href | escape }}"
+            {% if is_external %}
+              target="_blank" rel="noopener"
+            {% endif %}
+          >
+            {{- channel_value | escape -}}
+          </a>
+        {%- else -%}
+          <p class="grip-contact-channel__value">{{ channel_value | escape }}</p>
+        {%- endif -%}
+      {%- elsif request.design_mode and channel_kind == 'email' -%}
+        <p class="grip-editor-note">No value, and the store has no contact email set.</p>
+      {%- endif -%}
+      {%- if block.settings.note != blank -%}
+        <p class="grip-contact-channel__note grip-muted">{{ block.settings.note | escape }}</p>
+      {%- endif -%}
+    </div>
+  </li>
+{%- elsif request.design_mode -%}
+  <li class="grip-contact-channel grip-contact-channel--no-icon" {{ block.shopify_attributes }}>
+    <p class="grip-editor-note">Channel: add a label or value</p>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GRIP contact channel",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "kind",
+      "label": "Type",
+      "options": [
+        { "value": "email", "label": "Email" },
+        { "value": "phone", "label": "Phone" },
+        { "value": "location", "label": "Location" },
+        { "value": "social", "label": "Social profile" },
+        { "value": "link", "label": "Other link" }
+      ],
+      "default": "email"
+    },
+    { "type": "text", "id": "label", "label": "Label", "default": "EMAIL" },
+    { "type": "text", "id": "value", "label": "Value", "info": "Email left empty uses the store contact email from Settings > Store details." },
+    { "type": "url", "id": "link", "label": "Custom link", "info": "Optional. Email and phone link automatically." },
+    { "type": "text", "id": "note", "label": "Note" },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "auto", "label": "Match type" },
+        { "value": "none", "label": "None" },
+        { "value": "mail", "label": "Mail" },
+        { "value": "phone", "label": "Phone" },
+        { "value": "map-pin", "label": "Map pin" },
+        { "value": "message", "label": "Message" },
+        { "value": "clock", "label": "Clock" },
+        { "value": "instagram", "label": "Instagram" },
+        { "value": "facebook", "label": "Facebook" },
+        { "value": "tiktok", "label": "TikTok" },
+        { "value": "youtube", "label": "YouTube" },
+        { "value": "x", "label": "X" }
+      ],
+      "default": "auto"
+    }
+  ]
+}
+{% endschema %}

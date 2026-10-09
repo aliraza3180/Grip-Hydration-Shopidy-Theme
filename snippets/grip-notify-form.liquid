@@ -1,0 +1,154 @@
+{%- doc -%}
+  Notify-me email capture: a Shopify customer form that tags the customer, so
+  launch and restock lists can be exported by tag. Success and error states
+  only show for this form's id, so several notify forms can share a page.
+
+  @param {string} key - Unique suffix for element ids, usually block.id
+  @param {string} tag - Customer tag, e.g. notify-blue-belt
+  @param {string} submit_label - Submit button label
+  @param {string} email_label - Visually hidden label for the email field
+  @param {string} [button_label] - Label on the toggle button when collapsible
+  @param {string} [context_label] - Appended to the hidden email label, e.g. the belt name
+  @param {string} [email_placeholder] - Email field placeholder
+  @param {string} [success_text] - Message shown after a successful submit
+  @param {string} [consent_note] - Small print under the form
+  @param {boolean} [collapsible] - Hide the form behind a toggle button (default true)
+  @param {string} [toggle_class] - Extra classes for the toggle button
+
+  @example
+  {% render 'grip-notify-form', key: block.id, tag: 'notify-blue-belt', submit_label: 'NOTIFY ME', email_label: 'Email', collapsible: false %}
+{%- enddoc -%}
+
+{%- liquid
+  assign form_id = 'GripNotify-' | append: key
+  assign form_matches = false
+  assign is_collapsible = true
+  if collapsible == false
+    assign is_collapsible = false
+  endif
+-%}
+
+{%- capture notify_form -%}
+  {%- form 'customer', id: form_id, class: 'grip-notify', data-grip-notify: key -%}
+    {%- liquid
+      if form.id == form_id
+        assign form_matches = true
+      endif
+    -%}
+    <input type="hidden" name="contact[tags]" value="{{ tag | escape }}">
+    <label class="visually-hidden" for="GripNotifyEmail-{{ key }}">
+      {{- email_label | escape }}{% if context_label != blank %}: {{ context_label | escape }}{% endif -%}
+    </label>
+    <input
+      class="grip-notify__input"
+      id="GripNotifyEmail-{{ key }}"
+      type="email"
+      name="contact[email]"
+      {% if email_placeholder != blank %}
+        placeholder="{{ email_placeholder | escape }}"
+      {% endif %}
+      autocomplete="email"
+      autocapitalize="off"
+      spellcheck="false"
+      required
+      {% if form_matches and form.errors %}
+        aria-invalid="true"
+        aria-describedby="GripNotifyError-{{ key }}"
+      {% endif %}
+    >
+    <button type="submit" class="button grip-button grip-notify__submit">
+      {{- submit_label | escape -}}
+    </button>
+    <p
+      class="grip-notify__message grip-notify__message--error"
+      id="GripNotifyError-{{ key }}"
+      role="alert"
+      tabindex="-1"
+      {% unless form_matches and form.errors %}
+        hidden
+      {% endunless %}
+    >
+      {%- if form_matches and form.errors -%}
+        {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+      {%- endif -%}
+    </p>
+    <p
+      class="grip-notify__message"
+      id="GripNotifySuccess-{{ key }}"
+      role="status"
+      tabindex="-1"
+      {% unless form_matches and form.posted_successfully? %}
+        hidden
+      {% endunless %}
+    >
+      {{- success_text | escape -}}
+    </p>
+    {%- if consent_note != blank -%}
+      <p class="grip-notify__consent grip-muted">{{ consent_note | escape }}</p>
+    {%- endif -%}
+  {%- endform -%}
+{%- endcapture -%}
+
+{%- if is_collapsible -%}
+  <details class="grip-notify-toggle grip-card__notify"{% if form_matches %} open{% endif %}>
+    <summary class="button-secondary grip-button grip-notify-toggle__button{% if toggle_class != blank %} {{ toggle_class }}{% endif %}">
+      {{- button_label | escape -}}
+    </summary>
+    {{ notify_form }}
+  </details>
+{%- else -%}
+  {{ notify_form }}
+{%- endif -%}
+
+{% stylesheet %}
+  .grip-notify-toggle__button {
+    width: 100%;
+    min-height: 2.75rem;
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  .grip-notify-toggle[open] .grip-notify-toggle__button {
+    margin-block-end: 0.75rem;
+  }
+
+  .grip-notify {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .grip-notify__input {
+    min-width: 0;
+    min-height: 2.75rem;
+    padding-inline: 0.875rem;
+    font: inherit;
+    color: var(--color-input-text, inherit);
+    background: var(--color-input-background, transparent);
+    border: 1px solid var(--color-input-border, var(--color-border));
+    border-radius: var(--style-border-radius-inputs, var(--grip-radius));
+  }
+
+  .grip-notify__submit {
+    width: 100%;
+    min-height: 2.75rem;
+  }
+
+  .grip-notify__message {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .grip-notify__message--error {
+    color: var(--grip-error);
+  }
+
+  .grip-notify__consent {
+    margin: 0;
+    font-size: 0.75rem;
+  }
+{% endstylesheet %}
